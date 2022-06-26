@@ -1,0 +1,46 @@
+#!/bin/bash
+
+CONF=$(echo "scripts
+awesome
+polybar
+rofi
+bin
+alacritty
+picom
+zsh" | rofi -dmenu -i -p " Config:  ")
+
+if [[ "$CONF" == "awesome" ]]; then
+	CONFF=$(echo -e "rc\ntheme" | rofi -dmenu -i -p " File:  ")
+	if [[ -n $CONFF ]]; then 
+		CMD="micro $HOME/.config/awesome/$CONFF.lua" 
+	fi
+elif [[ "$CONF" == "polybar" ]]; then
+	CMD="micro $HOME/.config/polybar/config.ini"
+elif [[ "$CONF" == "awesome" ]]; then
+	CMD="micro $HOME/.zshrc"
+elif [[ "$CONF" == "alacritty" ]]; then
+	CMD="micro $HOME/.config/alacritty/alacritty.yml"
+elif [[ "$CONF" == "rofi" ]]; then
+	CONFF=$(echo -e "config\ntheme" | rofi -dmenu -i -p " File:  ")
+	if [[ -n $CONFF ]]; then 
+		CMD="micro $HOME/.config/rofi/$CONFF.rasi" 
+	fi
+elif [[ "$CONF" == "picom" ]]; then
+	CMD="micro $HOME/.config/picom/picom.conf"
+
+elif [[ "$CONF" == "scripts" ]]; then
+	CONFF=$(ls -1 "${HOME}/scripts" | rofi -dmenu -i -p " File:  ")
+	if [[ -n $CONFF ]]; then 
+		CMD="micro $HOME/scripts/${CONFF}" 
+	fi
+elif [[ "$CONF" == "bin" ]]; then
+	CONFF=$(ls -1 "${HOME}/bin" | rofi -dmenu -i -p " File:  ")
+	if [[ -n $CONFF ]]; then 
+		CMD="micro $HOME/bin/${CONFF}" 
+	fi
+	
+else
+	CMD="echo 'config not found'"
+fi
+
+alacritty -e $CMD

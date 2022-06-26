@@ -1,0 +1,6 @@
+#!/bin/bash
+
+key=$1
+repl=$2
+file=$3
+sed -i "0,/${key}/s/${key}.*/${key}${repl}/" $file

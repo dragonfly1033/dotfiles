@@ -1,0 +1,5 @@
+#!/bin/bash
+
+xrandr -s 1600x1200 &
+sleep 3 &
+xrandr -s 1920x1080 &
