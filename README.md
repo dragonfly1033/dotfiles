@@ -1,5 +1,5 @@
 # dotfiles
 
-move wallpapers into ~/Pictures/ 
+move wallpapers to ~/Pictures/wallpapers
 
-scripts, bin, .themes and .config belong in ~/
+scripts, bin, .themes and .config belong in ~
