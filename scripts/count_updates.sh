@@ -1,0 +1,5 @@
+#!/bin/bash
+
+count=$(pacman -Qu | wc -l)
+
+echo " $count "
