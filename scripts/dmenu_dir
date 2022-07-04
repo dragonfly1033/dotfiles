@@ -1,0 +1,26 @@
+#!/bin/sh
+
+DIR=$1
+
+if [ -z $DIR ]; then
+	echo "Usage: dmenu_dir <dir>"
+	exit
+fi
+
+ddmenu=$HOME/scripts/dmenu
+go=true
+
+while $go; do
+	OPT=$(find "$DIR" -maxdepth 1 -printf "%f\n" | sed 1d)
+	CHO=$($ddmenu "$OPT" "Select:")
+	if [ ! -d $DIR/$CHO ]; then
+		go=false
+		END=$DIR/$CHO
+	elif [ -z $CHO ]; then
+		echo 'NONE'
+		exit
+	fi
+	DIR=$DIR/$CHO
+done
+
+echo $END

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+options=$1
+prompt=$2
+echo -e "$options" | rofi -dmenu -i -p " $prompt  "
