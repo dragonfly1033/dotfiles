@@ -9,6 +9,8 @@ install Iosevka font in /usr/local/share/fonts/Iosevka/ansdn
 
 move MyFonts folder to /usr/local/share/fonts/ansdlkn
 
+change width, height and session greeter in /etc/lightdm/lightdm.conf
+
 install:
 alacritty
 rofi
