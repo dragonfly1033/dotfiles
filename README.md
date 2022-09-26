@@ -24,4 +24,6 @@ openssh
 cronie
 pacman-contrib
 gpick or colorpicker(AUR)
-lightdm-webkit2-greeter lightdm-webkit-theme-litarvan
+lightdm-webkit2-greeter 
+lightdm-webkit-theme-litarvan
+awesome
