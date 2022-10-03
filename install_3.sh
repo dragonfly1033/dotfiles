@@ -15,5 +15,5 @@ mv dotfiles/bin .
 mv dotfiles/.profile .
 mv dotfiles/.fehbg .
 mv dotfiles/.config/* .config
-mkdir -p /usr/local/share/fonts
-mv dotfiles/fonts/MyFonts /usr/local/share/fonts
+sudo mkdir -p /usr/local/share/fonts
+sudo mv dotfiles/fonts/MyFonts /usr/local/share/fonts
