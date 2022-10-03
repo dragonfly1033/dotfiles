@@ -36,8 +36,8 @@ pacman -S networkmanager &
 
 systemctl enable NetworkManager &
 
-echo "NOW RUN THESE:"
-echo "----------------"
-echo "exit"
-echo "umount -l /mnt"
-echo "reboot"
+echo "NOW RUN THESE:" &
+echo "----------------" &
+echo "exit" &
+echo "umount -l /mnt" &
+echo "reboot" 
