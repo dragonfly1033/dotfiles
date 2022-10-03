@@ -4,7 +4,8 @@
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
-yay -S picom-jonaburg-git 
+yay -S picom-jonaburg-git ttf-raleway
+cd ..
 
 mkdir Pictures 
 mv dotfiles/wallpapers Pictures
