@@ -1,10 +1,8 @@
 #!/bin/bash
 
-cd ~
 curl https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
-cd ..
 
 pacman -S picom xorg xorg-xinit xterm awesome pacman-contrib
 pacman -S mlocate feh alacritty firefox rofi polybar cronie dunst exa tree openssh gpick
