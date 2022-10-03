@@ -1,10 +1,10 @@
 #!/bin/bash
 
 
-git clone https://aur.archlinux.org/yay.git
-cd yay
+git clone https://aur.archlinux.org/yay-bin.git
+cd yay-bin
 makepkg -si
-yay -S picom-jonaburg-git ttf-raleway
+yay -S --needed --noconfirm picom-jonaburg-git ttf-raleway
 cd ..
 
 mkdir Pictures 
