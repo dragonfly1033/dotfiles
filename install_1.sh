@@ -4,15 +4,15 @@ read -p 'Enter Hostname: ' hostname
 read -p 'Enter Username: ' username
 
 echo "Installing base system..."
-pacman -S --noconfirm --needed micro sudo grub efibootmgr dosfstools os-prober mtools
+pacman -S --noconfirm --needed micro sudo grub efibootmgr dosfstools os-prober mtools > /dev/null
 
 echo "Setting clock and timezone"
-ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime
-hwclock --systohc
+ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime > /dev/null
+hwclock --systohc > /dev/null
 
 echo "Setting locale"
-sed -i '/en_GB.UTF-8/s/^#//g' /etc/locale.gen
-locale-gen
+sed -i '/en_GB.UTF-8/s/^#//g' /etc/locale.gen > /dev/null
+locale-gen > /dev/null
 
 echo "Setting constants"
 echo "LANG=en_GB.UTF-8" >> /etc/locale.conf
@@ -28,27 +28,27 @@ echo ""
 echo "Set ROOT password"
 passwd
 
-useradd -m $username
+useradd -m $username > /dev/null
 echo ""
 echo ""
 echo "Set User Password"
 passwd $username
-usermod -aG wheel,audio,video,optical,storage $username
+usermod -aG wheel,audio,video,optical,storage $username > /dev/null
 
 EDITOR=micro visudo
 
 echo "Setup grub"
-mkdir /boot/EFI
-mount /dev/sda1 /boot/EFI
-grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
-grub-mkconfig -o /boot/grub/grub.cfg
+mkdir /boot/EFI > /dev/null
+mount /dev/sda1 /boot/EFI > /dev/null
+grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck > /dev/null
+grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
 echo "Setup Network Manager"
-pacman -S --noconfirm --needed networkmanager gtkmm3
+pacman -S --noconfirm --needed networkmanager gtkmm3 > /dev/null
 
-systemctl enable NetworkManager
-systemctl enable vmtoolsd.service
-systemctl enable vmware-vmblock-fuse.service
+systemctl enable NetworkManager > /dev/null
+systemctl enable vmtoolsd.service > /dev/null
+systemctl enable vmware-vmblock-fuse.service > /dev/null
 
 sed -i 's/\r$//' /root/dotfiles/install_2_sudo.sh
 sed -i 's/\r$//' /root/dotfiles/install_3.sh
