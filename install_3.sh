@@ -1,11 +1,17 @@
 #!/bin/bash
 
+echo "Install AUR Helper"
 
 git clone https://aur.archlinux.org/yay-bin.git > /dev/null
 cd yay-bin
 makepkg -si > /dev/null
+
+echo "Install fonts"
+
 yay -S --noconfirm --needed picom-jonaburg-git ttf-raleway > /dev/null
 cd ..
+
+echo "Move directories to correct places"
 
 mkdir Pictures
 mv dotfiles/wallpapers Pictures
