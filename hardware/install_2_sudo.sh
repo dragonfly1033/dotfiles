@@ -3,7 +3,7 @@
 echo "-------------------------------------------"
 echo "Install graphical system packages"
 
-pacman -S --noconfirm --needed picom xorg xorg-xinit xterm awesome pacman-contrib xf86-video-vmware mesa > /dev/null
+pacman -S --noconfirm --needed picom xorg xorg-xinit xterm awesome pacman-contrib xf86-video-amdgpu mesa > /dev/null
 
 echo "-------------------------------------------"
 echo "Install apps and utils"
@@ -32,13 +32,6 @@ sed -i '/#greeter-session/c\greeter-session=lightdm-webkit2-greeter' /etc/lightd
 sed -i '/#width/c\width=1920' /etc/lightdm/lightdm.conf
 sed -i '/#height/c\height=1080' /etc/lightdm/lightdm.conf
 sed -i '/webkit_theme/c\webkit_theme=litarvan' /etc/lightdm/lightdm-webkit2-greeter.conf
-
-echo "-------------------------------------------"
-echo "Configure xinitrc"
-
-touch .xinitrc
-head -n -5 /etc/X11/xinit/xinitrc >> .xinitrc
-echo "awesome &" >> .xinitrc
 
 echo "-------------------------------------------"
 echo "Move fonts"

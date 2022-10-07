@@ -10,7 +10,7 @@ makepkg -si > /dev/null
 echo "-------------------------------------------"
 echo "Install fonts"
 
-yay -S --noconfirm --needed picom-jonaburg-git ttf-raleway > /dev/null
+yay -S --needed picom-jonaburg-git ttf-raleway > /dev/null
 cd ..
 
 echo "-------------------------------------------"

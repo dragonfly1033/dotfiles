@@ -2,11 +2,12 @@
 
 read -p 'Enter Hostname: ' hostname
 read -p 'Enter Username: ' username
+read -p 'Enter EFI partition: ' efi_partition
 
 echo "-------------------------------------------"
 echo "Installing base system..."
 
-pacman -S --noconfirm --needed micro sudo grub efibootmgr dosfstools os-prober mtools virtualbox-guest-utils > /dev/null
+pacman -S --noconfirm --needed micro sudo grub efibootmgr dosfstools os-prober mtools > /dev/null
 
 echo "-------------------------------------------"
 echo "Setting clock and timezone"
@@ -50,23 +51,22 @@ echo "-------------------------------------------"
 echo "Setup GRUB"
 
 mkdir /efi > /dev/null
-mount /dev/sda1 /efi > /dev/null
+mount $efi_partition /efi > /dev/null
 grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB --recheck > /dev/null
 grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
 echo "-------------------------------------------"
-echo "Setup Network Manager and VirtualBox"
+echo "Setup Network Manager"
 
-pacman -S --noconfirm --needed networkmanager gtkmm3 > /dev/null
+pacman -S --noconfirm --needed networkmanager > /dev/null
 
 systemctl enable NetworkManager > /dev/null
-systemctl enable vboxservice.service > /dev/null
 
 echo "-------------------------------------------"
 echo "Correct CRLF in other install scripts"
 
-sed -i 's/\r$//' /root/dotfiles/virtualbox/install_2_sudo.sh
-sed -i 's/\r$//' /root/dotfiles/virtualbox/install_3.sh
+sed -i 's/\r$//' /root/dotfiles/vmware/install_2_sudo.sh
+sed -i 's/\r$//' /root/dotfiles/vmware/install_3.sh
 
 echo "-------------------------------------------"
 echo "Change ownership of dotfiles"

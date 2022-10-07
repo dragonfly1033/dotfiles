@@ -49,9 +49,9 @@ EDITOR=micro visudo
 echo "-------------------------------------------"
 echo "Setup GRUB"
 
-mkdir /boot/EFI > /dev/null
-mount /dev/sda1 /boot/EFI > /dev/null
-grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck > /dev/null
+mkdir /efi > /dev/null
+mount /dev/sda1 /efi > /dev/null
+grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB --recheck > /dev/null
 grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
 echo "-------------------------------------------"
@@ -66,8 +66,8 @@ systemctl enable vmware-vmblock-fuse.service > /dev/null
 echo "-------------------------------------------"
 echo "Correct CRLF in other install scripts"
 
-sed -i 's/\r$//' /root/dotfiles/install_2_sudo.sh
-sed -i 's/\r$//' /root/dotfiles/install_3.sh
+sed -i 's/\r$//' /root/dotfiles/vmware/install_2_sudo.sh
+sed -i 's/\r$//' /root/dotfiles/vmware/install_3.sh
 
 echo "-------------------------------------------"
 echo "Change ownership of dotfiles"
