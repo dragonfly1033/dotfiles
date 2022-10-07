@@ -56,13 +56,6 @@ grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB --rec
 grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
 echo "-------------------------------------------"
-echo "Setup Network Manager"
-
-pacman -S --noconfirm --needed networkmanager > /dev/null
-
-systemctl enable NetworkManager > /dev/null
-
-echo "-------------------------------------------"
 echo "Correct CRLF in other install scripts"
 
 sed -i 's/\r$//' /root/dotfiles/vmware/install_2_sudo.sh
