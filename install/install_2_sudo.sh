@@ -38,6 +38,7 @@ pacman -S --noconfirm --needed ttf-iosevka-nerd  > /dev/null
 echo "-------------------------------------------"
 echo "Enable login"
 
+pacman -S --noconfirm --needed gdk-pixbuf2 > /dev/null
 systemctl enable lightdm > /dev/null
 
 echo "-------------------------------------------"
@@ -46,7 +47,7 @@ echo "Configure Login"
 sed -i '/#greeter-session/c\greeter-session=lightdm-webkit2-greeter' /etc/lightdm/lightdm.conf
 sed -i '/#width/c\width=1920' /etc/lightdm/lightdm.conf
 sed -i '/#height/c\height=1080' /etc/lightdm/lightdm.conf
-sed -i '/webkit_theme/c\webkit_theme=litarvan' /etc/lightdm/lightdm-webkit2-greeter.conf
+sed -i '/^webkit_theme/c\webkit_theme=litarvan' /etc/lightdm/lightdm-webkit2-greeter.conf
 
 echo "-------------------------------------------"
 echo "Configure xinitrc"

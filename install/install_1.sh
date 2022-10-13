@@ -64,7 +64,7 @@ mount $efi_partition /efi > /dev/null
 grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB --recheck > /dev/null
 grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
-mount $efi_partition /efi
+mount $efi_partition /efi > /dev/null
 uuid=$(blkid -s UUID -o value $efi_partition)
 echo "menuentry \"Windows\"" >> /etc/grub.d/40-custom
 echo "    insmod  part-gpt" >> /etc/grub.d/40-custom
