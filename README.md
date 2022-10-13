@@ -1,29 +1,12 @@
 # dotfiles
 
-move wallpapers to ~/Pictures/wallpapers
-
-scripts, bin, .themes and .config belong in ~
-
-install Raleway font in /usr/local/share/fonts/Raleway/alsndkasd
-install Iosevka font in /usr/local/share/fonts/Iosevka/ansdn
-
-move MyFonts folder to /usr/local/share/fonts/ansdlkn
-
-change width, height and session greeter in /etc/lightdm/lightdm.conf
-
-install:
-alacritty
-rofi
-polybar
-picom-jonaburg-git
-dunst
-feh
-exa
-tree
-openssh
-cronie
-pacman-contrib
-gpick or colorpicker(AUR)
-lightdm-webkit2-greeter 
-lightdm-webkit-theme-litarvan
-awesome
+1. Perform a base install up until the arch-chroot
+2. Install git
+3. Clone this Repo
+4. ``` chmod +x dotfiles/install/install_* ```
+5. Run install_1.sh
+6. Follow instructions provided at the end.
+7. Log in as your user
+8. Run install_2_sudo.sh with sudo
+9. Run install_3.sh
+10. Reboot
