@@ -27,7 +27,7 @@ fi
 echo "-------------------------------------------"
 echo "Install apps and utils"
 
-pacman -S --noconfirm --needed mlocate htop feh neofetch alacritty firefox rofi polybar cronie dunst exa tree openssh gpick > /dev/null
+pacman -S --noconfirm --needed mlocate htop acpi feh neofetch alacritty firefox rofi polybar cronie dunst exa tree openssh gpick > /dev/null
 
 echo "-------------------------------------------"
 echo "Install login"

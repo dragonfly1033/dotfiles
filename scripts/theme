@@ -33,6 +33,6 @@ $sed_var "accent: " "#$newaccent;" $HOME/.config/rofi/theme.rasi
 $sed_var "background-color: " "#$newback;" $HOME/.config/rofi/theme.rasi
 $sed_var "text-color: " "#$newtext;" $HOME/.config/rofi/theme.rasi
 
-$sed_var "theme = " "$theme" $HOME/.fehbg
+$sed_var "name=" "\"$theme\"" $HOME/.fehbg
 
 echo "awesome.restart()" | awesome-client
