@@ -58,7 +58,7 @@ echo "Configure xinitrc"
 
 touch .xinitrc
 head -n -5 /etc/X11/xinit/xinitrc >> .xinitrc
-echo "awesome &" >> .xinitrc
+echo "awesome" >> .xinitrc
 chmod +x .xinitrc
 chown $username .xinitrc
 chgrp $username .xinitrc
