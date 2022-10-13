@@ -47,7 +47,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init("/home/arch/.config/awesome/theme.lua")
+beautiful.init("~/.config/awesome/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty"
@@ -350,4 +350,4 @@ awful.mouse.snap.client_enabled = false
 awful.mouse.drag_to_tag.enabled = false
 
 
-awful.spawn.with_shell("/home/arch/scripts/startup.sh")
+awful.spawn.with_shell("~/scripts/startup")

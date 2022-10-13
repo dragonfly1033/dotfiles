@@ -1,0 +1,20 @@
+#!/bin/sh
+
+battery=$(acpi | awk -F", " '{ print $2 }' | tr -d '%')
+charging=$(acpi | awk -F", " '{ print $1 }' | awk -F": " '{ print $2 }')
+
+if   [ "$charging" = "Discharging" -a "$battery" -le 20 ]; then
+    echo " $battery%"
+elif [ "$charging" = "Discharging" -a "$battery" -le 50 ]; then
+    echo " $battery%"
+elif [ "$charging" = "Discharging" -a "$battery" -le 70 ]; then
+    echo " $battery%"
+elif [ "$charging" = "Charging" -a "$battery" -le 20 ]; then
+    echo " $battery%"
+elif [ "$charging" = "Charging" -a "$battery" -le 50 ]; then
+    echo " $battery%"
+elif [ "$charging" = "Charging" -a "$battery" -le 70 ]; then
+    echo " $battery%"
+elif [ "$charging" = 'Unknown' ]; then
+    echo " $battery%"
+fi

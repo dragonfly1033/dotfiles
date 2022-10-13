@@ -27,15 +27,12 @@ theme.fg_focus      = "#ffffff"
 theme.fg_urgent     = "#ffffff"
 theme.fg_minimize   = "#ffffff"
 
+theme.gap_single_client = false
 theme.useless_gap   = dpi(8)
 theme.border_width  = dpi(1)
 theme.border_normal = "#393951"
 theme.border_focus = "#F6B99C"
 theme.border_marked = "#ff0000"
-
-client.connect_signal("focus", function(c) c.border_color = theme.border_focus end)
-client.connect_signal("unfocus", function(c) c.border_color = theme.border_normal end)
-
 
 -- There are other variable sets
 -- overriding the default one when

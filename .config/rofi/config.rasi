@@ -147,4 +147,4 @@ configuration {
       sorting-method:    "name";
   }
 }
-@theme "/home/arch/.config/rofi/theme.rasi"
+@theme "~/.config/rofi/theme.rasi"

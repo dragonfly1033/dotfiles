@@ -21,6 +21,6 @@ mv dotfiles/wallpapers Pictures
 mv dotfiles/scripts .
 mv dotfiles/.themes .
 mv dotfiles/bin .
-mv dotfiles/.profile .
+mv dotfiles/.bashrc .
 mv dotfiles/.fehbg .
 mv dotfiles/.config/* .config

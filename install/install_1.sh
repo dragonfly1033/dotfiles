@@ -2,12 +2,21 @@
 
 read -p 'Enter Hostname: ' hostname
 read -p 'Enter Username: ' username
-read -p 'Enter EFI partition: ' efi_partition
+read -p 'Enter EFI partition (full path): ' efi_partition
+read -p 'Enter System (h)ardware, (v)mware, virtual(b)ox: ' system
 
 echo "-------------------------------------------"
 echo "Installing base system..."
 
 pacman -S --noconfirm --needed micro sudo grub efibootmgr dosfstools os-prober mtools > /dev/null
+
+if [ $system = 'v' ]; then
+    echo "Installed VMware tools"
+    pacman -S --noconfirm --needed open-vm-tools > /dev/null
+elif [ $system = 'b' ]; then
+    echo "Installed VirtualBox tools"
+    pacman -S --noconfirm --needed vitualbox-guest-utils > /dev/null
+fi
 
 echo "-------------------------------------------"
 echo "Setting clock and timezone"
@@ -55,11 +64,34 @@ mount $efi_partition /efi > /dev/null
 grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB --recheck > /dev/null
 grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
-echo "-------------------------------------------"
-echo "Correct CRLF in other install scripts"
+mount $efi_partition /efi
+uuid=$(blkid -s UUID -o value $efi_partition)
+echo "menuentry \"Windows\"" >> /etc/grub.d/40-custom
+echo "    insmod  part-gpt" >> /etc/grub.d/40-custom
+echo "    insmod  fat" >> /etc/grub.d/40-custom
+echo "    search --no-floppy --fs--uuid --set=root \"$uuid\"" >> /etc/grub.d/40-custom
+echo "    chainloader /EFI/Microsoft/Boot/bootmgfw.efi" >> /etc/grub.d/40-custom
 
-sed -i 's/\r$//' /root/dotfiles/vmware/install_2_sudo.sh
-sed -i 's/\r$//' /root/dotfiles/vmware/install_3.sh
+echo "-------------------------------------------"
+echo "Setup NetworkManager and System"
+
+pacman -S --noconfirm --needed networkmanager > /dev/null
+
+systemctl enable NetworkManager > /dev/null
+
+if [ $system != 'h' ]; then
+    echo "Install gtkmm3"
+    pacman -S --noconfirm --needed gtkmm3 > /dev/null
+fi
+
+if [ $system = 'v' ]; then
+    echo "Enabled VMware services"
+    systemctl enable vmtoolsd.service > /dev/null
+    systemctl enable vmware-vmblock-fuse.service > /dev/null
+else [ $system = 'b' ]; then
+    echo "Enabled VirtualBox services"
+    systemctl enable vboxservice.service > /dev/null
+fi
 
 echo "-------------------------------------------"
 echo "Change ownership of dotfiles"
