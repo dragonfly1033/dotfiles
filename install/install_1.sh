@@ -67,7 +67,6 @@ grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 mount $efi_partition /efi > /dev/null
 uuid=$(blkid -s UUID -o value $efi_partition)
 echo "menuentry \"Windows\"" >> /etc/grub.d/40-custom
-echo "    insmod  part-gpt" >> /etc/grub.d/40-custom
 echo "    insmod  fat" >> /etc/grub.d/40-custom
 echo "    search --no-floppy --fs--uuid --set=root \"$uuid\"" >> /etc/grub.d/40-custom
 echo "    chainloader /EFI/Microsoft/Boot/bootmgfw.efi" >> /etc/grub.d/40-custom
