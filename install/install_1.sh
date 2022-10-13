@@ -83,7 +83,7 @@ if [ $system = 'v' ]; then
     echo "Enabled VMware services"
     systemctl enable vmtoolsd.service > /dev/null
     systemctl enable vmware-vmblock-fuse.service > /dev/null
-else [ $system = 'b' ]; then
+elif [ $system = 'b' ]; then
     echo "Enabled VirtualBox services"
     systemctl enable vboxservice.service > /dev/null
 fi
