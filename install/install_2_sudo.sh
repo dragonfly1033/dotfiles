@@ -1,5 +1,6 @@
 #!/bin/bash
 
+read -p 'Enter Username: ' username
 read -p 'Enter System (h)ardware, (v)mware, virtual(b)ox: ' system
 
 echo "-------------------------------------------"
@@ -7,7 +8,10 @@ echo "Install graphical system packages"
 
 
 pacman -S --noconfirm --needed xorg xorg-xinit xterm awesome pacman-contrib libinput mesa > /dev/null
-pacman -Rns xf86-video-vesa > /dev/null
+
+echo "-------------------------------------------"
+echo "Uninstall vesa"
+pacman -Rns --noconfirm xf86-video-vesa > /dev/null
 
 if [ $system = 'h' ]; then
     echo "Install hardware drivers"
@@ -55,6 +59,9 @@ echo "Configure xinitrc"
 touch .xinitrc
 head -n -5 /etc/X11/xinit/xinitrc >> .xinitrc
 echo "awesome &" >> .xinitrc
+chmod +x .xinitrc
+chown $username .xinitrc
+chgrp $username .xinitrc
 
 echo "-------------------------------------------"
 echo "Configure touchpad"
@@ -73,5 +80,6 @@ echo "Change Perms"
 
 chmod -R +x dotfiles/scripts
 chmod -R +x dotfiles/bin
+chmod -R +x dotfiles/.config
 chmod +x dotfiles/.bashrc
 chmod +x dotfiles/.fehbg

@@ -10,7 +10,9 @@ echo "Installing base system..."
 
 pacman -S --noconfirm --needed micro sudo grub efibootmgr dosfstools os-prober mtools > /dev/null
 
-if [ $system = 'v' ]; then
+if [ $system = 'h' ]; then
+    pacman -S --noconfirm --needed ntfs-3g
+elif [ $system = 'v' ]; then
     echo "Installed VMware tools"
     pacman -S --noconfirm --needed open-vm-tools > /dev/null
 elif [ $system = 'b' ]; then
@@ -62,14 +64,8 @@ echo "Setup GRUB"
 mkdir /efi > /dev/null
 mount $efi_partition /efi > /dev/null
 grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB --recheck > /dev/null
+os-prober
 grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
-
-mount $efi_partition /efi > /dev/null
-uuid=$(blkid -s UUID -o value $efi_partition)
-echo "menuentry \"Windows\"" >> /etc/grub.d/40-custom
-echo "    insmod  fat" >> /etc/grub.d/40-custom
-echo "    search --no-floppy --fs--uuid --set=root \"$uuid\"" >> /etc/grub.d/40-custom
-echo "    chainloader /EFI/Microsoft/Boot/bootmgfw.efi" >> /etc/grub.d/40-custom
 
 echo "-------------------------------------------"
 echo "Setup NetworkManager and System"
