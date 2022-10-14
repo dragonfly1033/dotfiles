@@ -4,15 +4,18 @@ read -p 'Enter Username: ' username
 read -p 'Enter System (h)ardware, (v)mware, virtual(b)ox: ' system
 
 echo "-------------------------------------------"
-echo "Install graphical system packages"
+echo "Add Windows to boot menu"
 
+sed -i '/#GRUB_DISABLE_OS_PROBER/c\GRUB_DISABLE_OS_PROBER=false' /etc/default/grub
+os-prober > /dev/null
+grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
+
+echo "-------------------------------------------"
+echo "Install graphical system packages"
 
 pacman -S --noconfirm --needed xorg xorg-xinit xterm awesome pacman-contrib libinput mesa > /dev/null
 
 echo "-------------------------------------------"
-echo "Uninstall vesa"
-pacman -Rns --noconfirm xf86-video-vesa > /dev/null
-
 if [ $system = 'h' ]; then
     echo "Install hardware drivers"
     pacman -S --noconfirm --needed xf86-video-amdgpu > /dev/null
@@ -32,12 +35,16 @@ pacman -S --noconfirm --needed mlocate htop acpi feh neofetch alacritty firefox 
 echo "-------------------------------------------"
 echo "Install login"
 
-pacman -S --noconfirm --needed lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan > /dev/null
+pacman -S --noconfirm --needed --overwrite \* lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan > /dev/null
 
 echo "-------------------------------------------"
 echo "Install fonts"
 
 pacman -S --noconfirm --needed ttf-iosevka-nerd  > /dev/null
+
+echo "-------------------------------------------"
+echo "Uninstall vesa"
+pacman -Rns --noconfirm xf86-video-vesa > /dev/null
 
 echo "-------------------------------------------"
 echo "Enable login"
