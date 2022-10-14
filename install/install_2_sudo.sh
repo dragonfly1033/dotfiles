@@ -1,12 +1,14 @@
 #!/bin/bash
 
 read -p 'Enter Username: ' username
+read -p 'Enter EFI partition (full path): ' efi_partition
 read -p 'Enter System (h)ardware, (v)mware, virtual(b)ox: ' system
 
 echo "-------------------------------------------"
 echo "Add Windows to boot menu"
 
 sed -i '/#GRUB_DISABLE_OS_PROBER/c\GRUB_DISABLE_OS_PROBER=false' /etc/default/grub
+mount $efi_partition /efi
 os-prober > /dev/null
 grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
