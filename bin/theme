@@ -1,6 +1,0 @@
-#!/bin/sh
-
-THEME=$(ls -1 $HOME/.themes | rofi -dmenu -i -p " Theme:  ")
-if [[ -n $THEME ]]; then
-	$HOME/scripts/theme $THEME
-fi

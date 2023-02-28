@@ -1,3 +1,0 @@
-#!/bin/bash
-name="mountain"
-feh --no-fehbg --bg-scale ~/Pictures/wallpapers/$name

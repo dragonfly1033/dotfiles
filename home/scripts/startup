@@ -1,0 +1,26 @@
+#!/bin/bash
+
+function run {
+	echo 'TESTING-------------------------' $@
+  	if ! pgrep -f "$*" ; then
+  		$@&
+  	else
+	echo "EXISTS--------------------------"
+  	fi
+}
+
+setxkbmap gb
+sudo chgrp video /sys/class/backlight/amdgpu_bl0/brightness
+sudo chmod g+w /sys/class/backlight/amdgpu_bl0/brightness
+numlockx on
+$HOME/scripts/set_temp_sensor
+
+run picom --no-vsync --experimental-backend
+run ~/.fehbg
+run polybar -r top
+run mpris-proxy 
+run volctl 
+run nm-applet
+run blueman-applet 
+run xbindkeys 
+run redshift-gtk

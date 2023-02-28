@@ -1,0 +1,3 @@
+#!/bin/bash
+name="violet_floor"
+feh --no-fehbg --bg-scale ~/Pictures/wallpapers/$name

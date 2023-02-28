@@ -1,0 +1,16 @@
+#!/bin/sh
+
+checkupdates | awk -F'[ -]' '{print $1}' | uniq
+txt=$(checkupdates | awk -F'[ -]' '{print $1}' | uniq)
+
+read -p "Update (y/n)? " ans
+
+if [ $ans = "y" ]; then
+	sudo pacman -Syu
+
+	if [[ $txt =~ "grub" ]]; then
+		$HOME/bin/reinstall-grub
+		read nil
+	fi
+fi
+

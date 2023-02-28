@@ -61,9 +61,8 @@ EDITOR=micro visudo
 echo "-------------------------------------------"
 echo "Setup GRUB"
 
-mkdir /efi > /dev/null
-mount $efi_partition /efi > /dev/null
-grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB --recheck > /dev/null
+mount $efi_partition /boot > /dev/null
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB --recheck > /dev/null
 grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
 echo "-------------------------------------------"
@@ -96,7 +95,7 @@ chgrp -R $username /root/dotfiles
 echo "-------------------------------------------"
 echo "NOW RUN THESE:"
 echo ""
-echo "mv dotfiles /home/$username"
+echo "mv dotfiles /home/$username/.dotfiles"
 echo "exit"
 echo "umount -l /mnt"
 echo "reboot" 

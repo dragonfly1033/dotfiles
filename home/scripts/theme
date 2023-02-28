@@ -1,0 +1,39 @@
+ #!/bin/bash
+
+theme=$1
+
+if [ -z $theme ]; then
+	theme=$(cat $HOME/scripts/.script_env/THEME)
+else
+	echo $theme > $HOME/scripts/.script_env/THEME
+fi
+
+path="${HOME}/.config/themes/${theme}"
+sed_var=${HOME}/scripts/sed_var
+
+newaccent=$(awk '{print $1}' "${path}")
+newaccent2=$(awk '{print $2}' "${path}")
+newback=$(awk '{print $3}' "${path}")
+newtext=$(awk '{print $4}' "${path}")
+newtextd=$(awk '{print $5}' "${path}")
+
+$sed_var "theme.border_focus = " "\"#$newaccent\"" $HOME/.config/awesome/theme.lua
+$sed_var "theme.border_normal = " "\"#$newback\"" $HOME/.config/awesome/theme.lua
+$sed_var "theme.hotkeys_bg = " "\"#$newback\"" $HOME/.config/awesome/theme.lua
+$sed_var "theme.hotkeys_modifiers_fg = " "\"#$newtext\"" $HOME/.config/awesome/theme.lua
+$sed_var "theme.hotkeys_fg = " "\"#$newtext\"" $HOME/.config/awesome/theme.lua
+
+$sed_var "background-alt = " "#$newaccent2" $HOME/.config/polybar/config.ini
+$sed_var "primary = " "#$newaccent" $HOME/.config/polybar/config.ini
+$sed_var "background = " "#$newback" $HOME/.config/polybar/config.ini
+$sed_var "foreground = " "#$newtext" $HOME/.config/polybar/config.ini
+$sed_var "disabled = " "#$newtextd" $HOME/.config/polybar/config.ini
+$sed_var "secondary = " "#$newaccent2" $HOME/.config/polybar/config.ini
+
+$sed_var "accent: " "#$newaccent;" $HOME/.config/rofi/theme.rasi
+$sed_var "background-color: " "#$newback;" $HOME/.config/rofi/theme.rasi
+$sed_var "text-color: " "#$newtext;" $HOME/.config/rofi/theme.rasi
+
+$sed_var "name=" "\"$theme\"" $HOME/.fehbg
+
+echo "awesome.restart()" | awesome-client

@@ -10,17 +10,16 @@ makepkg -si > /dev/null
 echo "-------------------------------------------"
 echo "Install fonts"
 
-yay -S --needed picom-jonaburg-git ttf-raleway
+yay -S --needed picom-jonaburg-git bt-dualboot nbfc-linux
 cd ..
 
 echo "-------------------------------------------"
 echo "Move directories to correct places"
 
+mkdir Downloads
+mkdir Documents
+mkdir Desktop
 mkdir Pictures
-mv dotfiles/wallpapers Pictures
-mv dotfiles/scripts .
-mv dotfiles/.themes .
-mv dotfiles/bin .
-mv dotfiles/.bashrc .
-mv dotfiles/.fehbg .
-mv dotfiles/.config/* .config
+ln -s .dotfiles/wallpapers Pictures/wallpapers
+ln -s .dotfiles/.config/* .config
+ln -s .dotfiles/home/* .

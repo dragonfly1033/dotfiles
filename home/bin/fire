@@ -1,0 +1,16 @@
+#!/bin/sh
+
+ddmenu=~/scripts/dmenu
+PROF=$($ddmenu "Main\nPolitics\nAnime\nIncog\nPriv" "Config:")
+
+if [ $PROF == 'Main' ]; then
+	firefox -P Main
+elif [ $PROF == 'Politics' ]; then
+	firefox -P Pol
+elif [ $PROF == 'Anime' ]; then
+	firefox -P Weeb
+elif [ $PROF == 'Incog' ]; then
+	firefox -P Inc
+elif [ $PROF == 'Priv' ]; then
+	firefox --private-window -P Main
+fi

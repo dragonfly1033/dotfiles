@@ -1,0 +1,9 @@
+#!/bin/sh
+
+POLYBAR_BOTTOM=$(cat $HOME/scripts/.script_env/POLYBAR_BOTTOM)
+if [ $POLYBAR_BOTTOM == "true" ]; then
+	echo "false" > $HOME/scipts/.script_env/POLYBAR_BOTTOM
+elif [ $POLYBAR_BOTTOM == "false" ]; then
+	echo "true" > $HOME/scripts/.script_env/POLYBAR_BOTTOM
+fi
+polybar-msg cmd restart

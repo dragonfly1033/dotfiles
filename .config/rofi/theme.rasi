@@ -5,11 +5,11 @@
  */
 
 * {
-    background-color: #393951;
+    background-color: #20273e;
     border-color:          White;
-    text-color: #CDD1EA;
-    accent: #F6B99C;
-    font:            "Raleway 13";
+    text-color: #fdedd6;
+    accent: #be8fcd;
+    font:            "Fira Code 12";
 }
 window {
     anchor:     north;
@@ -33,7 +33,7 @@ entry {
     padding: 0px 3px;
 }
 element {
-    padding: 0px 6px;
+    padding: 3px 6px;
 }
 element selected {
 	text-color: @background-color;

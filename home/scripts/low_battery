@@ -1,0 +1,24 @@
+#!/bin/sh
+
+battery=$(acpi | grep -v "unavailable" | awk -F", " '{ print $2 }' | tr -d '%')
+charging=$(acpi | grep -v "unavailable" | awk -F", " '{ print $1 }' | awk -F": " '{ print $2 }')
+
+LOW_BATTERY_SENT=$(cat $HOME/scripts/.script_env/LOW_BATTERY_SENT)
+VERY_LOW_BATTERY_SENT=$(cat $HOME/scripts/.script_env/VERY_LOW_BATTERY_SENT)
+
+if [ "$charging" = "Discharging" ] && [ "$battery" -le 5 ]; then
+	shutdown now
+elif [ "$charging" = "Discharging" ] && [ "$battery" -le 10 ]; then
+	if [ $VERY_LOW_BATTERY_SENT != "true" ]; then
+		DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send -u critical "Very Low Battery" "Plug in charger RIGHT NOW!!!"
+		echo "true" > $HOME/scripts/.script_env/VERY_LOW_BATTERY_SENT
+	fi
+elif [ "$charging" = "Discharging" ] && [ "$battery" -le 20 ]; then
+	if [ $LOW_BATTERY_SENT != "true" ]; then
+		DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send -t 30000 -u critical "Low Battery" "Plug in charger!"
+		echo "true" > $HOME/scripts/.script_env/LOW_BATTERY_SENT
+	fi
+else
+	echo "false" > $HOME/scripts/.script_env/LOW_BATTERY_SENT
+	echo "false" > $HOME/scripts/.script_env/VERY_LOW_BATTERY_SENT
+fi
