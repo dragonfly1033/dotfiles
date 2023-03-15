@@ -1,0 +1,9 @@
+(defpoll layout_icon
+	:interval "500ms"
+	:initial "A"
+`$HOME/scripts/get_layout`)
+
+(defwidget layout []
+	(label :class "layout"
+			:text layout_icon)
+)

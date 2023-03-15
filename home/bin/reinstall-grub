@@ -1,4 +1,5 @@
 #!/bin/sh
 
 sudo grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub_uefi --recheck
+sudo os-prober
 sudo grub-mkconfig -o /boot/grub/grub.cfg

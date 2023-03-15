@@ -37,12 +37,31 @@ client.connect_signal("property::floating", function (c)
 	end
 end)
 
+function polybarTest(c, el)
+	return c.class == "Polybar"
+end
+
+function ewwTest(c, el)
+	return string.sub(c.class, 1, 3) == "eww"
+end
+
+function tagContains(table, test)
+  for _, client in pairs(table) do
+    if test(client) then
+      return true
+    end
+  end
+  return false
+end
+
 local function set_border(c)
-    local s = awful.screen.focused()
+	local s = awful.screen.focused()
+	if c.class == nul then c.border_width = 0; return end
     if (c.maximized
         or (#s.tiled_clients == 1 and not c.floating)
         or c.fullscreen
-        or c.class == "Polybar")
+        or polybarTest(c)
+        or ewwTest(c))
     then
         c.border_width = 0
     else
@@ -51,7 +70,8 @@ local function set_border(c)
 end
 
 local function set_shape(c)
-	if c.class ~= "Polybar" and c.class ~= nil then
+	if c.class == nil then return end
+	if not (polybarTest(c) or ewwTest(c)) then
 		if c.sticky == true then
 			c.shape = function (cr) gears.shape.infobubble(cr, c.width, c.height, 0, 20, 0) end
 		elseif c.floating == true then
@@ -66,13 +86,9 @@ end
 
 client.connect_signal("property::sticky", set_shape)
 client.connect_signal("property::floating", set_shape)
-client.connect_signal("manage", set_shape)
-client.connect_signal("request::geometry", set_shape)
-client.connect_signal("request::activate", set_shape)
 
-client.connect_signal("property::size", set_border)
-client.connect_signal("manage", set_border)
-client.connect_signal("request::geometry", set_border)
+client.connect_signal("property::sticky", set_border)
+client.connect_signal("property::floating", set_border)
 client.connect_signal("request::activate", set_border)
 
 client.connect_signal("property:minimized", function(c) c.minimized = false end)

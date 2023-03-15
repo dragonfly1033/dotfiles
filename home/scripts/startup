@@ -20,7 +20,4 @@ run ~/.fehbg
 run polybar -r top
 run mpris-proxy 
 run volctl 
-run nm-applet
-run blueman-applet 
-run xbindkeys 
-run redshift-gtk
+run xbindkeys -f "$XDG_CONFIG_HOME/xbindkeys/config"

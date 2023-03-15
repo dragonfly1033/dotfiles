@@ -1,0 +1,60 @@
+$accent : #5d537e;
+$accent2: #e0b0c3;
+$bg     : #1c1b20;
+$fg     : #cbb9af;
+$fgd    : #ae928e;
+
+* {
+  background-color: $bg;
+  color: $fg;
+}
+
+.layout {
+  margin-top: 2px;
+  margin-bottom: 7px;
+  font-family: "layouts";
+  font-size: 15pt;
+}
+
+.revealer {
+  background-color: #ff0;
+}
+
+.time-label {
+  font-family: "Fira Code";
+  margin-top: -4px;
+  margin-left: 1px;
+  letter-spacing: 1px;
+  font-size: 18px;
+}
+
+.ws {
+  all: unset;
+  margin-right: 2px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.toolbar {
+  all: unset;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.toolbar2 {
+  all: unset;
+  margin-left: -3px;
+  font-size: 20px;
+}
+
+
+.chev {
+  font-family: "Iosevka Nerd Font Extralight";
+  font-size: 38px;
+  margin-right: 1px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  color: $accent;
+}

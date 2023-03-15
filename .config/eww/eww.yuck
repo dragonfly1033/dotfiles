@@ -1,0 +1,35 @@
+(include "./modules/workspaces.yuck")
+(include "./modules/date.yuck")
+(include "./modules/layout.yuck")
+(include "./modules/updates.yuck")
+
+(defwindow	bar
+	:monitor 0
+	:geometry (geometry	:x "0px"
+						:y "0px"
+						:width "24px"
+						:height "1080px"
+						:anchor "bottom left")
+	:stacking "fg"
+	:reserve (struts :distance "24px" :side "left")
+(centerbox	:orientation "v"
+	(box	:orientation "v"
+			:space-evenly false
+			:valign "start"	
+		(layout)
+		(date)
+	)
+	(box	:orientation "v"
+			:space-evenly false
+			:valign "center"
+		(label :class "chev" :text "")
+		(xworkspaces)
+		(label :class "chev" :text "")
+	)
+	(box	:orientation "v"
+			:space-evenly false
+			:valign "end"
+		(updates)
+	)
+))
+

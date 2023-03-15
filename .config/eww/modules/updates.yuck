@@ -1,0 +1,18 @@
+(defwidget updates []
+    (box :orientation "v"
+        :space-evenly true
+    
+        (label  :class "toolbar2" :text "ﲐ")
+        (button :class "ws" 
+                :onclick "alacritty -e ~/bin/showupdates"
+                :class "toolbar"
+                :halign "start"
+            update_no
+        )
+    )
+)
+
+(defpoll update_no
+    :interval "60s"
+    :initial "0"
+`checkupdates | wc -l | sed 's/$/ /'`)

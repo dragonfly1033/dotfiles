@@ -57,11 +57,15 @@ awful.rules.rules = {
       properties = { titlebars_enabled = false, size_hints_honor = false }
     },
 
+    { rule_any = {class = { "popterm" }},
+      properties = { floating = true, placement = awful.placement.centered }
+    },
+
     { rule_any = {class = { "firefox" }},
       properties = { floating = false, maximized = false }
     },
 
-    { rule = {class = "Polybar"},
+    { rule_any = {class = {"Polybar", "eww-bar"}},
       properties = {
       	border_width = 0,
       	floating = true,

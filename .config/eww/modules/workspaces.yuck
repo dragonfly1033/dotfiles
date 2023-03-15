@@ -1,0 +1,8 @@
+(defwidget xworkspaces []
+    (literal :content xwork)    
+)
+
+(defpoll xwork
+	:interval "100ms"
+	:initial ""
+`./scripts/xworkspaces.sh`)

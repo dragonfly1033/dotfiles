@@ -10,6 +10,8 @@ modkey = "Mod4"
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty"
+popterm = "alacritty --class popterm"
+file_manager = "pcmanfm"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -50,6 +52,10 @@ globalkeys = gears.table.join(
     -- Standard program
     awful.key({ ALT,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
+    awful.key({ ALT,  "Shift"  }, "Return", function () awful.spawn(popterm) end,
+              {description = "open a floating terminal", group = "launcher"}),
+    awful.key({ ALT,           }, "e", function () awful.spawn(file_manager) end,
+              {description = "open file manager", group = "launcher"}),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Control"   }, "q", awesome.quit,
