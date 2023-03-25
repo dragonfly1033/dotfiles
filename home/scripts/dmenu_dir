@@ -11,9 +11,12 @@ ddmenu=$HOME/scripts/dmenu
 go=true
 
 while $go; do
-	OPT=$(find "$DIR" -maxdepth 1 -printf "%f\n" | sed 1d)
-	CHO=$($ddmenu "$OPT" "Select:")
-	if [ ! -d $DIR/$CHO ]; then
+	OPT=$(ls -1 "$DIR")
+	CHO=$($ddmenu ".\n$OPT" "Select:")
+	if [ $CHO == "." ]; then
+		go=false
+		END=$DIR
+	elif [ ! -d $DIR/$CHO ]; then
 		go=false
 		END=$DIR/$CHO
 	elif [ -z $CHO ]; then

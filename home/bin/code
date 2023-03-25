@@ -1,0 +1,9 @@
+#!/bin/sh
+
+ddmenu_dir=~/scripts/dmenu_dir
+
+CONF=$($ddmenu_dir ~/Documents/Python)
+if [ $CONF != 'NONE' ]; then 
+	vscodium "$CONF" 
+fi	
+

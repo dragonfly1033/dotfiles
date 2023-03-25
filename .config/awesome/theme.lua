@@ -30,8 +30,8 @@ theme.fg_minimize   = "#ffffff"
 theme.gap_single_client = false
 theme.useless_gap   = dpi(8)
 theme.border_width  = dpi(2)
-theme.border_normal = "#15121f"
-theme.border_focus = "#d7deec"
+theme.border_normal = "#071C33"
+theme.border_focus = "#FDE17F"
 theme.border_marked = "#ff0000"
 
 -- There are other variable sets
@@ -47,9 +47,9 @@ theme.border_marked = "#ff0000"
 -- Example:
 --theme.taglist_bg_focus = "#ff0000"
 
-theme.hotkeys_modifiers_fg = "#d7deec"
-theme.hotkeys_fg = "#d7deec"
-theme.hotkeys_bg = "#15121f"
+theme.hotkeys_modifiers_fg = "#FBEFD8"
+theme.hotkeys_fg = "#FBEFD8"
+theme.hotkeys_bg = "#071C33"
 theme.hotkeys_font = "Fira Code 14"
 theme.hotkeys_description_font = "Fira Code 11"
 

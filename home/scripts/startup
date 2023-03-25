@@ -1,4 +1,4 @@
-#!/bin/bash
+s#!/bin/bash
 
 function run {
 	echo 'TESTING-------------------------' $@
@@ -15,9 +15,10 @@ sudo chmod g+w /sys/class/backlight/amdgpu_bl0/brightness
 numlockx on
 $HOME/scripts/set_temp_sensor
 
-run picom --no-vsync --experimental-backend
+run picom --no-vsync --experimental-backends
 run ~/.fehbg
 run polybar -r top
 run mpris-proxy 
 run volctl 
-run xbindkeys -f "$XDG_CONFIG_HOME/xbindkeys/config"
+run xbindkeys
+run /usr/lib/mate-polkit/polkit-mate-authentication-agent-1

@@ -118,7 +118,10 @@ clientkeys = gears.table.join(
               
     awful.key({ ALT,  }, "f",  awful.client.floating.toggle       ,
               {description = "toggle floating", group = "client"}),
-              
+
+    awful.key({ ALT, "Shift" }, "m",  function (c) c.maximised = not c.maximised end,
+              {description = "toggle maximised", group = "client"}),          
+
     awful.key({ ALT, }, "m", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),            
               
@@ -126,7 +129,7 @@ clientkeys = gears.table.join(
               {description = "toggle pin", group = "client"}),
 
     awful.key({ ALT,           }, "F11", function (c) c.fullscreen = not c.fullscreen end,
-              {description = "toggle fullscreen", group = "tag"})
+              {description = "toggle fullscreen", group = "client"})
 
 )
 

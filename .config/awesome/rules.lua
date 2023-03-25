@@ -65,6 +65,10 @@ awful.rules.rules = {
       properties = { floating = false, maximized = false }
     },
 
+    { rule_any = {class = { "sayonara" }},
+      properties = { floating = true, sticky = true, ontop = true, width = 271, height = 736, honor_padding = false, placement = awful.placement.bottom_right }
+    },
+
     { rule_any = {class = {"Polybar", "eww-bar"}},
       properties = {
       	border_width = 0,

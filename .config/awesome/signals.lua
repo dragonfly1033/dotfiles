@@ -92,6 +92,7 @@ client.connect_signal("property::floating", set_border)
 client.connect_signal("request::activate", set_border)
 
 client.connect_signal("property:minimized", function(c) c.minimized = false end)
+client.connect_signal("property:maximised", function(c) c.maximised = false end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}

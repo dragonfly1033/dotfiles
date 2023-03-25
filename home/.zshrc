@@ -25,7 +25,6 @@ export GTK2_RC_FILES=$XDG_CONFIG_HOME/gtk-2.0/gtkrc
 export PYTHONSTARTUP=$XDG_CONFIG_HOME/python/pythonrc
 export LESSHIST=$XDG_STATE_HOME/less/history
 export XDG_CONFIG_HOME=$HOME/.config
-alias xbindkeys='xbindkeys -f $XDG_CONFIG_HOME/xbindkeys/config'
 
 export HISTFILE=$XDG_STATE_HOME/zsh/history
 export HISTSIZE=10000
@@ -54,6 +53,23 @@ export BROWSER="firefox"
 alias home="cd /mnt/c/Users/shrey"
 alias sv="cd $HOME/Documents/supervisions"
 
+project () {
+	ls -1 $HOME/Documents/Python | nl -w2 -s') '
+	
+	num=$(ls -1 $HOME/Documents/Python | wc -l)
+
+	echo -n "Project: "
+	read selection
+	echo ""
+	
+	if [[ $selection -gt $num || $selection -lt 1 ]]; then
+		echo "Invalid Option"
+	else
+		proj=$(\ls -1 $HOME/Documents/Python | nl -w2 -s') ' | grep "$selection)" | awk -F' ' '{print $2}')
+		cd $HOME/Documents/Python/$proj
+	fi
+}
+
 alias ls='exa --icons'
 alias la='exa -lahg --icons'
 alias nano='micro'
@@ -75,5 +91,7 @@ alias m='micro'
 alias suod='sudo'
 alias sd='sudo systemctl'
 alias todo='micro $HOME/Desktop/todo.md'
+alias temp='micro $HOME/Desktop/temp'
 alias df='df -h'
 alias du='du -sh'
+alias vlc='celluloid'
