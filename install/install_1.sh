@@ -11,7 +11,7 @@ echo "Installing base system..."
 pacman -S --noconfirm --needed micro sudo grub efibootmgr dosfstools os-prober mtools > /dev/null
 
 if [ $system = 'h' ]; then
-    pacman -S --noconfirm --needed ntfs-3g
+    pacman -S --noconfirm --needed ntfs-3g > /dev/null
 elif [ $system = 'v' ]; then
     echo "Installed VMware tools"
     pacman -S --noconfirm --needed open-vm-tools > /dev/null
