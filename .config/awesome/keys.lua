@@ -56,7 +56,10 @@ globalkeys = gears.table.join(
               {description = "open a floating terminal", group = "launcher"}),
     awful.key({ ALT,           }, "e", function () awful.spawn(file_manager) end,
               {description = "open file manager", group = "launcher"}),
-    awful.key({ modkey, "Control" }, "r", awesome.restart,
+    awful.key({ ALT,           }, "c", function () awful.spawn("snippets") end,
+              {description = "snippets prompt", group = "launcher"}),
+              
+    awful.key({ modkey, "Control" }, "r", function () awful.spawn("awesome_restart") end,
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Control"   }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),

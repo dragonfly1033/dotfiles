@@ -1,0 +1,13 @@
+(defwidget toggle [texton textoff funcon funcoff]
+    (eventbox :class "eventbox"
+        :onclick {check ? "eww update check=false" : "eww update check=true"}
+        (checkbox :class "checkbox-toggle"
+                :onchecked funcon
+                :onunchecked funcoff
+                :width 10
+                :height 30
+        {check ? texton : textoff})
+    )
+)
+
+(defvar check false)

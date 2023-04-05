@@ -1,13 +1,15 @@
 #!/bin/sh
 
-LIST=$(ls -1 $HOME/.config/themes_safe)
+themes=$HOME/.config/themes_safe
+
+LIST=$(ls -1 $themes)
 THEME=$(echo "random"$'\n'"$LIST" | rofi -dmenu -i -p " Theme:  ")
 if [[ -n $THEME ]]; then
 	if [[ $THEME = "random" ]]; then
-		rnd=$(ls -1 $HOME/.config/themes_safe | shuf -n 1)
+		rnd=$(ls -1 $themes | shuf -n 1)
 		echo $rnd
-		$HOME/scripts/theme $rnd
+		$HOME/bin/theme $rnd
 	else
-		$HOME/scripts/theme $THEME
+		$HOME/bin/theme $THEME
 	fi
 fi

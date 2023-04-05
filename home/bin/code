@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ddmenu_dir=~/scripts/dmenu_dir
+ddmenu_dir=~/bin/dmenu_dir
 
 CONF=$($ddmenu_dir ~/Documents/Python)
 if [ $CONF != 'NONE' ]; then 

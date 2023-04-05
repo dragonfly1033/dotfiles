@@ -1,0 +1,16 @@
+#!/bin/sh
+
+tag=$(awesome-client '
+local awful = require("awful")
+return awful.screen.focused().selected_tag.name
+')
+tag=$(echo $tag | cut -d ' ' -f 2 | sed -e 's/"//g')
+
+awesome-client 'awesome.restart()'
+
+sleep 0.2 &&
+
+awesome-client '
+local awful = require("awful")
+awful.tag.find_by_name(awful.screen.focused(), "'"$tag"'"):view_only()
+'

@@ -89,8 +89,8 @@ fi
 echo "-------------------------------------------"
 echo "Change ownership of dotfiles"
 
-chown -R $username /root/dotfiles
-chgrp -R $username /root/dotfiles
+chown -R $username /dotfiles
+chgrp -R $username /dotfiles
 
 echo "-------------------------------------------"
 echo "NOW RUN THESE:"

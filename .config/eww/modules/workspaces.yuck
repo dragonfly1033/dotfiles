@@ -5,4 +5,4 @@
 (defpoll xwork
 	:interval "100ms"
 	:initial ""
-`./scripts/xworkspaces.sh`)
+`./bin/xworkspaces.sh`)

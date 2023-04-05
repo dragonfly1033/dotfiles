@@ -1,3 +1,6 @@
+export PF_INFO="ascii title os kernel pkgs palette"
+# pfetch
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -44,36 +47,26 @@ bindkey '\e[B' history-search-forward
 bindkey  "^[[H"   beginning-of-line
 bindkey  "^[[F"   end-of-line
 bindkey  "^[[3~"  delete-char
+bindkey  "^[[1;5D"  vi-backward-blank-word
+bindkey  "^[[1;5C"  vi-forward-blank-word
+bindkey  "^H"  backward-delete-word
+bindkey  "^[[3;5~"  delete-word
+bindkey  "^[[1;5H"  backward-kill-line
+bindkey  "^[[1;5F"  kill-line
 
 export PATH="$HOME/bin:$PATH"
 export EDITOR="micro"
+export PAGER="less"
 export TERMINAL="alacritty"
 export BROWSER="firefox"
 
 alias home="cd /mnt/c/Users/shrey"
 alias sv="cd $HOME/Documents/supervisions"
 
-project () {
-	ls -1 $HOME/Documents/Python | nl -w2 -s') '
-	
-	num=$(ls -1 $HOME/Documents/Python | wc -l)
-
-	echo -n "Project: "
-	read selection
-	echo ""
-	
-	if [[ $selection -gt $num || $selection -lt 1 ]]; then
-		echo "Invalid Option"
-	else
-		proj=$(\ls -1 $HOME/Documents/Python | nl -w2 -s') ' | grep "$selection)" | awk -F' ' '{print $2}')
-		cd $HOME/Documents/Python/$proj
-	fi
-}
-
 alias ls='exa --icons'
 alias la='exa -lahg --icons'
 alias nano='micro'
-alias tree='tree -a -I .git -I .cache -I .mozilla -I .local -I backups -I pulse'
+alias tree='tree -a -I .git -I .cache -I .mozilla -I .local -I backups -I pulse -I .vscode-oss -I VSCodium'
 alias grep='grep --color=auto'
 alias update='sudo pacman -Syu'
 alias install='sudo pacman -S'
@@ -83,10 +76,11 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
 alias feh='feh -F --slideshow-delay 3 -z'
+alias wall='feh --no-fehbg --bg-scale'
 alias pdf='firefox -P Main --new-window'
 alias windows='sudo mount /dev/nvme0n1p3 /mnt/c'
 alias unwindows='sudo umount /dev/nvme0n1p3'
-alias rc='micro ~/.zshrc'
+alias rc='micro ~/.zshrc && source ~/.zshrc'
 alias m='micro'
 alias suod='sudo'
 alias sd='sudo systemctl'
@@ -95,3 +89,8 @@ alias temp='micro $HOME/Desktop/temp'
 alias df='df -h'
 alias du='du -sh'
 alias vlc='celluloid'
+alias gcl='git clone'
+alias ga='git add'
+alias gc='git commit -m'
+alias gch='git checkout'
+

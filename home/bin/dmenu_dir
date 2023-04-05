@@ -7,7 +7,7 @@ if [ -z $DIR ]; then
 	exit
 fi
 
-ddmenu=$HOME/scripts/dmenu
+ddmenu=$HOME/bin/dmenu
 go=true
 
 while $go; do

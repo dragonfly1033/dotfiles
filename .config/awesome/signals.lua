@@ -73,7 +73,9 @@ local function set_shape(c)
 	if c.class == nil then return end
 	if not (polybarTest(c) or ewwTest(c)) then
 		if c.sticky == true then
-			c.shape = function (cr) gears.shape.infobubble(cr, c.width, c.height, 0, 20, 0) end
+			-- c.shape = function (cr) gears.shape.infobubble(cr, c.width, c.height, 0, 20, 0) end
+			-- c.shape = function (cr) gears.shape.partially_rounded_rect(cr, c.width, c.height, false, true, true, true, 10) end
+			c.shape = function (cr) gears.shape.octogon(cr, c.width, c.height, 30) end
 		elseif c.floating == true then
 			c.shape = function (cr) gears.shape.rounded_rect(cr, c.width, c.height, 10) end
 		else

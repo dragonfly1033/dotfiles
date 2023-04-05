@@ -5,7 +5,7 @@ local awful = require("awful")
 local ret = ""
 for i, v in ipairs(awful.screen.focused().tags)
 do
-local swi = "./scripts/switch.sh "..tostring(i)
+local swi = "./bin/switch.sh "..tostring(i)
 if v == awful.screen.focused().selected_tag then ret = ret .. "(button :class \"ws\" :onclick \"" .. swi .."\" \"\")"
 elseif #v:clients() >= 1 then ret = ret .. "(button :class \"ws\" :onclick \"" .. swi .."\" \"綠\")"
 else ret = ret .. "(button :class \"ws\" :onclick \"" .. swi .."\" \"祿\")"

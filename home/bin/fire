@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ddmenu=~/scripts/dmenu
+ddmenu=~/bin/dmenu
 PROF=$($ddmenu "Main\nPolitics\nAnime\nIncog\nPriv" "Config:")
 
 if [ $PROF == 'Main' ]; then

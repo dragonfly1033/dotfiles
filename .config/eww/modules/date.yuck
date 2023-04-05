@@ -26,20 +26,20 @@
     (defpoll date1
         :interval "500ms"
         :initial ""
-    `./scripts/date.sh 1`)
+    `./bin/date.sh 1`)
     (defpoll date2
         :interval "500ms"
         :initial ""
-    `./scripts/date.sh 2`)
+    `./bin/date.sh 2`)
     (defpoll date3
         :interval "500ms"
         :initial ""
-    `./scripts/date.sh 3`)
+    `./bin/date.sh 3`)
     (defpoll date4
         :interval "500ms"
         :initial ""
-    `./scripts/date.sh 4`)
+    `./bin/date.sh 4`)
     (defpoll date5
         :interval "500ms"
         :initial ""
-    `./scripts/date.sh 5`)
+    `./bin/date.sh 5`)

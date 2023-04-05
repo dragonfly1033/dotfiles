@@ -1,0 +1,22 @@
+#!/bin/sh
+
+dmenu=$HOME/bin/dmenu
+
+wiki=$($dmenu "awesome\narch" "Enter: ")
+
+if [ $wiki == "awesome" ]; then
+	sub=$($dmenu "screen\nclient\ntag\nshape" "Enter: ")
+	if [ $sub == "screen" ]; then
+		firefox -P "Main" "https://awesomewm.org/doc/api/classes/screen.html"
+	elif [ $sub == "client" ]; then
+		firefox -P "Main" "https://awesomewm.org/doc/api/classes/client.html"
+	elif [ $sub == "tag" ]; then
+		firefox -P "Main" "https://awesomewm.org/doc/api/classes/tag.html"
+	elif [ $sub == "shape" ]; then
+		firefox -P "Main" "https://awesomewm.org/doc/api/libraries/gears.shape.html"
+	fi
+elif [ $wiki == "arch" ]; then
+	search=$($dmenu "" "Search: ")
+	firefox -P "Main" "https://wiki.archlinux.org/index.php?search=$search"
+fi
+

@@ -3,13 +3,13 @@
 theme=$1
 
 if [ -z $theme ]; then
-	theme=$(cat $HOME/scripts/.script_env/THEME)
+	theme=$(cat $HOME/bin/.env/THEME)
 else
-	echo $theme > $HOME/scripts/.script_env/THEME
+	echo $theme > $HOME/bin/.env/THEME
 fi
 
 path="${HOME}/.config/themes/${theme}"
-sed_var=${HOME}/scripts/sed_var
+sed_var=${HOME}/bin/sed_var
 
 newaccent=$(awk '{print $1}' "${path}")
 newaccent2=$(awk '{print $2}' "${path}")
@@ -36,4 +36,4 @@ $sed_var "text-color: " "#$newtext;" $HOME/.config/rofi/theme.rasi
 
 $sed_var "name=" "\"$theme\"" $HOME/.fehbg
 
-echo "awesome.restart()" | awesome-client
+$HOME/bin/awesome_restart

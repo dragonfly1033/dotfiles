@@ -1,6 +1,6 @@
 #!/bin/sh
 
-checkupdates | awk -F'[ -]' '{print $1}' | uniq
+checkupdates | awk -F'[ -]' '{print $1}' | uniq -c
 txt=$(checkupdates | awk -F'[ -]' '{print $1}' | uniq)
 
 read -p "Update (y/n)? " ans

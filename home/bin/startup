@@ -13,7 +13,7 @@ setxkbmap gb
 sudo chgrp video /sys/class/backlight/amdgpu_bl0/brightness
 sudo chmod g+w /sys/class/backlight/amdgpu_bl0/brightness
 numlockx on
-$HOME/scripts/set_temp_sensor
+$HOME/bin/set_temp_sensor
 
 run picom --no-vsync --experimental-backends
 run ~/.fehbg

@@ -1,35 +1,20 @@
-(include "./modules/workspaces.yuck")
-(include "./modules/date.yuck")
-(include "./modules/layout.yuck")
-(include "./modules/updates.yuck")
+(include "./modules/toggle.yuck")
 
-(defwindow	bar
+(defwindow	settings
 	:monitor 0
-	:geometry (geometry	:x "0px"
-						:y "0px"
-						:width "24px"
-						:height "1080px"
+	:geometry (geometry	:x "0%"
+						:y "0%"
+						:width "30%"
+						:height "30%"
 						:anchor "bottom left")
 	:stacking "fg"
-	:reserve (struts :distance "24px" :side "left")
-(centerbox	:orientation "v"
-	(box	:orientation "v"
-			:space-evenly false
-			:valign "start"	
-		(layout)
-		(date)
+	; :reserve (struts :distance "24px" :side "left")
+	
+	(toggle :class "toggle"
+			:texton "on" 
+			:textoff "off" 
+			:funcon "notify-send on"
+			:funcoff "notify-send off"
 	)
-	(box	:orientation "v"
-			:space-evenly false
-			:valign "center"
-		(label :class "chev" :text "")
-		(xworkspaces)
-		(label :class "chev" :text "")
-	)
-	(box	:orientation "v"
-			:space-evenly false
-			:valign "end"
-		(updates)
-	)
-))
+)
 

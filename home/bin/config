@@ -1,7 +1,7 @@
 #!/bin/sh
 
-ddmenu_dir=~/scripts/dmenu_dir
-ddmenu=~/scripts/dmenu
+ddmenu_dir=~/bin/dmenu_dir
+ddmenu=~/bin/dmenu
 
 ORIG=$($ddmenu "configs\nscripts\nbin" "Config:")
 if [ $ORIG == 'configs' ]; then
@@ -10,7 +10,7 @@ if [ $ORIG == 'configs' ]; then
 		alacritty -e micro "$CONF" 
 	fi	
 elif [ $ORIG == 'scripts' ]; then
-	CONF=$($ddmenu_dir ~/scripts)
+	CONF=$($ddmenu_dir ~/bin)
 	if [ $CONF != 'NONE' ]; then 
 		alacritty -e micro "$CONF" 
 	fi
