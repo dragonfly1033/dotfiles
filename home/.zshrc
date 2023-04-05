@@ -93,4 +93,4 @@ alias gcl='git clone'
 alias ga='git add'
 alias gc='git commit -m'
 alias gch='git checkout'
-
+alias gpom='git push origin master'
