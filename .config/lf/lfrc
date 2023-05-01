@@ -21,7 +21,10 @@ set ifs "\n"
 set scrolloff 10
 
 # Use the `dim` attribute instead of underline for the cursor in the preview pane
-set cursorpreviewfmt "\033[7;2m"
+# set cursorpreviewfmt "\033[7;2m"
+
+set previewer ~/.config/lf/preview
+set cleaner ~/.config/lf/cleaner
 
 map <c-u>
 map <c-b>
@@ -76,7 +79,8 @@ map O $mimeopen --ask $f
 cmd open &{{
     case $(file --mime-type -Lb $f) in
         text/*) lf -remote "send $id \$$PAGER \$fx";;
-        *) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
+        *) done ;;
+        # *) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
     esac
 }}
 

@@ -9,7 +9,7 @@ if [ $ans = "y" ]; then
 	sudo pacman -Syu
 
 	if [[ $txt =~ "grub" ]]; then
-		$HOME/bin/reinstall-grub
+		sudo $HOME/bin/reinstall-grub
 		read nil
 	fi
 fi

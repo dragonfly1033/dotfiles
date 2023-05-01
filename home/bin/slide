@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ -z $2 ]; then
+	delay=6
+else
+	delay=$2
+fi
+
+feh -F --slideshow-delay $delay -z $1
+

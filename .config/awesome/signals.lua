@@ -77,7 +77,8 @@ local function set_shape(c)
 			-- c.shape = function (cr) gears.shape.partially_rounded_rect(cr, c.width, c.height, false, true, true, true, 10) end
 			c.shape = function (cr) gears.shape.octogon(cr, c.width, c.height, 30) end
 		elseif c.floating == true then
-			c.shape = function (cr) gears.shape.rounded_rect(cr, c.width, c.height, 10) end
+			-- c.shape = function (cr) gears.shape.rounded_rect(cr, c.width, c.height, 10) end
+			c.shape = function (cr) gears.shape.rectangle(cr, c.width, c.height) end
 		else
 			c.shape = function (cr) gears.shape.rectangle(cr, c.width, c.height) end
 		end

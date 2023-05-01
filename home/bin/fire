@@ -1,10 +1,12 @@
 #!/bin/sh
 
 ddmenu=~/bin/dmenu
-PROF=$($ddmenu "Main\nPolitics\nAnime\nIncog\nPriv" "Config:")
+PROF=$($ddmenu "Main\nChill\nPolitics\nAnime\nIncog\nPriv" "Config:")
 
 if [ $PROF == 'Main' ]; then
 	firefox -P Main
+elif [ $PROF == 'Chill' ]; then
+	firefox -P Chill
 elif [ $PROF == 'Politics' ]; then
 	firefox -P Pol
 elif [ $PROF == 'Anime' ]; then

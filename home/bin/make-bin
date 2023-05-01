@@ -1,0 +1,10 @@
+#!/bin/sh
+
+name=$1
+
+echo "#!/bin/sh" > $HOME/bin/$name
+echo "" >> $HOME/bin/$name
+echo "" >> $HOME/bin/$name
+echo "" >> $HOME/bin/$name
+chmod +x $HOME/bin/$name
+$EDITOR $HOME/bin/$name 

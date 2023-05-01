@@ -1,0 +1,12 @@
+#!/bin/sh
+
+pending=$HOME/bin/pending
+
+name=$1
+command=${@:2}
+
+$pending add $name > /dev/null
+notify-send -t 5000 "$name" "has started" 
+eval $command 
+$pending remove $name > /dev/null
+notify-send -t 5000 "$name" "has ended" 

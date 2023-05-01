@@ -73,6 +73,7 @@ awful.rules.rules = {
       properties = {
       	border_width = 0,
       	floating = true,
+      	tag = "WWW"
       }
     	
     },

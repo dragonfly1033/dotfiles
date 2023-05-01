@@ -56,7 +56,9 @@ globalkeys = gears.table.join(
               {description = "open a floating terminal", group = "launcher"}),
     awful.key({ ALT,           }, "e", function () awful.spawn(file_manager) end,
               {description = "open file manager", group = "launcher"}),
-    awful.key({ ALT,           }, "c", function () awful.spawn("snippets") end,
+    awful.key({ ALT,           }, "c", function () awful.spawn(popterm.." -e calc") end,
+              {description = "open calculator", group = "launcher"}),
+    awful.key({ ALT,           }, "v", function () awful.spawn("snippets") end,
               {description = "snippets prompt", group = "launcher"}),
               
     awful.key({ modkey, "Control" }, "r", function () awful.spawn("awesome_restart") end,
@@ -132,7 +134,21 @@ clientkeys = gears.table.join(
               {description = "toggle pin", group = "client"}),
 
     awful.key({ ALT,           }, "F11", function (c) c.fullscreen = not c.fullscreen end,
-              {description = "toggle fullscreen", group = "client"})
+              {description = "toggle fullscreen", group = "client"}),
+
+	awful.key({ ALT,           }, "`", 
+				function (c)  
+					local screen = awful.screen.focused()
+					local tags = screen.tags
+					local tag = screen.selected_tag.index
+					for i=tag+1,#tags do
+						if #tags[i]:clients() == 0 then
+							c:move_to_tag(tags[i])
+							return
+						end
+					end
+				end,
+              {description = "move client to next free tag", group = "client"})
 
 )
 

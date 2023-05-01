@@ -1,15 +1,15 @@
 #!/bin/sh
 
-themes=$HOME/.config/themes_safe
+source $HOME/bin/.env/THEME_META
 
-LIST=$(ls -1 $themes)
+LIST=$(python $HOME/bin/theme_meta $safe $light)
 THEME=$(echo "random"$'\n'"$LIST" | rofi -dmenu -i -p " Theme:  ")
 if [[ -n $THEME ]]; then
 	if [[ $THEME = "random" ]]; then
-		rnd=$(ls -1 $themes | shuf -n 1)
+		rnd=$(python $HOME/bin/theme_meta $safe $light | shuf -n 1)
 		echo $rnd
-		$HOME/bin/theme $rnd
+		$HOME/bin/set_theme $rnd
 	else
-		$HOME/bin/theme $THEME
+		$HOME/bin/set_theme $THEME
 	fi
 fi

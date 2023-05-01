@@ -1,7 +1,0 @@
-#!/bin/sh
-
-delim=$1
-col=$2
-file=$3 || $(read)
-
-awk -F"$delim" 'BEGIN { ORS="\\n" }; {print $'"$col"'}' $file

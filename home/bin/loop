@@ -1,0 +1,12 @@
+#!/bin/sh
+
+num=$1
+command=${@:2}
+long=""
+
+for i in $(seq $(($num -1))); do
+	long="$long $command &"
+done
+long="$long $command"
+
+(trap 'kill 0' SIGINT; eval $long)

@@ -1,19 +1,24 @@
-s#!/bin/bash
+#!/bin/bash
 
 function run {
-	echo 'TESTING-------------------------' $@
+	echo 'TESTING-------------------------' $@ | tee -a /tmp/startup_log
   	if ! pgrep -f "$*" ; then
   		$@&
   	else
-	echo "EXISTS--------------------------"
+	echo "EXISTS--------------------------" | tee -a /tmp/startup_log
   	fi
 }
 
+echo "" > /tmp/startup_log
+
 setxkbmap gb
-sudo chgrp video /sys/class/backlight/amdgpu_bl0/brightness
-sudo chmod g+w /sys/class/backlight/amdgpu_bl0/brightness
+setxkbmap -query | grep layout | tee -a /tmp/startup_log
+
+ls -la /sys/class/backlight/amdgpu_bl0/brightness | awk '{print $1" "$4}' | tee -a /tmp/startup_log
+
 numlockx on
 $HOME/bin/set_temp_sensor
+$HOME/bin/time_brightness
 
 run picom --no-vsync --experimental-backends
 run ~/.fehbg
@@ -22,3 +27,5 @@ run mpris-proxy
 run volctl 
 run xbindkeys
 run /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
+
+# notify-send "Startup Succesful!" "$(cat /tmp/startup_log)"

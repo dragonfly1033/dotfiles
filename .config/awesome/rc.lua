@@ -97,5 +97,6 @@ awful.mouse.drag_to_tag.enabled = false
 -- awful.spawn.once("firefox -P Weeb", {tag = "ANI"})
 -- awful.spawn.once("firefox -P Pol",  {tag = "POL"})
 awful.spawn.once("firefox -P Main", {tag = "WWW"})
+-- awful.spawn.once("alacritty --class popterm --hold --command bat -p "..os.getenv("HOME").."/Desktop/todo.md", {tag = "WWW"})
 
-awful.spawn.with_shell("~/bin/startup")
+awful.spawn.with_shell(os.getenv("HOME").."/bin/startup")

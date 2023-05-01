@@ -1,0 +1,10 @@
+#!/bin/sh
+
+name=$1
+if [ -z $name ]; then
+	$EDITOR $HOME/Documents/notes/temp-$(date +"%y-%m-%d--%H:%M:%S")
+elif [ $name == "list" ]; then
+	ls $HOME/Documents/notes 	
+else
+	$EDITOR $HOME/Documents/notes/$name
+fi

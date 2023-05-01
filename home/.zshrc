@@ -62,30 +62,32 @@ export BROWSER="firefox"
 
 alias home="cd /mnt/c/Users/shrey"
 alias sv="cd $HOME/Documents/supervisions"
+alias music="cd $HOME/Documents/Sync/Music"
+alias pf="cd $HOME/Documents/Sync/PFiles"
 
-alias ls='exa --icons'
-alias la='exa -lahg --icons'
+alias ls='exa --group-directories-first --icons'
+alias la='exa --group-directories-first -lahg --icons'
 alias nano='micro'
 alias tree='tree -a -I .git -I .cache -I .mozilla -I .local -I backups -I pulse -I .vscode-oss -I VSCodium'
 alias grep='grep --color=auto'
+alias cat='bat -p'
 alias update='sudo pacman -Syu'
 alias install='sudo pacman -S'
 alias uninstall='sudo pacman -Rns'
-alias paint='krita'
+alias paint='pinta & disown'
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
-alias feh='feh -F --slideshow-delay 3 -z'
 alias wall='feh --no-fehbg --bg-scale'
-alias pdf='firefox -P Main --new-window'
+alias pdf='zathura'
 alias windows='sudo mount /dev/nvme0n1p3 /mnt/c'
 alias unwindows='sudo umount /dev/nvme0n1p3'
 alias rc='micro ~/.zshrc && source ~/.zshrc'
 alias m='micro'
 alias suod='sudo'
 alias sd='sudo systemctl'
-alias todo='micro $HOME/Desktop/todo.md'
-alias temp='micro $HOME/Desktop/temp'
+alias todo="$HOME/bin/note todo"
+alias temp="$HOME/bin/note temp"
 alias df='df -h'
 alias du='du -sh'
 alias vlc='celluloid'
@@ -94,3 +96,8 @@ alias ga='git add'
 alias gc='git commit -m'
 alias gch='git checkout'
 alias gpom='git push origin master'
+alias clip='xclip -selection clipboard'
+alias calc='bc -lq'
+alias bc='bc -lq'
+
+

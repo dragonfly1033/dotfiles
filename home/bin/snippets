@@ -1,10 +1,9 @@
 #!/bin/sh
 
-col=$HOME/bin/col
 dmenu=$HOME/bin/dmenu
 
-sel=$($dmenu $($col " " 1 $HOME/Documents/snippets) "Enter: ")
-exp=$(echo $(grep $sel $HOME/Documents/snippets) | $col " " 2 | sed -e 's:\\n$::')
+sel=$($dmenu "$(cat $HOME/Documents/snippets | cut -d' ' -f1)" "Enter: ")
+exp=$(grep $sel $HOME/Documents/snippets | cut -d' ' -f2)
 
 # echo $exp
 xdotool type "$exp"
