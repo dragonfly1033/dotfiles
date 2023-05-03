@@ -9,8 +9,10 @@ elif [[ "$NAME" == "\"magnifier\"" ]]; then
 	echo 'C'
 elif [[ "$NAME" == "\"dwindle\"" ]]; then
 	echo 'D'
-elif [[ "$NAME" == "\"fairv\"" ]]; then
+elif [[ "$NAME" == "\"fairv\"" ]] || [[ $NAME == "\"equalarea\"" ]]; then
 	echo 'E'
+elif [[ "$NAME" == "\"centered\"" ]]; then
+	echo 'F'
 else
 	echo "[]"
 fi

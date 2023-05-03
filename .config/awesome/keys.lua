@@ -54,6 +54,8 @@ globalkeys = gears.table.join(
               {description = "open a terminal", group = "launcher"}),
     awful.key({ ALT,  "Shift"  }, "Return", function () awful.spawn(popterm) end,
               {description = "open a floating terminal", group = "launcher"}),
+    awful.key({ ALT,  "Shift"  }, "m", function () awful.spawn("pragha -x") end,
+              {description = "Pragha popup", group = "launcher"}),
     awful.key({ ALT,           }, "e", function () awful.spawn(file_manager) end,
               {description = "open file manager", group = "launcher"}),
     awful.key({ ALT,           }, "c", function () awful.spawn(popterm.." -e calc") end,
@@ -118,9 +120,17 @@ globalkeys = gears.table.join(
 
 clientkeys = gears.table.join(
     
-    awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill() end,
-              {description = "close", group = "client"}),
+    awful.key({ modkey, "Shift"   }, "c",      function (c) 
+    												if c.class ~= "Pragha" then 
+    													c:kill() 
+    												else
+    													awful.spawn("pragha -x")
+    												end 
+    											end,
+              {description = "close (except scratchpads)", group = "client"}),
               
+    awful.key({ modkey, "Control", "Shift"   }, "c",      function (c) c:kill() end,
+              {description = "close", group = "client"}),          
     awful.key({ ALT,  }, "f",  awful.client.floating.toggle       ,
               {description = "toggle floating", group = "client"}),
 

@@ -23,3 +23,5 @@ mkdir Pictures
 ln -s .dotfiles/wallpapers Pictures/wallpapers
 ln -s .dotfiles/.config/* .config
 ln -s .dotfiles/home/* .
+
+git clone "https://github.com/BlingCorp/bling.git" "~/.config/awesome/bling"
