@@ -1,7 +1,8 @@
 #!/bin/sh
 
-hour=$(date | cut -d' ' -f4 | cut -d: -f1)
-if [ $hour -ge 23 ] || [ $hour -le 6 ]; then
+hour=$(date +"%H")
+
+elif [ $hour -ge 23 ] || [ $hour -le 6 ]; then
 	brightnessctl set 0%
 else
 	brightnessctl set 50%

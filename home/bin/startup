@@ -1,20 +1,17 @@
 #!/bin/bash
 
 function run {
-	echo 'TESTING-------------------------' $@ | tee -a /tmp/startup_log
+	echo 'TESTING-------------------------' $@
   	if ! pgrep -f "$*" ; then
   		$@&
   	else
-	echo "EXISTS--------------------------" | tee -a /tmp/startup_log
+	echo "EXISTS--------------------------" 
   	fi
 }
 
-echo "" > /tmp/startup_log
 
 setxkbmap gb
 setxkbmap -query | grep layout | tee -a /tmp/startup_log
-
-ls -la /sys/class/backlight/amdgpu_bl0/brightness | awk '{print $1" "$4}' | tee -a /tmp/startup_log
 
 numlockx on
 $HOME/bin/set_temp_sensor

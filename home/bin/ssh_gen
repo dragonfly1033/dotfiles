@@ -1,0 +1,21 @@
+#!/bin/sh
+
+name=$1
+email=$2
+
+if [ -z $name ] || [ -z $email ]; then
+	echo "provide name and email"
+	exit 1
+fi
+
+touch "$HOME/.ssh/$name"
+chmod 600 "$HOME/.ssh/$name"
+
+ssh-keygen -t ed25519 -C "$name""+""$email" -f "$HOME/.ssh/$name"
+eval "$(ssh-agent -s)"
+ssh-add "$HOME/.ssh/$name"
+
+echo "Host github.com-$name" >> $HOME/.ssh/config
+echo "        Hostname github.com" >> $HOME/.ssh/config
+echo "        IdentityFile=$HOME/.ssh/$name" >> $HOME/.ssh/config
+
