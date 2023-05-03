@@ -101,5 +101,4 @@ alias gpom='git push origin master'
 alias clip='xclip -selection clipboard'
 alias calc='bc -lq'
 alias bc='bc -lq'
-
-
+alias sudo='sudo EDITOR=micro '

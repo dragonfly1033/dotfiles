@@ -87,7 +87,14 @@ chmod +xr /usr/share/X11/xorg.conf.d/10-amdgpu.conf
 echo "-------------------------------------------"
 echo "Configure cron"
 
-crontab -u $username .dotfiles/files/cron
+sed -i "s/USER/$username/g" .dotfiles/files/cron/user
+sed -i "s/USER/$username/g" .dotfiles/files/cron/root
+
+echo "* * */1 * * /home/$username/bin/backup_cron" >> .dotfiles/files/cron/root
+
+crontab -u $username .dotfiles/files/cron/user
+crontab -u root .dotfiles/files/cron/root
+
 
 echo "-------------------------------------------"
 echo "Move fonts"

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cat /var/spool/cron/$USER > $HOME/.dotfiles/files/cron/user
+sed -i "s/$USER/USER/g" $HOME/.dotfiles/files/cron/user
+sudo cat /var/spool/cron/root > $HOME/.dotfiles/files/cron/root
+sed -i "s/$USER/USER/g" $HOME/.dotfiles/files/cron/root
+sed -i "/backup_cron/ d" $HOME/.dotfiles/files/cron/root
+

@@ -109,7 +109,7 @@ globalkeys = gears.table.join(
     														index=curIndex+1
     												}) 
     											end,
-              {description = "new tag", group = "layout"}),
+              {description = "new tag", group = "tag"}),
               
     awful.key({ modkey, "Shift"   }, "Tab", function () awful.layout.inc(-1)                end,
               {description = "select previous", group = "layout"}),
