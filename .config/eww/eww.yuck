@@ -1,20 +1,48 @@
-(include "./modules/toggle.yuck")
 
 (defwindow	settings
 	:monitor 0
 	:geometry (geometry	:x "0%"
 						:y "0%"
-						:width "30%"
+						:width "10px"
 						:height "30%"
 						:anchor "bottom left")
 	:stacking "fg"
 	; :reserve (struts :distance "24px" :side "left")
-	
-	(toggle :class "toggle"
-			:texton "on" 
-			:textoff "off" 
-			:funcon "notify-send on"
-			:funcoff "notify-send off"
+
+	(box :orientation "v"
+			:space-evenly false
+			:vexpand true
+			:hexpand true
+			:valign "start"
+			:spacing 1
+			
+		
+		(circular-progress :class "prog"
+				:value {EWW_BATTERY["BAT1"]["capacity"]}
+				:start-at 75
+				:thickness 2
+				:clockwise true
+				:style {
+					EWW_BATTERY["BAT1"]["status"] == "Charging" ? "color: #00dddd" : 
+						EWW_BATTERY["BAT1"]["capacity"] > 20 ? "color: #00dd00" : 
+							EWW_BATTERY["BAT1"]["capacity"] > 10 ? "color: #dd8800" : 
+								"color: #dd0000"
+					}
+			(label :class "slabel"
+				:text {EWW_BATTERY["BAT1"]["capacity"]}
+			)
+		)
+		(label :class "blabel"
+				:text {EWW_TEMPS["ACPITZ_TEMP1"]}
+				:style {
+					EWW_TEMPS["ACPITZ_TEMP1"] >= 50 ? "color: #ff0000" : ""
+				}
+		)
+		(label :class "mlabel"
+			:text "Wed  3  May"
+			:angle 90
+		)
 	)
 )
 
+(defvar perc 10)

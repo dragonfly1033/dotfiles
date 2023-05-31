@@ -1,3 +1,3 @@
 #!/bin/sh
 
-(bluetoothctl devices | cut -d' ' -f2 | xargs bluetoothctl info | grep "Connected: yes" > /dev/null) && echo '' || echo ''
+(bluetoothctl devices | grep "WH-CH510" | cut -d' ' -f2 | xargs bluetoothctl info | grep "Connected: yes" > /dev/null) && echo '' || echo ''

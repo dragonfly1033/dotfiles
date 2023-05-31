@@ -14,24 +14,30 @@ local themes_path = gfs.get_themes_dir()
 
 local theme = {}
 
+-- class names list of parents that should not be swallowed
+theme.parent_filter_list   = {"firefox", "Gimp", "Pcmanfm"}
+-- class names list that should not swallow their parents
+theme.child_filter_list    = {}
+-- whether the filters above should be active
+theme.swallowing_filter = true
+
 theme.font          = "Fira Code 12"
 
 theme.bg_normal     = "#222222"
 theme.bg_focus      = "#535d6c"
-theme.bg_urgent     = "#ff0000"
 theme.bg_minimize   = "#444444"
 theme.bg_systray    = theme.bg_normal
 
 theme.fg_normal     = "#aaaaaa"
 theme.fg_focus      = "#ffffff"
-theme.fg_urgent     = "#ffffff"
+theme.fg_urgent     = "#ff0000"
 theme.fg_minimize   = "#ffffff"
 
 theme.gap_single_client = false
 theme.useless_gap   = dpi(8)
 theme.border_width  = dpi(2)
-theme.border_normal = "#302d2e"
-theme.border_focus = "#ebd286"
+theme.border_normal = "#001A36"
+theme.border_focus = "#E17600"
 theme.border_marked = "#ff0000"
 
 -- There are other variable sets
@@ -47,11 +53,12 @@ theme.border_marked = "#ff0000"
 -- Example:
 --theme.taglist_bg_focus = "#ff0000"
 
-theme.hotkeys_modifiers_fg = "#fae3cf"
-theme.hotkeys_fg = "#fae3cf"
-theme.hotkeys_bg = "#302d2e"
+theme.hotkeys_modifiers_fg = "#D7E1D8"
+theme.hotkeys_fg = "#D7E1D8"
+theme.hotkeys_bg = "#001A36"
 theme.hotkeys_font = "Fira Code 14"
 theme.hotkeys_description_font = "Fira Code 11"
+theme.bg_urgent = "#001A36"
 
 naughty.config.icon_formats={
 "png",
@@ -77,7 +84,7 @@ naughty.config.icon_formats={
 -- notification_[width|height|margin]
 -- notification_[border_color|border_width|shape|opacity]
 
--- theme.notification_font = "Fira Code Bold 14"
+theme.notification_font = "Fira Code 14"
 theme.notification_bg = theme.hotkeys_bg
 theme.notification_fg = theme.hotkeys_fg
 -- theme.notification_width = dpi(400)

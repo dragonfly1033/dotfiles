@@ -2,6 +2,8 @@ local naughty = require("naughty")
 local wibox = require("wibox")
 local gears = require("gears")
 
+naughty.config.defaults["timeout"] = 10
+
 client.connect_signal("request::display", function(n) 
 	naughty.layout.box { 
 		notification = n,

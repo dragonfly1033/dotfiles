@@ -44,6 +44,13 @@ end
 
 beautiful.init("~/.config/awesome/theme.lua")
 
+naughty.config.presets.critical.timeout = 0
+-- naughty.config.presets.critical.fg = beautiful.fg_urgent
+-- naughty.config.presets.critical.bg = beautiful.bg_urgent
+naughty.config.presets.critical.fg = "#dddddd"
+naughty.config.presets.critical.bg = "#aa0000"
+
+
 local bling = require("bling")
 bling.module.window_swallowing.start()
 
@@ -100,7 +107,10 @@ awful.mouse.drag_to_tag.enabled = false
 
 -- awful.spawn.once("firefox -P Weeb", {tag = "ANI"})
 -- awful.spawn.once("firefox -P Pol",  {tag = "POL"})
+-- awful.spawn.once(osr.getenv("HOME").."/bin/theme random")
+
 awful.spawn.once("firefox -P Main", {tag = "WWW"})
+awful.spawn.once("a2ln --pairing-port 8028 --notification-port 8088")
 -- awful.spawn.once("alacritty --class popterm --hold --command bat -p "..os.getenv("HOME").."/Desktop/todo.md", {tag = "WWW"})
 
 awful.spawn.with_shell(os.getenv("HOME").."/bin/startup")

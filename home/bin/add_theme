@@ -1,17 +1,41 @@
-#!/bin/bash
+#!/bin/python
 
-echo -n "Enter Name: "
-read name
-echo -n "Enter Accent: "
-read accent
-echo -n "Enter Accent 2: "
-read accent2
-echo -n "Enter Background: "
-read bg
-echo -n "Enter Text: "
-read fg
-echo -n "Enter Text Dark: "
-read fgd
+import os
 
-touch $HOME/.config/themes/$name
-echo "$accent $accent2 $bg $fg $fgd" > $HOME/.config/themes/$name
+env = os.environ.get
+
+name = input("Enter Name: ").replace(' ', '_')
+wall = input("Enter Wallpaper URL: ")
+if wall:
+	from PIL import Image
+	from io import BytesIO
+	from requests import get
+	img = BytesIO(get(wall).content)
+	with open(f"{env('HOME')}/Pictures/wallpapers/{name}", "wb") as f:
+		f.write(img.getbuffer())
+else:
+	print("No Wallpaper Provided")
+
+opt = input("Theme Now(y,n)? ")
+
+if opt == 'y':
+    accent1 = input("Enter Accent 1: ").replace('#', '')
+    accent2 = input("Enter Accent 2: ").replace('#', '')
+    bg = input("Enter Background: ").replace('#', '')
+    fg = input("Enter Foreground: ").replace('#', '')
+    fgd = input("Enter Foreground Dark: ").replace('#', '')
+else:
+    accent1 = "bb0000"
+    accent2 = "00bb00"
+    bg = "444444"
+    fg = "bbbbbb"
+    fgd = "666666"
+    
+safe = input("Safe(0,1)? ")
+light = input("Light(0,1)? ")
+
+with open(f"{env('HOME')}/.config/themes/{name}", 'w') as f:
+	f.write(f"{accent1} {accent2} {bg} {fg} {fgd}")
+
+with open(f"{env('HOME')}/bin/.env/wall_meta.csv", 'a') as f:
+	f.write(f"{name},{safe},{light}\n")

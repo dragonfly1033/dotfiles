@@ -1,9 +1,10 @@
 #!/bin/sh
 
 hour=$(date +"%H")
+brightness=$HOME/bin/brightness
 
 elif [ $hour -ge 23 ] || [ $hour -le 6 ]; then
-	brightnessctl set 0%
+	$brightness set 0
 else
-	brightnessctl set 50%
+	$brightness set 75
 fi

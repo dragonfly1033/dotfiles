@@ -1,0 +1,26 @@
+#!/bin/python
+
+import sys
+import os
+import subprocess
+
+env = os.environ.get
+
+action = sys.argv[1]
+a = str(subprocess.check_output(["brightnessctl", "get"]))[2:-3]
+
+if action == "get":
+    print(a)
+elif action == "inc":
+    extra = sys.argv[2]
+    new = round(min((int(a)/255)**0.5 + int(extra)/100, 1)**2, 2) * 100
+    subprocess.run(["brightnessctl", "set", f"{new}%"])
+elif action == "dec":
+    extra = sys.argv[2]
+    new = round(max((int(a)/255)**0.5 - int(extra)/100, 0)**2, 2) * 100
+    subprocess.run(["brightnessctl", "set", f"{new}%"])
+elif action == "set":
+    extra = sys.argv[2]
+    new = round((int(extra)/100)**2, 2) * 100
+    subprocess.run(["brightnessctl", "set", f"{new}%"])
+

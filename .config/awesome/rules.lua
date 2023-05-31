@@ -57,7 +57,29 @@ awful.rules.rules = {
       properties = { titlebars_enabled = false, size_hints_honor = false }
     },
 
-    { rule_any = {class = { "popterm" }},
+    { rule_any = {class = { "popterm-large" }},
+      properties = { 
+      	floating = true, 
+		width = 1500,
+		height = 800,
+		x = 210,
+		y = 140,
+      	placement = awful.placement.centered
+      }
+    },
+
+    { rule_any = {class = { "popterm-medium" }},
+      properties = { 
+      	floating = true, 
+		width = 1000,
+		height = 600,
+		x = 460,
+		y = 240,
+      	placement = awful.placement.centered
+      }
+    },
+
+    { rule_any = {class = { "popterm-small" }},
       properties = { floating = true, placement = awful.placement.centered }
     },
 
@@ -73,6 +95,18 @@ awful.rules.rules = {
 		height = 981,
 		x = 500,
 		y = 44, 
+		honor_padding = false
+	  }
+    },
+
+    { rule_any = {class = { "Anki" }},
+	  properties = { 
+		floating = true,
+		ontop = true, 
+		width = 1080, 
+		height = 630,
+		x = 420,
+		y = 250, 
 		honor_padding = false
 	  }
     },

@@ -1,0 +1,27 @@
+#!/bin/python -i
+
+from math import sin, cos, tan, atan2, acos, asin, pi, tau, e, sqrt, ceil, floor
+from math import gcd, lcm, perm, exp, log, log2, log10, pow, hypot, degrees, radians, inf
+from math import factorial as fact
+from math import comb as choose
+
+import numpy as np
+
+import sys
+sys.ps1 = ""
+sys.ps2 = ""
+
+print("Calculator")
+
+def sign(a):
+	return 1 * (a > 0) -1 * (a < 0)
+
+def help():
+	print("e, pi, tau, inf")
+	print("sin, cos, tan, asin, acos, atan2")
+	print("degrees, radians, sqrt, ceil, floor")
+	print("pow, hypot, fact, sign, gcd, lcm")
+	print("perm, choose, exp, log, log2, log10")
+	print("numpy = np")
+
+

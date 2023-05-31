@@ -1,0 +1,44 @@
+#!/bin/sh
+
+find $HOME -type d -not -path "$HOME/.cache/*" \
+		  -a -not -path "$HOME/.gradle/*" \
+		  -a -not -path "$HOME/.config/BraveSoftware/*" \
+		  -a -not -path "$HOME/Documents/Java/*" \
+		  -a -not -path "$HOME/.m2/*" \
+		  -a -not -path "$HOME/.config/cache/*" \
+		  -a -not -path "$HOME/.mozilla/*" \
+		  -a -not -path "$HOME/.cargo/*" \
+		  -a -not -path "*/.git/*" \
+		  -a -not -path "$HOME/.rustup/*" \
+		  -a -not -path "$HOME/.i2p/*" \
+		  -a -not -path "*Cache*" \
+		  -a -not -path "*cache*" \
+		  -a -not -path "*session*" \
+		  -a -not -path "*Session*" \
+		  -a -not -path "$HOME/.config/JetBrains/*" \
+		  -a -not -path "$HOME/.gephi/*" \
+		  -a -not -path "$HOME/.lemminx/*" \
+		  -a -not -path "$HOME/.local/share/*" \
+		  -a -not -path "$HOME/.config/libreoffice/*" \
+		  -a -not -path "$HOME/.vscode-oss/*" \
+		  -a -not -path "$HOME/.local/lib/*" \
+		  -a -not -path "$HOME/.config/VSCodium/*" | fzf --cycle
+
+# #!/bin/sh
+# 
+# find -type d -path "./bin" \
+		  # -o -path "./bin/*" \
+		  # -o -path "./Desktop" \
+		  # -o -path "./Desktop/*" \
+		  # -o -path "./Documents" \
+		  # -o -path "./Documents/*" \
+		  # -o -path "./Downloads" \
+		  # -o -path "./Downloads/*" \
+		  # -o -path "./Pictures" \
+		  # -o -path "./Pictures/*" \
+		  # -o -path "./.config/alacritty" \
+		  # 
+		  # -o -path "./.config/VSCodium" | fzf
+
+
+

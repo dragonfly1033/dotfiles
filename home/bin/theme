@@ -2,14 +2,25 @@
 
 source $HOME/bin/.env/THEME_META
 
-LIST=$(python $HOME/bin/theme_meta $safe $light)
-THEME=$(echo "random"$'\n'"$LIST" | rofi -dmenu -i -p " Theme:  ")
+THEME=$1
+USE=$2
+
+if [[ -z $THEME ]]; then
+	LIST=$(python $HOME/bin/get_themes $safe $light)
+	THEME=$(echo "random"$'\n'"$LIST" | rofi -dmenu -i -p " Theme:  ")
+elif [[ $THEME == "random" ]]; then
+	THEME=$(python $HOME/bin/get_themes $safe $light | shuf -n 1)
+	$HOME/bin/set_theme $THEME $USE
+	exit 1
+fi
+
 if [[ -n $THEME ]]; then
-	if [[ $THEME = "random" ]]; then
-		rnd=$(python $HOME/bin/theme_meta $safe $light | shuf -n 1)
-		echo $rnd
-		$HOME/bin/set_theme $rnd
+	if [[ $THEME == "random" ]]; then
+		THEME=$($HOME/bin/dmenu "$(python $HOME/bin/get_themes $safe $light | shuf -n 5)" "Theme:  ")
+		if [[ -n $THEME ]]; then
+			$HOME/bin/set_theme $THEME $USE
+		fi
 	else
-		$HOME/bin/set_theme $THEME
+		$HOME/bin/set_theme $THEME $USE
 	fi
 fi

@@ -1,6 +1,7 @@
 local gears = require("gears")
 local awful = require("awful")
 local naughty = require("naughty")
+local spads = require("scratchpads")
 local hotkeys = require("awful.hotkeys_popup")
 local hotkeys_popup = hotkeys.widget.new(
 			{width=550, height=750})
@@ -10,7 +11,9 @@ modkey = "Mod4"
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty"
-popterm = "alacritty --class popterm"
+poptermS = "alacritty --class popterm-small"
+poptermM = "alacritty --class popterm-medium"
+poptermL = "alacritty --class popterm-large"
 file_manager = "pcmanfm"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
@@ -52,14 +55,18 @@ globalkeys = gears.table.join(
     -- Standard program
     awful.key({ ALT,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
-    awful.key({ ALT,  "Shift"  }, "Return", function () awful.spawn(popterm) end,
-              {description = "open a floating terminal", group = "launcher"}),
+              
+    awful.key({ ALT,  "Shift"  }, "Return", function () awful.spawn(poptermM) end,
+              {description = "open a floating terminal", group = "scratch"}),
     awful.key({ ALT,  "Shift"  }, "m", function () awful.spawn("pragha -x") end,
-              {description = "Pragha popup", group = "launcher"}),
+              {description = "Pragha popup", group = "scratch"}),
+    awful.key({ ALT,  "Shift"  }, "c", function () awful.spawn(poptermS.." --hold -e calc") end,
+              {description = "Calculator popup", group = "scratch"}),
+    awful.key({ ALT,  "Shift"   }, "h", function () awful.spawn(poptermL.." -e htop") end,
+              {description = "htop prompt", group = "scratch"}),
+              
     awful.key({ ALT,           }, "e", function () awful.spawn(file_manager) end,
               {description = "open file manager", group = "launcher"}),
-    awful.key({ ALT,           }, "c", function () awful.spawn(popterm.." -e calc") end,
-              {description = "open calculator", group = "launcher"}),
     awful.key({ ALT,           }, "v", function () awful.spawn("snippets") end,
               {description = "snippets prompt", group = "launcher"}),
               
@@ -121,7 +128,7 @@ globalkeys = gears.table.join(
 clientkeys = gears.table.join(
     
     awful.key({ modkey, "Shift"   }, "c",      function (c) 
-    												if c.class ~= "Pragha" then 
+    												if c.name ~= "Pragha Music Player" then 
     													c:kill() 
     												else
     													awful.spawn("pragha -x")

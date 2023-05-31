@@ -1,0 +1,30 @@
+#!/bin/python
+
+import os
+import sys
+import re
+
+env = os.environ.get
+
+def convert(optn):
+	return '.*' if optn == "2" else f'[{optn}2]'
+
+with open(f"{env('HOME')}/bin/.env/wall_meta.csv", "r") as f:
+	table = [i.replace('\n', '') for i in f.readlines()]
+
+heads = table[0].split(',')
+table = table[1:]
+if len(sys.argv) < len(heads):
+	print('Not enough args. Provide values (0, 1, 2 for either) for all of: \n    ', end='')
+	print(', '.join(heads[1:]))
+	quit()
+	
+safe = convert(sys.argv[1])
+light = convert(sys.argv[2])
+
+cond = re.compile(f'(.*),{safe},{light}')
+
+for theme in table:
+	out = cond.match(theme)
+	if out: print(out.group(1))
+

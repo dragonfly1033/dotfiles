@@ -25,5 +25,4 @@ run volctl
 run xbindkeys
 run /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
 run pragha -x
-
 # notify-send "Startup Succesful!" "$(cat /tmp/startup_log)"

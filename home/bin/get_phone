@@ -1,0 +1,4 @@
+#!/bin/sh
+
+(bluetoothctl devices | grep "Pixel 6a" | cut -d' ' -f2 | xargs bluetoothctl info | grep "Connected: yes" > /dev/null) && echo '' || echo ''
+# 

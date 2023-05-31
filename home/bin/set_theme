@@ -1,4 +1,4 @@
- #!/bin/bash
+#!/bin/sh
 
 theme=$1
 
@@ -20,6 +20,7 @@ newtextd=$(awk '{print $5}' "${path}")
 $sed_var "theme.border_focus = " "\"#$newaccent\"" $HOME/.config/awesome/theme.lua
 $sed_var "theme.border_normal = " "\"#$newback\"" $HOME/.config/awesome/theme.lua
 $sed_var "theme.hotkeys_bg = " "\"#$newback\"" $HOME/.config/awesome/theme.lua
+$sed_var "theme.bg_urgent = " "\"#$newback\"" $HOME/.config/awesome/theme.lua
 $sed_var "theme.hotkeys_modifiers_fg = " "\"#$newtext\"" $HOME/.config/awesome/theme.lua
 $sed_var "theme.hotkeys_fg = " "\"#$newtext\"" $HOME/.config/awesome/theme.lua
 
@@ -34,6 +35,20 @@ $sed_var "accent: " "#$newaccent;" $HOME/.config/rofi/theme.rasi
 $sed_var "background-color: " "#$newback;" $HOME/.config/rofi/theme.rasi
 $sed_var "text-color: " "#$newtext;" $HOME/.config/rofi/theme.rasi
 
+for i in $(ls -1d $HOME/.mozilla/firefox/*/ | sed '/firefox\/.*\..*\/$/ !d'); do
+	$sed_var "  --my-accent: " "#$newaccent;" "$i""chrome/resources/userChrome.css"
+	$sed_var "  --my-foreground: " "#$newtext;" "$i""chrome/resources/userChrome.css"
+	$sed_var "  --my-background: " "#$newback;" "$i""chrome/resources/userChrome.css"
+done
+
 $sed_var "name=" "\"$theme\"" $HOME/.fehbg
 
-$HOME/bin/awesome_restart
+use=$2
+
+if [[ "_$use" == "_" ]]; then
+	for i in $(xwininfo -tree -root | grep 'Navigator' | tr -d ' ' | cut -d'"' -f1); do
+		xdotool key --window "$i" --clearmodifiers "ctrl+h" &
+	done
+
+	$HOME/bin/awesome_restart
+fi

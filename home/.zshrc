@@ -1,6 +1,7 @@
 export PF_INFO="ascii title os kernel pkgs palette"
 # pfetch
 # colorscript -r
+cat ~/Desktop/schedule.csv | column --table -s',' | grep --color "$(date +'%a %d')\|$"
 
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
@@ -13,6 +14,7 @@ fi
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh/plugins/zsh-auto-notify/zsh-auto-notify.zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -42,6 +44,13 @@ setopt EXTENDED_HISTORY
 setopt cdablevars
 setopt cdsilent
 setopt autocd
+
+export AUTO_NOTIFY_THRESHOLD=20
+export AUTO_NOTIFY_TITLE="%command has finished"
+export AUTO_NOTIFY_BODY="%elapsed seconds | exit code %exit_code"
+export AUTO_NOTIFY_EXPIRE_TIME=10000
+AUTO_NOTIFY_IGNORE+=("micro" "m" "man" "less" "bat" "krita")
+
 
 bindkey '\e[A' history-search-backward
 bindkey '\e[B' history-search-forward
@@ -99,6 +108,9 @@ alias gc='git commit -m'
 alias gch='git checkout'
 alias gpom='git push origin master'
 alias clip='xclip -selection clipboard'
-alias calc='bc -lq'
 alias bc='bc -lq'
 alias sudo='sudo EDITOR=micro '
+alias gti='git'
+alias hist="history 1 -1 | cut -c 8- | sort -r | uniq | fzf | tr -d '\n' | clip"
+alias ytdap='yt-dlp -x --no-flat-playlist'
+

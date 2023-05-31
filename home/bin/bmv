@@ -1,0 +1,28 @@
+#!/bin/sh
+
+dirr=$1
+dest=$2
+
+if [ -z $dirr ]; then
+	dirr="."
+	dest=$1
+fi
+
+if [ -z $dest ]; then
+	echo "No destination"
+	exit 1
+fi
+
+list=$(ls $dirr | fzf --cycle -m | tr ' ' '\n')
+echo "Are you sure you want to move: "
+echo $list | tr ' ' '\n' | sed 's/^\(.*\)/\t\1/g'
+echo "to $dest"
+read -p "Confirm(y/n)? " conf
+
+if [ "_$conf" == "_y" ]; then
+	echo $list | tr ' ' '\n' | xargs -I{} mv "$dirr/{}" $dest
+else
+	echo "Aborted"
+fi
+
+
