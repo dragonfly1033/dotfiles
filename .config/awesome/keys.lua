@@ -165,7 +165,22 @@ clientkeys = gears.table.join(
 						end
 					end
 				end,
-              {description = "move client to next free tag", group = "client"})
+              {description = "move client to prev free tag", group = "client"}),
+
+	awful.key({ ALT,  "Shift"  }, "`", 
+				function (c)  
+					local screen = awful.screen.focused()
+					local tags = screen.tags
+					local tag = screen.selected_tag.index
+					for i=1,tag-1 do -- for first free
+					-- for i=tag-1,1,-1 do -- for prev free
+						if #tags[i]:clients() == 0 then
+							c:move_to_tag(tags[i])
+							return
+						end
+					end
+				end,
+              {description = "move client to first free tag", group = "client"})
 
 )
 

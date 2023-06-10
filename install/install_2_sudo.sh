@@ -85,6 +85,11 @@ cp .dotfiles/files/10-amdgpu.conf /usr/share/X11/xorg.conf.d
 chmod +xr /usr/share/X11/xorg.conf.d/10-amdgpu.conf
 
 echo "-------------------------------------------"
+echo "Moving files"
+
+cp .dotfiles/files/pfetch /usr/bin
+
+echo "-------------------------------------------"
 echo "Configure cron"
 
 sed -i "s/USER/$username/g" .dotfiles/files/cron/user

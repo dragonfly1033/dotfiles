@@ -1,7 +1,8 @@
 #!/bin/sh
 
 ddmenu=~/bin/dmenu
-PROF=$($ddmenu "Main\nChill\nPolitics\nAnime\nIncog\nPriv" "Config:")
+# PROF=$($ddmenu "Main\nChill\nPolitics\nAnime\nIncog\nPriv" "Profile:")
+PROF=$($ddmenu "Main\nPriv" "Profile:")
 
 if [ $PROF == 'Main' ]; then
 	firefox -P Main
