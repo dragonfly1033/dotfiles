@@ -1,8 +1,6 @@
 export PF_INFO="ascii title os kernel pkgs palette"
 # pfetch
 # colorscript -r
-cat ~/Desktop/schedule.csv | column --table -s',' | grep --color "$(date +'%a %d')\|$"
-
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -113,4 +111,4 @@ alias sudo='sudo EDITOR=micro '
 alias gti='git'
 alias hist="history 1 -1 | cut -c 8- | sort -r | uniq | fzf | tr -d '\n' | clip"
 alias ytdap='yt-dlp -x --no-flat-playlist'
-
+alias pyvenv='python -m venv venv && source ./venv/bin/activate'

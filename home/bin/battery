@@ -2,6 +2,7 @@
 
 battery=$(acpi | grep -v "unavailable" | awk -F", " '{ print $2 }' | tr -d '%')
 charging=$(acpi | grep -v "unavailable" | awk -F", " '{ print $1 }' | awk -F": " '{ print $2 }')
+full=$(acpi | grep -v "unavailable" | grep -e "Full")
 
 LOW_BATTERY_SENT=$(cat $HOME/bin/.env/LOW_BATTERY_SENT)
 VERY_LOW_BATTERY_SENT=$(cat $HOME/bin/.env/VERY_LOW_BATTERY_SENT)
@@ -19,8 +20,11 @@ elif [ "$charging" = "Discharging" ] && [ "$battery" -le 20 ]; then
 		DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send -t 30000 -u critical "Low Battery" "Plug in charger!"
 		echo "true" > $HOME/bin/.env/LOW_BATTERY_SENT
 	fi
-elif [ "$charging" = "Full" ]; then
+elif [ -n "$full" ] && [ "$charging" == "Charging" ]; then
 	DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send -t 30000 -u critical "Full Battery" "Unplug in charger!"
+elif [ "$battery" -ge 98 ] && [ "$charging" == "Charging" ]; then
+	DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send -t 30000 -u critical "Full Battery" "Unplug in charger!"
+
 else
 	echo "false" > $HOME/bin/.env/LOW_BATTERY_SENT
 	echo "false" > $HOME/bin/.env/VERY_LOW_BATTERY_SENT

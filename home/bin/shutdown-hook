@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# alacritty --class "popterm-small" -e "$HOME/bin/showupdates"
+
+shutdown now

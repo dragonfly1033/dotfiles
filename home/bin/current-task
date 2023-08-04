@@ -14,43 +14,7 @@ def index(hr, m):
     m = str(m) if len(str(m)) == 2 else '0'+str(m)
     return int(f'{hr}{m}')
 
-
-time = datetime.now()
-day, date, hour, minute = time.strftime('%a:%d:%H:%M').split(':')
-time = index(hour, minute)
-
-with open(f'{env("HOME")}/Desktop/schedule.csv', 'r') as f:
-    cont = [i.replace('\n', '').split(',') for i in f.readlines()][2:]
-    today = ["", "", "", ""]
-    for i in cont:
-        if i[0] == f"{day} {date}":
-            today = i
-            break
-        
-if time <= index(7, 0):
-    out('Sleeping')
-elif time <= index(7, 30):
-    out('Getting Ready')
-elif time <= index(8, 0):
-    out('Relaxing')
-elif time <= index(12, 0):
-    out(today[1])
-elif time <= index(12, 30):
-    out('Relaxing')
-elif time <= index(13, 0):
-    out('Lunch')
-elif time <= index(17, 0):
-    out(today[2])
-elif time <= index(18, 0):
-    out('Relaxing')
-elif time <= index(18, 30):
-    out('Dinner')
-elif time <= index(22, 30):
-    out(today[3])
-elif time <= index(23, 0):
-    out('Relaxing')
-elif index(23, 0) <= time:
-    out('Sleeping')
+out('')
 
 
 
