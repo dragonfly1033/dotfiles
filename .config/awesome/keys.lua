@@ -103,20 +103,20 @@ globalkeys = gears.table.join(
     awful.key({ modkey,           }, "Tab", function () awful.layout.inc( 1)                end,
               {description = "select next", group = "layout"}),
 
-    awful.key({ modkey,           }, "n", function () 
-    												local screen = awful.screen.focused()
-    												local tags = screen.tags
-    												local lenTags = #tags
-    												local curIndex = screen.selected_tag.index
-
-    												awful.tag.add(tostring(lenTags+1), {
-    														screen=screen,
-    														layout=awful.layout.suit.tile, 
-    														volatile=true, 
-    														index=curIndex+1
-    												}) 
-    											end,
-              {description = "new tag", group = "tag"}),
+--     awful.key({ modkey,           }, "n", function () 
+--     												local screen = awful.screen.focused()
+--     												local tags = screen.tags
+--     												local lenTags = #tags
+--     												local curIndex = screen.selected_tag.index
+-- 
+--     												awful.tag.add(tostring(lenTags+1), {
+--     														screen=screen,
+--     														layout=awful.layout.suit.tile, 
+--     														volatile=true, 
+--     														index=curIndex+1
+--     												}) 
+--     											end,
+--               {description = "new tag", group = "tag"}),
               
     awful.key({ modkey, "Shift"   }, "Tab", function () awful.layout.inc(-1)                end,
               {description = "select previous", group = "layout"}),
@@ -141,10 +141,10 @@ clientkeys = gears.table.join(
     awful.key({ ALT,  }, "f",  awful.client.floating.toggle       ,
               {description = "toggle floating", group = "client"}),
 
-    awful.key({ ALT, "Shift" }, "m",  function (c) c.maximised = not c.maximised end,
+    awful.key({ ALT }, "m",  function (c) c.maximised = not c.maximised end,
               {description = "toggle maximised", group = "client"}),          
 
-    awful.key({ ALT, }, "m", function (c) c:swap(awful.client.getmaster()) end,
+    awful.key({ ALT, "Control" }, "m", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),            
               
     awful.key({ ALT,           }, "p",      function (c) c.sticky = not c.sticky end,
@@ -158,7 +158,8 @@ clientkeys = gears.table.join(
 					local screen = awful.screen.focused()
 					local tags = screen.tags
 					local tag = screen.selected_tag.index
-					for i=tag+1,#tags do
+					-- for i=#tags,tag+1,-1 do -- for last free
+					for i=tag+1,#tags,1 do -- for next free
 						if #tags[i]:clients() == 0 then
 							c:move_to_tag(tags[i])
 							return
@@ -172,8 +173,8 @@ clientkeys = gears.table.join(
 					local screen = awful.screen.focused()
 					local tags = screen.tags
 					local tag = screen.selected_tag.index
-					for i=1,tag-1 do -- for first free
-					-- for i=tag-1,1,-1 do -- for prev free
+					-- for i=1,tag-1 do -- for first free
+					for i=tag-1,1,-1 do -- for prev free
 						if #tags[i]:clients() == 0 then
 							c:move_to_tag(tags[i])
 							return

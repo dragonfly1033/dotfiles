@@ -43,9 +43,9 @@ done
 
 $sed_var "name=" "\"$theme\"" $HOME/.fehbg
 
-use=$2
+noUse=$2
 
-if [[ "_$use" == "_" ]]; then
+if [[ "_$noUse" == "_" ]]; then
 	for i in $(xwininfo -tree -root | grep 'Navigator' | tr -d ' ' | cut -d'"' -f1); do
 		xdotool key --window "$i" --clearmodifiers "ctrl+h" &
 	done

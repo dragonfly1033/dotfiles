@@ -3,14 +3,14 @@
 source $HOME/bin/.env/THEME_META
 
 THEME=$1
-USE=$2
+NOUSE=$2
 
 if [[ -z $THEME ]]; then
 	LIST=$(python $HOME/bin/get_themes $safe $light)
 	THEME=$(echo "random"$'\n'"$LIST" | rofi -dmenu -i -p " Theme:  ")
 elif [[ $THEME == "random" ]]; then
 	THEME=$(python $HOME/bin/get_themes $safe $light | shuf -n 1)
-	$HOME/bin/set_theme $THEME $USE
+	$HOME/bin/set_theme $THEME $NOUSE
 	exit 1
 fi
 
@@ -18,9 +18,9 @@ if [[ -n $THEME ]]; then
 	if [[ $THEME == "random" ]]; then
 		THEME=$($HOME/bin/dmenu "$(python $HOME/bin/get_themes $safe $light | shuf -n 5)" "Theme:  ")
 		if [[ -n $THEME ]]; then
-			$HOME/bin/set_theme $THEME $USE
+			$HOME/bin/set_theme $THEME $NOUSE
 		fi
 	else
-		$HOME/bin/set_theme $THEME $USE
+		$HOME/bin/set_theme $THEME $NOUSE
 	fi
 fi

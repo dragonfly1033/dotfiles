@@ -1,5 +1,8 @@
 #!/bin/sh
 
+
+~/bin/theme random 1
+
 # alacritty --class "popterm-small" -e "$HOME/bin/showupdates"
 
 shutdown now

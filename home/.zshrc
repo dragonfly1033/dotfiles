@@ -49,6 +49,17 @@ export AUTO_NOTIFY_BODY="%elapsed seconds | exit code %exit_code"
 export AUTO_NOTIFY_EXPIRE_TIME=10000
 AUTO_NOTIFY_IGNORE+=("micro" "m" "man" "less" "bat" "krita")
 
+# start programs from shell but immediately disown them
+startAndDisown() {
+    $@ & disown $! 
+}
+
+mkdir() {
+	/usr/bin/mkdir $1 && cd $1
+}
+
+alias s=startAndDisown
+
 
 bindkey '\e[A' history-search-backward
 bindkey '\e[B' history-search-forward
@@ -74,8 +85,8 @@ alias sv="cd $HOME/Documents/supervisions"
 alias music="cd $HOME/Documents/Sync/Music"
 alias pf="cd $HOME/Documents/Sync/PFiles"
 
-alias ls='exa --group-directories-first --icons'
-alias la='exa --group-directories-first -lahg --icons'
+alias ls='eza --group-directories-first --icons'
+alias la='eza --group-directories-first -lahg --icons'
 alias nano='micro'
 alias tree='tree -a -I .git -I .cache -I .mozilla -I .local -I backups -I pulse -I .vscode-oss -I VSCodium'
 alias grep='grep --color=auto'
@@ -83,7 +94,6 @@ alias cat='bat -p'
 alias update='sudo pacman -Syu'
 alias install='sudo pacman -S'
 alias uninstall='sudo pacman -Rns'
-alias paint='pinta & disown'
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'

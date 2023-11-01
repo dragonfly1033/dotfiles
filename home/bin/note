@@ -6,5 +6,5 @@ if [ -z $name ]; then
 elif [ $name == "list" ]; then
 	micro "$HOME/Documents/notes/$(ls $HOME/Documents/notes | fzf)"
 else
-	$EDITOR $HOME/Documents/notes/$name
+	$EDITOR "$HOME/Documents/notes/$name.txt"
 fi
