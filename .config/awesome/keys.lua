@@ -2,6 +2,7 @@ local gears = require("gears")
 local awful = require("awful")
 local naughty = require("naughty")
 local spads = require("scratchpads")
+local beautiful = require("beautiful")
 local hotkeys = require("awful.hotkeys_popup")
 local hotkeys_popup = hotkeys.widget.new(
 			{width=550, height=750})
@@ -51,6 +52,14 @@ globalkeys = gears.table.join(
             group = "client"}
     ),
 
+    awful.key({ ALT,   "Shift"  }, "g", function () 
+    										if awful.screen.focused().selected_tag.gap ~= 0 then
+    											awful.screen.focused().selected_tag.gap = 0
+											else
+    											awful.screen.focused().selected_tag.gap = beautiful.useless_gap
+											end
+    									end,
+              {description = "search prompt", group = "tag"}),
 
     -- Standard program
     awful.key({ ALT,           }, "Return", function () awful.spawn(terminal) end,
@@ -69,6 +78,8 @@ globalkeys = gears.table.join(
               {description = "open file manager", group = "launcher"}),
     awful.key({ ALT,           }, "v", function () awful.spawn("snippets") end,
               {description = "snippets prompt", group = "launcher"}),
+    awful.key({ ALT,           }, "g", function () awful.spawn("search") end,
+              {description = "search prompt", group = "launcher"}),
               
     awful.key({ modkey, "Control" }, "r", function () awful.spawn("awesome_restart") end,
               {description = "reload awesome", group = "awesome"}),
@@ -125,6 +136,20 @@ globalkeys = gears.table.join(
               {description = "run prompt", group = "launcher"})
 )
 
+polybar_hide = {}
+
+for i=1,#awful.screen.focused().tags do
+	polybar_hide[i] = false
+end
+
+function handle_polybar(tag)
+	if polybar_hide[tag.index] then
+		awful.spawn("polybar-msg cmd hide")
+	else
+		awful.spawn("polybar-msg cmd show")
+	end	
+end
+
 clientkeys = gears.table.join(
     
     awful.key({ modkey, "Shift"   }, "c",      function (c) 
@@ -141,8 +166,12 @@ clientkeys = gears.table.join(
     awful.key({ ALT,  }, "f",  awful.client.floating.toggle       ,
               {description = "toggle floating", group = "client"}),
 
-    awful.key({ ALT }, "m",  function (c) c.maximised = not c.maximised end,
-              {description = "toggle maximised", group = "client"}),          
+    awful.key({ ALT }, "m",  function (c) 
+    							c.maximized = not c.maximized 
+    							polybar_hide[c.first_tag.index] = c.maximized
+    							handle_polybar(awful.screen.focused().selected_tag)
+    						end,
+              {description = "toggle maximized", group = "client"}),          
 
     awful.key({ ALT, "Control" }, "m", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),            

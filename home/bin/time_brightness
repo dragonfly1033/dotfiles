@@ -5,7 +5,7 @@ brightness=$HOME/bin/brightness
 
 if [ $hour -ge 23 ] || [ $hour -le 6 ]; then
 	$brightness set 0
-	redshift &
+	(redshift &) && disown
 else
 	$brightness set 75
 	killall redshift

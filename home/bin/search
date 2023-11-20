@@ -1,0 +1,17 @@
+#!/bin/sh
+
+s=$($HOME/bin/dmenu '' "Search: ")
+P=$(echo $s | cut -d' ' -f1)
+
+if [ -z "$s"]; then
+	exit
+fi
+
+if [ "$P" == "p" ]; then
+	Q=$(echo $s | sed 's/^p //' | tr ' ' '+')
+	firefox --private-window -P Main "https://www.duckduckgo.com/?q=$Q"
+else
+	Q=$(echo $s | tr ' ' '+')
+	firefox -P Main "https://www.duckduckgo.com/?q=$Q"
+fi
+

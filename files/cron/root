@@ -4,3 +4,4 @@
 */30 * * * * chmod g+w /sys/class/backlight/amdgpu_bl0/brightness
 */30 * * * * chmod g+w /sys/class/backlight/amdgpu_bl1/brightness
 * * */1 * * /home/USER/bin/backup_cron
+@weekly /home/USER/bin/paccache-clear

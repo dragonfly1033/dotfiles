@@ -1,48 +1,111 @@
 
-(defwindow	settings
+
+;class
+;valign - fill baseline center start end
+;halign - fill baseline center start end
+;vexpand - bool
+;hexpand - bool
+;width
+;height
+;active
+;tooltip
+;visibility
+
+
+(defwindow	sideBar
 	:monitor 0
 	:geometry (geometry	:x "0%"
 						:y "0%"
 						:width "10px"
-						:height "30%"
+						:height "100%"
 						:anchor "bottom left")
 	:stacking "fg"
-	; :reserve (struts :distance "24px" :side "left")
+	;:reserve (struts :distance "24px" :side "left")
+	:style "background-color: #00ff00ff"
 
-	(box :orientation "v"
+	(mycenterbox	:class "root"
+					:orientation "vertical"
+
+		(label	:class "text time" 
+				:text "long text placeholder"
+				:angle 90.0)
+
+		(label	:text "n")
+
+		(revealer-on-hover	:class "power"
+							:var powerRev
+							:varname "powerRev"
+							:orientation "vertical"
+							:transition "slideup"
+
+			(box	:orientation "vertical"
+					:valign "end"
+					:halign "center"
+					:class "power-buttons"
+				(eventbox	:onclick "~/bin/confirmation '~/bin/logout'"
+							:halign "center"
+					(label	:class "logout-button"
+							:text ""))
+				(eventbox	:onclick "~/bin/confirmation 'reboot'"
+							:halign "center"
+					(label	:class "reboot-button"
+							:text "累"))
+				(eventbox	:onclick "~/bin/confirmation '~/bin/shutdown-hook'"
+							:halign "center"
+					(label	:class "shutdown-button"
+							:text "襤")))
+			(label	:class "power-label"
+					:text ""))))
+
+
+(defwidget mybutton [?class ?onclick ]
+	(box	:class ""))
+
+
+(defwidget revealer-on-hover [var varname ?class ?duration ?orientation ?transition]
+	(box	:class "${class} revealer-on-hover"
+			:orientation {orientation ?: "horizontal"}
 			:space-evenly false
-			:vexpand true
-			:hexpand true
-			:valign "start"
-			:spacing 1
-			
-		
-		(circular-progress :class "prog"
-				:value {EWW_BATTERY["BAT1"]["capacity"]}
-				:start-at 75
-				:thickness 2
-				:clockwise true
-				:style {
-					EWW_BATTERY["BAT1"]["status"] == "Charging" ? "color: #00dddd" : 
-						EWW_BATTERY["BAT1"]["capacity"] > 20 ? "color: #00dd00" : 
-							EWW_BATTERY["BAT1"]["capacity"] > 10 ? "color: #dd8800" : 
-								"color: #dd0000"
-					}
-			(label :class "slabel"
-				:text {EWW_BATTERY["BAT1"]["capacity"]}
-			)
-		)
-		(label :class "blabel"
-				:text {EWW_TEMPS["ACPITZ_TEMP1"]}
-				:style {
-					EWW_TEMPS["ACPITZ_TEMP1"] >= 50 ? "color: #ff0000" : ""
-				}
-		)
-		(label :class "mlabel"
-			:text "Wed  3  May"
-			:angle 90
-		)
-	)
-)
+		(eventbox	:class "${class} eventbox"
+					:onhover "eww update ${varname}=true"
+					:onhoverlost "eww update ${varname}=false"
+			(box	:orientation {orientation ?: "horizontal"}
+					:space-evenly false		
+				(revealer	:valign "end"
+							:halign "center"
+							:transition {transition ?: "slideright"}
+							:reveal var
+							:duration {duration ?: "500ms"}
+					(children :nth 0))
+				(children :nth 1)))))
 
-(defvar perc 10)
+(defwidget mycenterbox [?class ?orientation]
+	(box	:class "${class} mycenterbox"
+			:orientation "vertical"
+			:space-evenly true
+		(box	:orientation "vertical"
+				:space-evenly false
+				:halign "center"
+				:valign "start"
+			(children :nth 0)
+			(label	:text ""
+					:class "accent"
+					:style "font-size: 16;"
+					:angle -90.0))
+		(box	:orientation "vertical"
+				:space-evenly false
+				:halign "center"
+				:valign "center"
+			(children :nth 1))
+		(box	:orientation "vertical"
+				:space-evenly false
+				:halign "center"
+				:valign "end"
+			(label	:text ""
+					:class "accent"
+					:style "font-size: 16;"
+					:angle 90.0)
+			(children :nth 2))))
+
+(defvar powerRev false)
+

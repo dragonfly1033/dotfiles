@@ -1,2 +1,1 @@
 */1 * * * * /home/USER/bin/low_battery
-@weekly /home/USER/bin/paccache-clear

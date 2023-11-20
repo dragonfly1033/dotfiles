@@ -17,5 +17,5 @@ AUR_REMOVED=$(/usr/bin/paccache -ruvk0 $AUR_CACHE_REMOVED | sed '/\.cache/!d' | 
 # Keep latest version for uninstalled native packages, keep two latest versions for installed packages
 # Get all cache directories for AUR helper (without removed packages)
 AUR_CACHE="$(find "$AUR_CACHE_DIR" -maxdepth 1 -type d | awk '{ print "-c " $1 }' | tail -n +2)"
-/usr/bin/paccache -qruk1
-/usr/bin/paccache -qrk2 -c /var/cache/pacman/pkg $AUR_CACHE
+/usr/bin/paccache -vruk1
+/usr/bin/paccache -vrk2 -c /var/cache/pacman/pkg $AUR_CACHE

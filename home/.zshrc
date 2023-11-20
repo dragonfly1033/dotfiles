@@ -54,8 +54,24 @@ startAndDisown() {
     $@ & disown $! 
 }
 
-mkdir() {
+j() {
+	if [ "$1" = "Python" ]; then
+		cd ~/Documents/Python
+	elif [ "$1" = "Sync" ]; then
+		cd ~/Documents/Sync
+	elif [ "$1" = "Music" ]; then
+		cd ~/Documents/Sync/Music
+	else
+		cd "$(find ~/Documents ~/Desktop ~/Downloads ~/.config ~/Pictures ~/.dotfiles -type d | fzf -e +i -f "$1" | head -1)"
+	fi
+}
+
+mkdirr() {
 	/usr/bin/mkdir $1 && cd $1
+}
+
+package-list() {
+	pacman -Qe | cut -d' ' -f1
 }
 
 alias s=startAndDisown
@@ -74,7 +90,7 @@ bindkey  "^[[3;5~"  delete-word
 bindkey  "^[[1;5H"  backward-kill-line
 bindkey  "^[[1;5F"  kill-line
 
-export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/bin:$HOME/Games/itchio:$PATH"
 export EDITOR="micro"
 export PAGER="less"
 export TERMINAL="alacritty"

@@ -91,7 +91,7 @@ awful.layout.layouts = {
 awful.screen.connect_for_each_screen(function(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "WWW", "2", "3", "4", "POL", "ANI", "7", "8", "9"}, s, awful.layout.layouts[1])
+    awful.tag({ "MAIN", "2", "3", "4", "5", "6", "ANI", "POL", "CHILL"}, s, awful.layout.layouts[1])
 	awful.screen.padding(s, {top=0, bottom=0, left=0, right=0})
 end)
 
