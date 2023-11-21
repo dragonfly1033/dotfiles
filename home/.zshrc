@@ -47,7 +47,7 @@ export AUTO_NOTIFY_THRESHOLD=20
 export AUTO_NOTIFY_TITLE="%command has finished"
 export AUTO_NOTIFY_BODY="%elapsed seconds | exit code %exit_code"
 export AUTO_NOTIFY_EXPIRE_TIME=10000
-AUTO_NOTIFY_IGNORE+=("micro" "m" "man" "less" "bat" "krita")
+AUTO_NOTIFY_IGNORE+=("micro" "m" "man" "less" "bat" "krita" "python")
 
 # start programs from shell but immediately disown them
 startAndDisown() {

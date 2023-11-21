@@ -114,9 +114,9 @@ awful.mouse.drag_to_tag.enabled = false
 -- awful.spawn.once("firefox -P Pol",  {tag = "POL"})
 -- naughty.notify({text="source "..os.getenv("HOME").."/bin/.env/THEME_META && "..os.getenv("HOME").."/bin/get_themes \"$safe\" \"$light\" | shuf -n 1"})
 
-awful.spawn.once("firefox -P Main", {tag = "WWW"})
-awful.spawn.once("firefox -P Chill", {tag = "9"})
-awful.spawn.once("firefox -P Pol", {tag = "8"})
+awful.spawn.once("firefox -P Main", {tag = "MAIN"})
+awful.spawn.once("firefox -P Chill", {tag = "CHILL"})
+awful.spawn.once("firefox -P Pol", {tag = "POL"})
 -- awful.spawn.once("alacritty --class popterm --hold --command bat -p "..os.getenv("HOME").."/Desktop/todo.md", {tag = "WWW"})
 
 awful.spawn.with_shell(os.getenv("HOME").."/bin/startup")

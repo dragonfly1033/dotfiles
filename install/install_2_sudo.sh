@@ -88,6 +88,7 @@ echo "-------------------------------------------"
 echo "Moving files"
 
 cp .dotfiles/files/pfetch /usr/bin
+cp .dotfiles/files/ly/config.ini /etc/ly/
 
 echo "-------------------------------------------"
 echo "Configure cron"
