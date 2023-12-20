@@ -1,0 +1,4 @@
+#!/bin/sh
+
+python ~/Documents/Python/Dishr/main.py
+

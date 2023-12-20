@@ -9,11 +9,6 @@ if [ $ORIG == 'configs' ]; then
 	if [ $CONF != 'NONE' ]; then 
 		alacritty -e micro "$CONF" 
 	fi	
-elif [ $ORIG == 'scripts' ]; then
-	CONF=$($ddmenu_dir ~/bin)
-	if [ $CONF != 'NONE' ]; then 
-		alacritty -e micro "$CONF" 
-	fi
 elif [ $ORIG == 'bin' ]; then
 	CONF=$($ddmenu_dir ~/bin)
 	if [ $CONF != 'NONE' ]; then 

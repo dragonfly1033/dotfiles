@@ -13,7 +13,6 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 
-
 -- awful.spawn.once(os.getenv("HOME").."/bin/theme random 1")
 -- awful.spawn.once("cat /home/dragonfly1033/bin/.env/THEME | xargs notify-send")
 -- awful.spawn.once("cat /home/dragonfly1033/.fehbg | grep name= | xargs notify-send")
@@ -57,7 +56,7 @@ naughty.config.presets.critical.bg = "#aa0000"
 
 
 local bling = require("bling")
--- bling.module.window_swallowing.start()
+bling.module.window_swallowing.start()
 
 require("scratchpads")
 require("keys")
@@ -71,11 +70,11 @@ require("signals")
 awful.layout.layouts = {
     awful.layout.suit.tile,
     bling.layout.centered,
-    awful.layout.suit.spiral.dwindle,
+    -- awful.layout.suit.spiral.dwindle,
+    awful.layout.suit.tile.bottom,
     bling.layout.equalarea,
     -- awful.layout.suit.floating,
     -- awful.layout.suit.tile.left,
-    -- awful.layout.suit.tile.bottom,
     -- awful.layout.suit.tile.top,
     -- awful.layout.suit.fair.horizontal,
     -- awful.layout.suit.spiral,
@@ -91,7 +90,7 @@ awful.layout.layouts = {
 awful.screen.connect_for_each_screen(function(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ "MAIN", "2", "3", "4", "5", "6", "ANI", "POL", "CHILL"}, s, awful.layout.layouts[1])
+    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9"}, s, awful.layout.layouts[1])
 	awful.screen.padding(s, {top=0, bottom=0, left=0, right=0})
 end)
 
@@ -110,13 +109,25 @@ awful.mouse.drag_to_tag.enabled = false
 											-- end)
 
 
--- awful.spawn.once("firefox -P Weeb", {tag = "ANI"})
--- awful.spawn.once("firefox -P Pol",  {tag = "POL"})
+-- awful.spawn.once("firefox -P Weeb", {tag = "7"})
+-- awful.spawn.once("firefox -P Pol",  {tag = "8"})
 -- naughty.notify({text="source "..os.getenv("HOME").."/bin/.env/THEME_META && "..os.getenv("HOME").."/bin/get_themes \"$safe\" \"$light\" | shuf -n 1"})
 
-awful.spawn.once("firefox -P Main", {tag = "MAIN"})
-awful.spawn.once("firefox -P Chill", {tag = "CHILL"})
-awful.spawn.once("firefox -P Pol", {tag = "POL"})
--- awful.spawn.once("alacritty --class popterm --hold --command bat -p "..os.getenv("HOME").."/Desktop/todo.md", {tag = "WWW"})
+-- awful.spawn.once("firefox -P Main --MOZ_LOG=all:5 --MOZ_LOG_FILE="..os.getenv("HOME").."/moz_log", {tag = "1"})
+-- awful.spawn.once("firefox -P Main", {tag = "1"})
+-- awful.spawn.once("firefox -P Chill", {tag = "9"})
+-- awful.spawn.once("firefox -P Pol", {tag = "8"})
+
+-- awful.spawn.with_line_callback("firefox -P Main", {
+--     stdout = function(line)
+--         gears.debug.dump( "LINE: "..line )
+--     end,
+--     stderr = function(line)
+--         naughty.notify { text = "ERR: "..line}
+--     end
+-- })
+
+
+-- awful.spawn.once("alacritty --class popterm --hold --command bat -p "..os.getenv("HOME").."/Desktop/todo.md", {tag = "1"})
 
 awful.spawn.with_shell(os.getenv("HOME").."/bin/startup")

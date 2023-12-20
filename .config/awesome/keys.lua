@@ -1,7 +1,7 @@
 local gears = require("gears")
 local awful = require("awful")
 local naughty = require("naughty")
-local spads = require("scratchpads")
+require("scratchpads")
 local beautiful = require("beautiful")
 local hotkeys = require("awful.hotkeys_popup")
 local hotkeys_popup = hotkeys.widget.new(
@@ -18,6 +18,11 @@ poptermL = "alacritty --class popterm-large"
 file_manager = "pcmanfm"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
+
+bar_state = false
+bar_auto = true
+
+tag_notification = nil
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
@@ -59,7 +64,7 @@ globalkeys = gears.table.join(
     											awful.screen.focused().selected_tag.gap = beautiful.useless_gap
 											end
     									end,
-              {description = "search prompt", group = "tag"}),
+              {description = "toggle gaps", group = "layout"}),
 
     -- Standard program
     awful.key({ ALT,           }, "Return", function () awful.spawn(terminal) end,
@@ -67,12 +72,14 @@ globalkeys = gears.table.join(
               
     awful.key({ ALT,  "Shift"  }, "Return", function () awful.spawn(poptermM) end,
               {description = "open a floating terminal", group = "scratch"}),
-    awful.key({ ALT,  "Shift"  }, "m", function () awful.spawn("pragha -x") end,
+    awful.key({ ALT,  "Shift"  }, "m", function () awful.spawn('pragha -x') end,
               {description = "Pragha popup", group = "scratch"}),
     awful.key({ ALT,  "Shift"  }, "c", function () awful.spawn(poptermS.." --hold -e calc") end,
               {description = "Calculator popup", group = "scratch"}),
     awful.key({ ALT,  "Shift"   }, "h", function () awful.spawn(poptermL.." -e htop") end,
               {description = "htop prompt", group = "scratch"}),
+    awful.key({ ALT,  "Shift"   }, "p", function () awful.spawn('pavucontrol') end,
+              {description = "pavucontrol", group = "scratch"}),
               
     awful.key({ ALT,           }, "e", function () awful.spawn(file_manager) end,
               {description = "open file manager", group = "launcher"}),
@@ -133,22 +140,76 @@ globalkeys = gears.table.join(
               {description = "select previous", group = "layout"}),
     -- Prompt
     awful.key({ ALT },         "x",     function () awful.spawn.with_shell('rofi -show run -sort -i') end,
-              {description = "run prompt", group = "launcher"})
+              {description = "run prompt", group = "launcher"}),    
+
+    awful.key({ ALT },         "b",     function () 
+    										if bar_status then
+    											awful.spawn.with_shell('polybar-msg cmd hide') 
+    											bar_status = false
+    											bar_auto = true
+    										else
+    											awful.spawn.with_shell('polybar-msg cmd show') 
+    											bar_status = true
+    											bar_auto = false   											
+    										end
+    									end,
+              {description = "toggle bar", group = "launcher"})
 )
 
-polybar_hide = {}
-
-for i=1,#awful.screen.focused().tags do
-	polybar_hide[i] = false
-end
-
-function handle_polybar(tag)
-	if polybar_hide[tag.index] then
-		awful.spawn("polybar-msg cmd hide")
-	else
-		awful.spawn("polybar-msg cmd show")
+function auto_bar_handler()
+	if bar_auto then
+		if mouse.coords().y <= 2 then
+			awful.spawn("polybar-msg cmd show", false)
+			bar_status = true
+		else
+			awful.spawn("polybar-msg cmd hide", false)
+			bar_status = false
+		end	
 	end	
 end
+
+function tag_notify(t) 
+	if t.selected and not bar_status then  
+		if tag_notification == nil then
+			tag_notification = naughty.notify({
+				text=t.name,
+				position="top_middle",
+				timeout=0.5,
+				height = 100,
+				font="Fira Code Bold 48",
+				border_width=10,
+				margin=20,
+				destroy=function() tag_notification = nil end
+			}) 
+		else
+			naughty.replace_text(tag_notification, t.name, "")
+			naughty.reset_timeout(tag_notification, 0.5)
+		end
+	end
+end 
+
+todo_timer = gears.timer({
+	timeout = 0.2,
+	call_now = true,
+	autostart = true,
+	callback = auto_bar_handler
+})
+
+tag.connect_signal("property::selected", function (t) tag_notify(t) end)
+
+-- polybar_hide = {}
+-- 
+-- for i=1,#awful.screen.focused().tags do
+-- 	polybar_hide[i] = false
+-- end
+-- 
+-- function handle_polybar(tag)
+-- 	if polybar_hide[tag.index] then
+-- 		awful.spawn("polybar-msg cmd hide")
+-- 	else
+-- 		awful.spawn("polybar-msg cmd show")
+-- 	end	
+-- end
 
 clientkeys = gears.table.join(
     
@@ -168,8 +229,8 @@ clientkeys = gears.table.join(
 
     awful.key({ ALT }, "m",  function (c) 
     							c.maximized = not c.maximized 
-    							polybar_hide[c.first_tag.index] = c.maximized
-    							handle_polybar(awful.screen.focused().selected_tag)
+    							-- polybar_hide[c.first_tag.index] = c.maximized
+    							-- handle_polybar(awful.screen.focused().selected_tag)
     						end,
               {description = "toggle maximized", group = "client"}),          
 

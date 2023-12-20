@@ -13,6 +13,8 @@ elif [[ "$NAME" == "\"fairv\"" ]] || [[ $NAME == "\"equalarea\"" ]]; then
 	echo 'E'
 elif [[ "$NAME" == "\"centered\"" ]]; then
 	echo 'F'
+elif [[ "$NAME" == "\"tilebottom\"" ]]; then
+	echo 'G'
 else
 	echo "[]"
 fi

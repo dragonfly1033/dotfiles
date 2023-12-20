@@ -1,0 +1,31 @@
+#!/bin/python
+
+import os, re
+
+HOME = os.environ.get("HOME")
+PATH = f"{HOME}/Downloads/"
+
+pat = re.compile(r'.*\.([a-zA-Z]+)$')
+
+for file in os.listdir(PATH):
+    if os.path.isdir(PATH+file): continue
+    
+    ext = pat.match(file)
+    if ext is None: continue
+
+    ext = ext.group(1).lower()
+    match ext:
+        case "jpg" | "jpeg" | "png" | "tif" | "tiff" | "gif":
+            os.rename(f"{PATH}{file}", f"{PATH}PIC/{file}")
+        case "mov" | "avi" | "mp4":
+            os.rename(f"{PATH}{file}", f"{PATH}VID/{file}")
+        case "zip" | "gz" | "tar" | "7z":
+            os.rename(f"{PATH}{file}", f"{PATH}ARC/{file}")
+        case "docx" | "doc" | "odf" | "xlsx" | "xls" | "pptx" | "ppt" | "pdf" | "md":
+            os.rename(f"{PATH}{file}", f"{PATH}DOC/{file}")
+        case "iso":
+            os.rename(f"{PATH}{file}", f"{PATH}ISO/{file}")
+        case "mp3" | "ogg" | "opus" | "acc":
+            os.rename(f"{PATH}{file}", f"{PATH}AUD/{file}")
+        case _:
+            pass

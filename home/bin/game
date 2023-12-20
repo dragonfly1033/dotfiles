@@ -1,0 +1,42 @@
+#!/bin/sh
+
+
+# (cd /c && exec /a/helloworld)
+
+
+dmenu=$HOME/bin/dmenu
+
+game=$($dmenu "Ravenfield
+Bloodletter
+Hyper Time Disruptor
+RERUN
+Headmaster
+Rexuiz" "Game: ")
+
+game_dir=$HOME/.config/itch/apps
+
+if [ "$game" == "Bloodletter" ]; then
+	DIR=$game_dir/bloodletter/bloodletter_ld44
+	(cd $DIR && exec "$DIR/fteqw64")
+
+elif [ "$game" == "Hyper Time Disruptor" ]; then
+	DIR="$game_dir/hyper-time-disruptor"
+	(cd $DIR && exec "$DIR/Hyper Time Disruptor Linux.x86_64")
+
+elif [ "$game" == "Ravenfield" ]; then
+	DIR=$game_dir/ravenfieldFull/Ravenfield
+	(cd $DIR && exec "$DIR/run.sh")
+	
+elif [ "$game" == "RERUN" ]; then
+	DIR=$game_dir/rerun
+	(cd $DIR && exec "$DIR/RERUN_linux.x86_64")
+	
+elif [ "$game" == "Rexuiz" ]; then
+	DIR=$game_dir/Rexuiz
+	(cd $DIR && exec "$DIR/rexuiz-linux-sdl-x86_64")
+	
+elif [ "$game" == "Headmaster" ]; then
+	DIR="$game_dir/the-headmaster/TheHeadmaster-0.14.3public-pc"
+	(cd $DIR && exec "$DIR/TheHeadmaster.sh")
+	
+fi

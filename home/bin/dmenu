@@ -2,4 +2,10 @@
 
 options=$1
 prompt=$2
+
+if [ -z $options ]; then
+	echo "Usage: dmenu <options> <prompt>"
+	exit
+fi
+
 echo -e "$options" | rofi -dmenu -i -p " $prompt  "

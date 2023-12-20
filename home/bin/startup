@@ -17,9 +17,11 @@ numlockx on
 $HOME/bin/set_temp_sensor
 $HOME/bin/time_brightness
 
-run picom --no-vsync --experimental-backends
+# run picom --no-vsync --experimental-backends
+run compfy -b
 run ~/.fehbg
 run polybar -r top
+polybar-msg cmd hide
 run mpris-proxy 
 run volctl 
 run xbindkeys

@@ -1,18 +1,28 @@
 #!/bin/python
 
-import os
+import os, sys
 
 env = os.environ.get
 
-name = input("Enter Name: ").replace(' ', '_')
-wall = input("Enter Wallpaper URL: ")
-if wall:
-	from PIL import Image
-	from io import BytesIO
-	from requests import get
-	img = BytesIO(get(wall).content)
-	with open(f"{env('HOME')}/Pictures/wallpapers/{name}", "wb") as f:
-		f.write(img.getbuffer())
+# name = input("Enter Name: ").replace(' ', '_')
+
+name = sys.argv[1]
+
+# wall = input("Enter Wallpaper URL: ")
+# if wall:
+# 	from PIL import Image
+# 	from io import BytesIO
+# 	from requests import get
+# 	img = BytesIO(get(wall).content)
+# 	with open(f"{env('HOME')}/Pictures/wallpapers/{name}", "wb") as f:
+# 		f.write(img.getbuffer())
+# else:
+# 	print("No Wallpaper Provided")
+
+# wall = input("Enter Wallpaper file name: ")
+if name:
+    os.system(f"feh --no-fehbg --bg-fill {env('HOME')}/Downloads/PIC/{name}")
+    os.rename(f"{env('HOME')}/Downloads/PIC/{name}", f"{env('HOME')}/Pictures/wallpapers/{name}")
 else:
 	print("No Wallpaper Provided")
 
@@ -31,8 +41,8 @@ else:
     fg = "bbbbbb"
     fgd = "666666"
     
-safe = input("Safe(0,1)? ")
-light = input("Light(0,1)? ")
+safe = input("Safe(0,1,2)? ")
+light = input("Light(0,1,2)? ")
 
 with open(f"{env('HOME')}/.config/themes/{name}", 'w') as f:
 	f.write(f"{accent1} {accent2} {bg} {fg} {fgd}")

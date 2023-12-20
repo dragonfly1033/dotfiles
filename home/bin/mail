@@ -1,4 +1,0 @@
-#!/bin/sh
-
-firefox --private-window -P Chill "mail.google.com"
-

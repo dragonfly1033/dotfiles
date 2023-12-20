@@ -1,10 +1,18 @@
 #!/bin/sh
 
 name=$1
-if [ -z $name ]; then
-	$EDITOR $HOME/Documents/notes/temp-$(date +"%y-%m-%d--%H:%M:%S")
-elif [ $name == "list" ]; then
-	micro "$HOME/Documents/notes/$(ls $HOME/Documents/notes | fzf)"
+view=$2
+
+if [ -z $view ]; then
+	view=$EDITOR
 else
-	$EDITOR "$HOME/Documents/notes/$name.txt"
+	view=$PAGER
+fi
+
+if [ -z $name ]; then
+	$view $HOME/Documents/notes/temp-$(date +"%y-%m-%d--%H:%M:%S")
+elif [ $name == "list" ]; then
+	$view "$HOME/Documents/notes/$(ls $HOME/Documents/notes | fzf)"
+else
+	$view "$HOME/Documents/notes/$name.txt"
 fi

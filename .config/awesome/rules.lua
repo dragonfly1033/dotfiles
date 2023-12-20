@@ -17,7 +17,7 @@ awful.rules.rules = {
                      buttons = clientbuttons,
                      screen = awful.screen.preferred,
                      placement = awful.placement.no_overlap+awful.placement.no_offscreen
-     }
+      }
     },
 
     -- Floating clients.
@@ -97,6 +97,18 @@ awful.rules.rules = {
 		y = 44, 
 		honor_padding = false
 	  }
+	},
+
+    { rule_any = {class = { "Pavucontrol" }},
+	  properties = { 
+		floating = true,
+		ontop = true, 
+		width = 820, 
+		height = 1044,
+		x = 550,
+		y = 30, 
+		honor_padding = false
+	  } 
     },
 
     { rule_any = {class = { "Anki" }},
@@ -115,7 +127,7 @@ awful.rules.rules = {
       properties = {
       	border_width = 0,
       	floating = true,
-      	tag = "WWW"
+      	tag = "1"
       }
     	
     },

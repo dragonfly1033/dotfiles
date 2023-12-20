@@ -86,16 +86,16 @@ local function set_shape(c)
 end
 
 
-function handle_polybar(tag)
-	if polybar_hide[tag.index] then
-		awful.spawn("polybar-msg cmd hide")
-	else
-		awful.spawn("polybar-msg cmd show")
-	end	
-end
+-- function handle_polybar(tag)
+-- 	if polybar_hide[tag.index] then
+-- 		awful.spawn("polybar-msg cmd hide")
+-- 	else
+-- 		awful.spawn("polybar-msg cmd show")
+-- 	end	
+-- end
 
--- tag.connect_signal("property::selected", function (t) if t.selected then naughty.notify({text=t.name}) end end)
-tag.connect_signal("property::selected", function (t) handle_polybar(t) end)
+
+-- tag.connect_signal("property::selected", function (t) handle_polybar(t) end)
 
 client.connect_signal("property::sticky", set_shape)
 client.connect_signal("property::floating", set_shape)

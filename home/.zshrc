@@ -42,6 +42,7 @@ setopt EXTENDED_HISTORY
 setopt cdablevars
 setopt cdsilent
 setopt autocd
+setopt complete_aliases
 
 export AUTO_NOTIFY_THRESHOLD=20
 export AUTO_NOTIFY_TITLE="%command has finished"
@@ -51,18 +52,36 @@ AUTO_NOTIFY_IGNORE+=("micro" "m" "man" "less" "bat" "krita" "python")
 
 # start programs from shell but immediately disown them
 startAndDisown() {
-    $@ & disown $! 
+    $@ & disown
+}
+
+cd_aliases() {
+	if [ "$1" = "py" ]; then
+		echo ~/Documents/Python
+	elif [ "$1" = "Sync" ]; then
+		echo ~/Documents/Sync
+	elif [ "$1" = "Music" ]; then
+		echo ~/Documents/Sync/Music
+	else
+		echo ""
+	fi
 }
 
 j() {
-	if [ "$1" = "Python" ]; then
-		cd ~/Documents/Python
-	elif [ "$1" = "Sync" ]; then
-		cd ~/Documents/Sync
-	elif [ "$1" = "Music" ]; then
-		cd ~/Documents/Sync/Music
-	else
+	d=$(cd_aliases $1)
+	if [ -z "$d" ]; then
 		cd "$(find ~/Documents ~/Desktop ~/Downloads ~/.config ~/Pictures ~/.dotfiles -type d | fzf -e +i -f "$1" | head -1)"
+	else
+		cd $d
+	fi
+}
+
+cd_wrapper() {
+	d=$(cd_aliases $1)
+	if [ -z "$d" ]; then
+		cd $1
+	else
+		cd $d
 	fi
 }
 
@@ -74,7 +93,8 @@ package-list() {
 	pacman -Qe | cut -d' ' -f1
 }
 
-alias s=startAndDisown
+alias d=startAndDisown
+alias cd=cd_wrapper
 
 
 bindkey '\e[A' history-search-backward
@@ -92,7 +112,7 @@ bindkey  "^[[1;5F"  kill-line
 
 export PATH="$HOME/bin:$HOME/Games/itchio:$PATH"
 export EDITOR="micro"
-export PAGER="less"
+export PAGER="bat -p"
 export TERMINAL="alacritty"
 export BROWSER="firefox"
 
@@ -102,6 +122,9 @@ alias music="cd $HOME/Documents/Sync/Music"
 alias pf="cd $HOME/Documents/Sync/PFiles"
 
 alias ls='eza --group-directories-first --icons'
+alias sl='\ls'
+alias l='eza --group-directories-first --icons'
+alias s='eza --group-directories-first --icons'
 alias la='eza --group-directories-first -lahg --icons'
 alias nano='micro'
 alias tree='tree -a -I .git -I .cache -I .mozilla -I .local -I backups -I pulse -I .vscode-oss -I VSCodium'
@@ -113,7 +136,7 @@ alias uninstall='sudo pacman -Rns'
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
-alias wall='feh --no-fehbg --bg-scale'
+alias wall='feh --no-fehbg --bg-fill'
 alias pdf='zathura'
 alias windows='sudo mount /dev/nvme0n1p3 /mnt/c'
 alias unwindows='sudo umount /dev/nvme0n1p3'
@@ -121,11 +144,12 @@ alias rc='micro ~/.zshrc && source ~/.zshrc'
 alias m='micro'
 alias suod='sudo'
 alias sd='sudo systemctl'
+alias sdu='systemctl --user'
 alias todo="$HOME/bin/note todo"
 alias temp="$HOME/bin/note temp"
 alias df='df -h'
 alias du='du -sh'
-alias vlc='celluloid'
+alias vlc='mpv'
 alias gcl='git clone'
 alias ga='git add'
 alias gc='git commit -m'

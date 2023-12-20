@@ -1,0 +1,43 @@
+#!/bin/python
+
+import pygame as pg
+import sys
+
+def hex2rgb(hexx):
+    R = int(f"0x{hexx[:2]}", 16)
+    G = int(f"0x{hexx[2:4]}", 16)
+    B = int(f"0x{hexx[4:]}", 16)
+    return R, G, B
+
+pg.init()
+pg.font.init()
+font = pg.font.SysFont('monospace', 18)
+
+accent = hex2rgb(sys.argv[1][1:])
+bg = hex2rgb(sys.argv[2][1:])
+fg = hex2rgb(sys.argv[3][1:])
+
+text = font.render("Example Text", True, fg)
+
+w = text.get_width()+4+20
+h = text.get_height()+4
+
+display = pg.display.set_mode((w, h))
+display.fill(bg)
+
+display.blit(text, (12, 2))
+
+pg.draw.line(display, accent, (10, 0), (10, 50), 2)
+pg.draw.line(display, accent, (w-10, 0), (w-10, 50), 2)
+
+
+run = True
+while run:
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+             run = False
+    pg.display.update()
+pg.quit()
+quit()
+
+
