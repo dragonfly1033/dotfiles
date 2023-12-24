@@ -5,7 +5,7 @@
 echo "-------------------------------------------"
 echo "Install Yay Packages"
 
-yes | LANG=C yay -S --batchinstall --norebuild --answerclean All --answerdiff None --mflags "--noconfirm" $(cat .dotfiles/install/yay_pkgs | xargs)
+yes | LANG=C yay -S --batchinstall --norebuild --answerclean All --answerdiff None --mflags "--noconfirm" $(cat ~/.dotfiles/install/yay_pkgs | xargs)
 
 echo "-------------------------------------------"
 echo "Move directories to correct places"

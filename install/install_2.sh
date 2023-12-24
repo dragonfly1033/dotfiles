@@ -44,6 +44,7 @@ pacman -S --noconfirm --needed lightdm lightdm-webkit2-greeter lightdm-webkit-th
 cp ~/.dotfiles/files/lightdm-plymouth.service /usr/lib/systemd/system
 mkdir /usr/share/backgrounds
 cp ~/.dotfiles/files/black_background.png /usr/share/backgrounds
+cp -r ~/.dotfiles/files/plymouth_themes/* /usr/share/plymouth/themes
 
 echo "-------------------------------------------"
 echo "Configure Login and Boot splash"
@@ -67,6 +68,9 @@ grub-mkconfig -o /boot/grub/grub.cfg
 mkinitcpio -P
 
 systemctl enable lightdm-plymouth.service
+
+plymouth-set-default-theme -R rings
+
 
 echo "-------------------------------------------"
 echo "Configure xinitrc"
