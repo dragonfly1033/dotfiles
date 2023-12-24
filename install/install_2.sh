@@ -5,19 +5,16 @@ read -p 'Enter EFI partition (full path): ' efi_partition
 read -p 'Enter System (h)ardware, (v)mware, virtual(b)ox: ' system
 
 echo "-------------------------------------------"
-echo "Add Windows to boot menu"
+echo "Install AUR Helper"
 
-sed -i '/#GRUB_DISABLE_OS_PROBER/c\GRUB_DISABLE_OS_PROBER=false' /etc/default/grub
-mount $efi_partition /boot
-os-prober > /dev/null
-grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
+git clone https://aur.archlinux.org/yay-bin.git > /dev/null
+cd yay-bin
+makepkg -si > /dev/null
 
-echo "-------------------------------------------"
-echo "Install graphical system packages"
-
-pacman -S --noconfirm --needed xorg xorg-xinit xterm awesome pacman-contrib libinput mesa > /dev/null
 
 echo "-------------------------------------------"
+echo "Install Drivers"
+
 if [ $system = 'h' ]; then
     echo "Install hardware drivers"
     pacman -S --noconfirm --needed xf86-video-amdgpu > /dev/null
@@ -30,28 +27,19 @@ elif [ $system = 'b' ]; then
 fi
 
 echo "-------------------------------------------"
-echo "Install apps and utils"
+echo "Install Pacman Packages"
 
-pacman -S --noconfirm --needed mlocate htop acpi feh neofetch alacritty firefox rofi polybar cronie exa tree openssh gpick > /dev/null
-pacman -S --noconfirm --needed bluez bluez-utils blues-libs pulseaudio pulseaudio-bluetooth pulseaudio-alsa pavucontrol zsh blueman brightnessctl ntfs-3g pandoc xbindkeys xdotool xclip > /dev/null
-pacman -S --noconfirm --needed libreoffice-still pcmanfm flameshot zsh-theme-powerlevel10k-git lm_sensors mtpfs android-udev syncthing vlc tlp cpupower > /dev/null
-
-echo "-------------------------------------------"
-echo "Install login"
-
-pacman -S --noconfirm --needed --overwrite ly > /dev/null
-
-echo "-------------------------------------------"
-echo "Install fonts"
-
-pacman -S --noconfirm --needed ttf-iosevka-nerd noto-fonts-cjk noto-fonts-emoji noto-fonts nerd-fonts-complete > /dev/null
+pacman -S --noconfirm --needed - < .dotfiles/install/pac_pkgs
 
 echo "-------------------------------------------"
 echo "Uninstall vesa"
+
 pacman -Rns --noconfirm xf86-video-vesa > /dev/null
 
 echo "-------------------------------------------"
-echo "Enable login"
+echo "Install and Enable login"
+
+pacman -S --noconfirm --needed ly
 
 systemctl enable ly
 
@@ -90,23 +78,21 @@ echo "Moving files"
 cp .dotfiles/files/pfetch /usr/bin
 cp .dotfiles/files/ly/config.ini /etc/ly/
 
+
 echo "-------------------------------------------"
 echo "Configure cron"
 
 sed -i "s/USER/$username/g" .dotfiles/files/cron/user
 sed -i "s/USER/$username/g" .dotfiles/files/cron/root
 
-echo "* * */1 * * /home/$username/bin/backup_cron" >> .dotfiles/files/cron/root
-
 crontab -u $username .dotfiles/files/cron/user
 crontab -u root .dotfiles/files/cron/root
-
 
 echo "-------------------------------------------"
 echo "Move fonts"
 
-mkdir -p /usr/local/share/fonts
-ln -s .dotfiles/fonts/* /usr/local/share/fonts
+mkdir -p .local/share/fonts/MyFonts
+ln -s ~/.dotfiles/fonts/* ~/.local/share/fonts/MyFonts
 
 echo "-------------------------------------------"
 echo "Change Perms"
@@ -114,3 +100,8 @@ echo "Change Perms"
 chmod -R +x .dotfiles/home
 chmod -R +x .dotfiles/.config
 
+echo "--------------------------------------------------------------------------------------"
+echo "Run install_3"
+echo "--------------------------------------------------------------------------------------"
+
+~/.dotfiles/install/install_3.sh

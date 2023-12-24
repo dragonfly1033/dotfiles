@@ -16,3 +16,12 @@ vscodium --install-extension ocamllabs.ocaml-platform
 vscodium --install-extension PKief.material-icon-theme
 vscodium --install-extension sdras.night-owl
 vscodium --install-extension shd101wyy.markdown-preview-enhanced
+vscodium --install-extension eww-yuck.yuck
+vscodium --install-extension mads-hartmann.bash-ide-vscode
+vscodium --install-extension MattPerlick.markdown-preview-editor
+vscodium --install-extension pomdtr.excalidraw-editor
+vscodium --install-extension qwtel.sqlite-viewer
+vscodium --install-extension redhat.vscode-xml
+vscodium --install-extension ritwickdey.LiveServer
+vscodium --install-extension shaunlebron.vscode-parinfer
+vscodium --install-extension zaaack.markdown-editor

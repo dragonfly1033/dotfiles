@@ -56,13 +56,27 @@ echo "Set User Password"
 passwd $username
 usermod -aG wheel,audio,video,optical,storage $username > /dev/null
 
+echo "-------------------------------------------"
+echo "Uncomment the line that says(in 10 secs):     %wheel ALL=(ALL) ALL"
+sleep 5
+echo "5"
+sleep 1
+echo "4"
+sleep 1
+echo "3"
+sleep 1
+echo "2"
+sleep 1
+echo "1"
+sleep 1
+
 EDITOR=micro visudo
 
 echo "-------------------------------------------"
 echo "Setup GRUB"
 
-mount $efi_partition /boot > /dev/null
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB --recheck > /dev/null
+sed -i '/#GRUB_DISABLE_OS_PROBER/c\GRUB_DISABLE_OS_PROBER=false' /etc/default/grub
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub_uefi --recheck > /dev/null
 grub-mkconfig -o /boot/grub/grub.cfg > /dev/null
 
 echo "-------------------------------------------"
@@ -92,10 +106,11 @@ echo "Change ownership of dotfiles"
 chown -R $username /dotfiles
 chgrp -R $username /dotfiles
 
+mv /dotfiles /home/$username/.dotfiles
+
 echo "-------------------------------------------"
 echo "NOW RUN THESE:"
 echo ""
-echo "mv dotfiles /home/$username/.dotfiles"
 echo "exit"
 echo "umount -l /mnt"
 echo "reboot" 
