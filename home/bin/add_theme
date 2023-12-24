@@ -21,8 +21,8 @@ name = sys.argv[1]
 
 # wall = input("Enter Wallpaper file name: ")
 if name:
-    os.system(f"feh --no-fehbg --bg-fill {env('HOME')}/Downloads/PIC/{name}")
-    os.rename(f"{env('HOME')}/Downloads/PIC/{name}", f"{env('HOME')}/Pictures/wallpapers/{name}")
+    os.system(f"feh --no-fehbg --bg-fill {env('HOME')}/Downloads/PIC/{name}.*")
+    os.rename(f"{env('HOME')}/Downloads/PIC/{name}.*", f"{env('HOME')}/Pictures/wallpapers/{name}.*")
 else:
 	print("No Wallpaper Provided")
 

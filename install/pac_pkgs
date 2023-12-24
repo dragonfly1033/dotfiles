@@ -57,6 +57,9 @@ libgeotiff
 libreoffice-still
 libtool
 libvirt
+lightdm
+lightdm-webkit2-greeter
+lightdm-webkit-theme-litarvan
 linux
 linux-firmware
 lm_sensors
@@ -93,6 +96,7 @@ pipewire-docs
 pipewire-pulse
 pkgconf
 playerctl
+plymouth
 polybar
 pop-gtk-theme
 pragha

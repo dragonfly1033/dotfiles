@@ -2,7 +2,8 @@
 
 name=$1
 
-echo "#!/bin/sh" > $HOME/bin/$name
+touch $HOME/bin/$name
+echo "#!/bin/sh" >> $HOME/bin/$name
 echo "" >> $HOME/bin/$name
 echo "" >> $HOME/bin/$name
 echo "" >> $HOME/bin/$name

@@ -37,27 +37,43 @@ echo "Uninstall vesa"
 pacman -Rns --noconfirm xf86-video-vesa > /dev/null
 
 echo "-------------------------------------------"
-echo "Install and Enable login"
+echo "Install login and Boot splash"
 
-pacman -S --noconfirm --needed ly
+pacman -S --noconfirm --needed lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan plymouth
 
-systemctl enable ly
+cp ~/.dotfiles/files/lightdm-plymouth.service /usr/lib/systemd/system
+mkdir /usr/share/backgrounds
+cp ~/.dotfiles/files/black_background.png /usr/share/backgrounds
 
 echo "-------------------------------------------"
-echo "Configure Login"
+echo "Configure Login and Boot splash"
 
-sed -i '/#animate/c\animate=false' /etc/ly/config.ini
-sed -i '/#asterisk/c\asterisk=o' /etc/ly/config.ini
-sed -i '/#margin_box_w/c\margin_box_w=6' /etc/ly/config.ini
-sed -i '/#margin_box_h/c\margin_box_h=25' /etc/ly/config.ini
-sed -i '/#blank_password/c\blank_password=true' /etc/ly/config.ini
+# sed -i '/#animate/c\animate=false' /etc/ly/config.ini
+# sed -i '/#asterisk/c\asterisk=o' /etc/ly/config.ini
+# sed -i '/#margin_box_w/c\margin_box_w=6' /etc/ly/config.ini
+# sed -i '/#margin_box_h/c\margin_box_h=25' /etc/ly/config.ini
+# sed -i '/#blank_password/c\blank_password=true' /etc/ly/config.ini
+
+sed -ri 's/^#?greeter-session=.*/greeter-session=qwe/' /etc/lightdm/lightdm.conf
+sed -ri 's/^#?webkit_theme.*/webkit_theme=qwe/' /etc/lightdm/lightdm-webkit2-greeter.conf
+sed -ri 's/^#?debug_mode.*/debug_mode=qwe/' /etc/lightdm/lightdm-webkit2-greeter.conf
+
+sed -ri 's/GRUB_CMDLINE_LINUX_DEFAULT="(.*)"/GRUB_CMDLINE_LINUX_DEFAULT="\1 splash"/' /etc/default/grub
+
+sed -ri 's/MODULES=\((.*)\)$/MODULES=\(\1 amdgpu\)/' /etc/mkinitcpio.conf
+sed -ri 's/HOOKS=\(base udev (.*)\)/HOOKS=\(base udev plymouth \1\)/' /etc/mkinitcpio.conf   
+
+grub-mkconfig -o /boot/grub/grub.cfg
+mkinitcpio -P
+
+systemctl enable lightdm-plymouth.service
 
 echo "-------------------------------------------"
 echo "Configure xinitrc"
 
 touch .xinitrc
 head -n -5 /etc/X11/xinit/xinitrc >> .xinitrc
-echo "awesome" >> .xinitrc
+echo "exec awesome" >> .xinitrc
 chmod +x .xinitrc
 chown $username .xinitrc
 chgrp $username .xinitrc

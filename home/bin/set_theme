@@ -43,6 +43,8 @@ done
 
 $sed_var "name=" "\"$theme\"" $HOME/.fehbg
 
+ln -sf ~/Pictures/wallpapers/$(cat ~/bin/.env/THEME).* ~/.dotfiles/files/lightdm_back_proxy
+
 sed -r "s/(background: '0x)(.*)(')/\1$newback\3/" -i $HOME/.config/alacritty/themes/theme.yaml
 sed -r "s/(foreground: '0x)(.*)(')/\1$newtext\3/" -i $HOME/.config/alacritty/themes/theme.yaml
 
