@@ -1,0 +1,6 @@
+multiple clipboards
+latex
+	- autoshift num row
+	- (\d)x(\d)
+		- input list of nums
+		- output \1 by \2 matrix with nums from list (top left to bottom right)

@@ -1,0 +1,65 @@
+# espanso match file
+
+# For a complete introduction, visit the official docs at: https://espanso.org/docs/
+
+# You can use this file to define the base matches (aka snippets)
+# that will be available in every application when using espanso.
+
+# Matches are substitution rules: when you type the "trigger" string
+# it gets replaced by the "replace" string.
+
+global_vars:
+  - name: clipboard
+    type: clipboard
+
+
+matches:
+  # Print the output of a shell command
+  - regex: "shell\\((?P<commandInput>.*)\\)"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "{{commandInput}}"
+
+  - trigger: "lc"
+    replace: " | wc -l"
+    word: true
+
+  - trigger: ";lower"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "python -c \"print('{{clipboard}}'.lower())\""
+
+  - trigger: ";title"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "python -c \"print('{{clipboard}}'.title())\""
+
+  - trigger: "rg14"
+    replace: "shreyrg14@gmail.com"
+
+  - trigger: "sp2"
+    replace: "sp2117@cam.ac.uk"
+
+  - triggers: ["slef", "sefl"]
+    replace: "self"
+  - trigger: "improt"
+    replace: "import"
+  - triggers: ["bcz", "cuz"]
+    replace: "beacuse"
+  - trigger: "probs"
+    replace: "probably"
+  - trigger: "idk"
+    replace: "I don't know"
+
+
+        
+  # And much more! For more information, visit the docs: https://espanso.org/docs/

@@ -3,7 +3,8 @@
 ddmenu_dir=~/bin/dmenu_dir
 
 CONF=$($ddmenu_dir ~/Documents/Python)
+
 if [ $CONF != 'NONE' ]; then 
-	vscodium "$CONF" 
+	eval "vscodium $CONF" 
 fi	
 

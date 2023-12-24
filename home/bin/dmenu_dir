@@ -8,16 +8,20 @@ if [ -z $DIR ]; then
 fi
 
 ddmenu=$HOME/bin/dmenu
-go=true
+END=""
 
-while $go; do
+while [ -z "$END" ]; do
 	OPT=$(ls -1 "$DIR")
 	CHO=$($ddmenu ".\n$OPT" "Select:")
-	if [ $CHO == "." ]; then
-		go=false
+
+	(echo "$OPT" | grep "$CHO" > /dev/null) || END=$CHO
+
+	if [ -n "$END" ]; then
+		echo $END
+		exit
+	elif [ "$CHO" == "." ]; then
 		END=$DIR
 	elif [ ! -d $DIR/$CHO ]; then
-		go=false
 		END=$DIR/$CHO
 	elif [ -z $CHO ]; then
 		echo 'NONE'

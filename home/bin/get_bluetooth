@@ -5,4 +5,4 @@
 
 
 ((bluetoothctl devices | grep "WH-CH510" | cut -d' ' -f2 | xargs bluetoothctl info | grep "Connected: yes" > /dev/null) ||
- (bluetoothctl devices | grep "Soundcore" | cut -d' ' -f2 | xargs bluetoothctl info | grep "Connected: yes" > /dev/null)) && echo '' || echo ''
+ (bluetoothctl devices | grep "Soundcore" | cut -d' ' -f2 | xargs bluetoothctl info | grep "Connected: yes" > /dev/null)) && echo '󰂰' || echo '󰂯'
