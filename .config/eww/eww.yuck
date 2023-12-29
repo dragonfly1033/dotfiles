@@ -11,101 +11,22 @@
 ;tooltip
 ;visibility
 
+; (include "./sideBar.yuck")
+(include "./trys/sideBar.yuck")
 
-(defwindow	sideBar
+(defwindow	main
 	:monitor 0
 	:geometry (geometry	:x "0%"
 						:y "0%"
-						:width "10px"
+						:width "24px"
 						:height "100%"
 						:anchor "bottom left")
 	:stacking "fg"
 	;:reserve (struts :distance "24px" :side "left")
-	:style "background-color: #00ff00ff"
-
-	(mycenterbox	:class "root"
-					:orientation "vertical"
-
-		(label	:class "text time" 
-				:text "long text placeholder"
-				:angle 90.0)
-
-		(label	:text "n")
-
-		(revealer-on-hover	:class "power"
-							:var powerRev
-							:varname "powerRev"
-							:orientation "vertical"
-							:transition "slideup"
-
-			(box	:orientation "vertical"
-					:valign "end"
-					:halign "center"
-					:class "power-buttons"
-				(eventbox	:onclick "~/bin/confirmation '~/bin/logout'"
-							:halign "center"
-					(label	:class "logout-button"
-							:text ""))
-				(eventbox	:onclick "~/bin/confirmation 'reboot'"
-							:halign "center"
-					(label	:class "reboot-button"
-							:text "累"))
-				(eventbox	:onclick "~/bin/confirmation '~/bin/shutdown-hook'"
-							:halign "center"
-					(label	:class "shutdown-button"
-							:text "襤")))
-			(label	:class "power-label"
-					:text ""))))
+	:style "background-color: #00ffff"
+	(inner)
+)
 
 
-(defwidget mybutton [?class ?onclick ]
-	(box	:class ""))
 
-
-(defwidget revealer-on-hover [var varname ?class ?duration ?orientation ?transition]
-	(box	:class "${class} revealer-on-hover"
-			:orientation {orientation ?: "horizontal"}
-			:space-evenly false
-		(eventbox	:class "${class} eventbox"
-					:onhover "eww update ${varname}=true"
-					:onhoverlost "eww update ${varname}=false"
-			(box	:orientation {orientation ?: "horizontal"}
-					:space-evenly false		
-				(revealer	:valign "end"
-							:halign "center"
-							:transition {transition ?: "slideright"}
-							:reveal var
-							:duration {duration ?: "500ms"}
-					(children :nth 0))
-				(children :nth 1)))))
-
-(defwidget mycenterbox [?class ?orientation]
-	(box	:class "${class} mycenterbox"
-			:orientation "vertical"
-			:space-evenly true
-		(box	:orientation "vertical"
-				:space-evenly false
-				:halign "center"
-				:valign "start"
-			(children :nth 0)
-			(label	:text ""
-					:class "accent"
-					:style "font-size: 16;"
-					:angle -90.0))
-		(box	:orientation "vertical"
-				:space-evenly false
-				:halign "center"
-				:valign "center"
-			(children :nth 1))
-		(box	:orientation "vertical"
-				:space-evenly false
-				:halign "center"
-				:valign "end"
-			(label	:text ""
-					:class "accent"
-					:style "font-size: 16;"
-					:angle 90.0)
-			(children :nth 2))))
-
-(defvar powerRev false)
 

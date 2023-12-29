@@ -1,0 +1,36 @@
+$acc1: #FF7C2E;
+$acc2: #7F3A57;
+$bg: #222052;
+$fg: #F3F3E2;
+$fgd: #737372;
+
+*{
+	font-family: "NotoSans Nerd Font Mono";
+	background-color: $bg;
+	color: $fg;
+}
+
+.text{
+	font-family: "Fira Code";
+	font-size: 14;
+	margin: 0;
+	padding: 0;
+}
+
+.accent{
+	color: $acc1;
+}
+
+.logout-button,
+.reboot-button,
+.shutdown-button{
+	margin-bottom: 10px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.power-label{
+	border-top: 1px $acc1 solid;
+	padding-top: 3px;
+	padding-bottom: 2px;
+}

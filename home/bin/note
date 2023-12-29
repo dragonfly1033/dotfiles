@@ -1,18 +1,24 @@
 #!/bin/sh
 
 name=$1
-view=$2
+read_only=$2
 
-if [ -z $view ]; then
+if [ -z $read_only ]; then
 	view=$EDITOR
 else
 	view=$PAGER
 fi
 
 if [ -z $name ]; then
-	$view $HOME/Documents/notes/temp-$(date +"%y-%m-%d--%H:%M:%S")
-elif [ $name == "list" ]; then
-	$view "$HOME/Documents/notes/$(ls $HOME/Documents/notes | fzf)"
-else
+	# read -p "Enter name: " name
+	# $view "$HOME/Documents/notes/$name.txt"
+	
+	$view "$HOME/Documents/notes/$(ls $HOME/Documents/notes | cut -d'.' -f1 | fzf --print-query | tail -1).txt"
+	
+	# $view $HOME/Documents/notes/temp-$(date +"%y-%m-%d--%H-%M-%S").txt
+elif [ $name == "help" ]; then
+	echo "Usage: note <name> <read_only>"
+	echo "read only false by default"
+else 
 	$view "$HOME/Documents/notes/$name.txt"
 fi

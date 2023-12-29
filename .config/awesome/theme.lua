@@ -39,8 +39,8 @@ theme.fg_minimize   = "#ffffff"
 theme.gap_single_client = false
 theme.useless_gap   = dpi(8)
 theme.border_width  = dpi(2)
-theme.border_normal = "#242629"
-theme.border_focus = "#CD6900"
+theme.border_normal = "#272121"
+theme.border_focus = "#515f2c"
 theme.border_marked = "#ff0000"
 
 -- There are other variable sets
@@ -56,12 +56,12 @@ theme.border_marked = "#ff0000"
 -- Example:
 --theme.taglist_bg_focus = "#ff0000"
 
-theme.hotkeys_modifiers_fg = "#C8C5C6"
-theme.hotkeys_fg = "#C8C5C6"
-theme.hotkeys_bg = "#242629"
+theme.hotkeys_modifiers_fg = "#eae2cf"
+theme.hotkeys_fg = "#eae2cf"
+theme.hotkeys_bg = "#272121"
 theme.hotkeys_font = "Fira Code 14"
 theme.hotkeys_description_font = "Fira Code 11"
-theme.bg_urgent = "#242629"
+theme.bg_urgent = "#272121"
 
 naughty.config.icon_formats={
 "png",

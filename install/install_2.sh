@@ -59,7 +59,11 @@ sed -ri 's/^#?greeter-session=.*/greeter-session=qwe/' /etc/lightdm/lightdm.conf
 sed -ri 's/^#?webkit_theme.*/webkit_theme=qwe/' /etc/lightdm/lightdm-webkit2-greeter.conf
 sed -ri 's/^#?debug_mode.*/debug_mode=qwe/' /etc/lightdm/lightdm-webkit2-greeter.conf
 
-sed -ri 's/GRUB_CMDLINE_LINUX_DEFAULT="(.*)"/GRUB_CMDLINE_LINUX_DEFAULT="\1 splash"/' /etc/default/grub
+sed -ri 's/GRUB_CMDLINE_LINUX_DEFAULT=".*"/GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 splash udev.log_level=3 rd.udev.log_level=3 loglevel=3 vt.global_cursor_default=0"/' /etc/default/grub
+sed -ri 's/^#?GRUB_DEFUALT=.*/GRUB_DEFAULT=0/' /etc/default/grub
+sed -ri 's/^#?GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
+echo "GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT" > /etc/default/grub
+
 
 sed -ri 's/MODULES=\((.*)\)$/MODULES=\(\1 amdgpu\)/' /etc/mkinitcpio.conf
 sed -ri 's/HOOKS=\(base udev (.*)\)/HOOKS=\(base udev plymouth \1\)/' /etc/mkinitcpio.conf   
