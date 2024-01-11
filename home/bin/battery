@@ -8,7 +8,7 @@ LOW_BATTERY_SENT=$(cat $HOME/bin/.env/LOW_BATTERY_SENT)
 VERY_LOW_BATTERY_SENT=$(cat $HOME/bin/.env/VERY_LOW_BATTERY_SENT)
 
 if [ "$charging" = "Discharging" ] && [ "$battery" -le 5 ]; then
-	DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send -u critical "Gonna Die" ":("
+	DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send -u critical "Gonna Die" ":( $battery%"
 	
 elif [ "$charging" = "Discharging" ] && [ "$battery" -le 10 ]; then
 	if [ $VERY_LOW_BATTERY_SENT != "true" ]; then

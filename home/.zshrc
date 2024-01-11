@@ -110,7 +110,7 @@ bindkey  "^[[3;5~"  delete-word
 bindkey  "^[[1;5H"  backward-kill-line
 bindkey  "^[[1;5F"  kill-line
 
-export PATH="$HOME/bin:$HOME/Games/itchio:$PATH"
+# export PATH="$HOME/Documents/AndroidStudioProjects/flutter/bin:$HOME/bin:$HOME/Games/itchio:$PATH"
 export EDITOR="micro"
 export PAGER="bat -p"
 export TERMINAL="alacritty"
@@ -128,6 +128,7 @@ alias s='eza --group-directories-first --icons'
 alias la='eza --group-directories-first -lahg --icons'
 alias diff='git diff'
 alias nano='micro'
+alias htop='btop -p 1'
 alias tree='tree -a -I .git -I .cache -I .mozilla -I .local -I backups -I pulse -I .vscode-oss -I VSCodium'
 alias grep='grep --color=auto'
 alias cat='bat -p'

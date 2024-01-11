@@ -7,6 +7,18 @@ local hotkeys = require("awful.hotkeys_popup")
 local hotkeys_popup = hotkeys.widget.new(
 			{width=550, height=750})
 
+
+function eww_show_toggle(name, variable)
+	if variable then
+		variable = false
+		awful.spawn("eww close "..name)
+	else
+		variable = true
+		awful.spawn("eww open "..name)
+	end
+	return variable
+end
+
 ALT = 'Mod1'
 modkey = "Mod4"
 
@@ -21,6 +33,8 @@ editor_cmd = terminal .. " -e " .. editor
 
 bar_state = false
 bar_auto = true
+toggles_menu_state = false
+power_menu_state = false
 
 tag_notification = nil
 
@@ -76,10 +90,14 @@ globalkeys = gears.table.join(
               {description = "Pragha popup", group = "scratch"}),
     awful.key({ ALT,  "Shift"  }, "c", function () awful.spawn(poptermS.." --hold -e calc") end,
               {description = "Calculator popup", group = "scratch"}),
-    awful.key({ ALT,  "Shift"   }, "h", function () awful.spawn(poptermL.." -e htop") end,
-              {description = "htop prompt", group = "scratch"}),
+    awful.key({ ALT,  "Shift"   }, "h", function () awful.spawn(poptermL.." -e btop") end,
+              {description = "btop prompt", group = "scratch"}),
     awful.key({ ALT,  "Shift"   }, "p", function () awful.spawn('pavucontrol') end,
               {description = "pavucontrol", group = "scratch"}),
+    awful.key({ ALT,  "Shift"   }, "t", function () toggles_menu_state = eww_show_toggle("toggles", toggles_menu_state) end,
+              {description = "toggles", group = "scratch"}),    
+    awful.key({ ALT,  "Shift"   }, "l", function () power_menu_state = eww_show_toggle("power_menu", power_menu_state) end,
+              {description = "power menu", group = "scratch"}),
               
     awful.key({ ALT,           }, "e", function () awful.spawn(file_manager) end,
               {description = "open file manager", group = "launcher"}),
@@ -256,7 +274,7 @@ clientkeys = gears.table.join(
 						end
 					end
 				end,
-              {description = "move client to prev free tag", group = "client"}),
+              {description = "move client to next free tag", group = "client"}),
 
 	awful.key({ ALT,  "Shift"  }, "`", 
 				function (c)  
@@ -271,7 +289,7 @@ clientkeys = gears.table.join(
 						end
 					end
 				end,
-              {description = "move client to first free tag", group = "client"})
+              {description = "move client to prev free tag", group = "client"})
 
 )
 

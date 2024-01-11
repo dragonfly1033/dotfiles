@@ -1,0 +1,6 @@
+#!/bin/sh
+read stdin
+for i in "$@"; do
+	eval "echo '$stdin' | $i"
+done
+

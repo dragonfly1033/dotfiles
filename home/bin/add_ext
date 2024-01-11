@@ -1,0 +1,13 @@
+#!/bin/sh
+
+folder=$1
+
+for i in $(ls -1 $folder); do
+	typ=$(file $folder/$i | sed -r 's/.* ([A-Z]+) image data.*/\1/' | sort | uniq)
+	if [ "$typ" == "JPEG" ]; then
+		ext="jpg"
+	elif [ "$typ" == "PNG" ]; then
+		ext="png"
+	fi
+	mv $folder/$i $folder/$i.$ext
+done

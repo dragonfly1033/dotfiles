@@ -1,0 +1,12 @@
+$accent: #CB782D;
+$accent2: #CB782D;
+$bg: #421D0D;
+$fg: #CB782D;
+$fgd: #CB782D;
+
+* {
+    background-color: $bg;
+    color: $fg;
+    border-color: $accent;
+    border-width: 3px;
+}

@@ -3,14 +3,10 @@
 hour=$(date +"%H")
 brightness=$HOME/bin/brightness
 
-killall redshift
-redshift -x
-
 if [ $hour -ge 23 ] || [ $hour -le 6 ]; then
 	$brightness set 0
-	(redshift &) && disown
+	$HOME/bin/set_redshift 0
 else
 	$brightness set 75
-	killall redshift
-	redshift -x
+	$HOME/bin/set_redshift 10
 fi

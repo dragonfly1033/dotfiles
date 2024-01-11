@@ -1,0 +1,64 @@
+
+(defwidget toggles-block [] 
+    (box    :class "root"
+        (box    :orientation "v"
+                :spacing 0
+                :space-evenly false
+            (box :orienation "h"
+                (toggle :texton "󱄄" :textoff "󰶐" :funcon "compfy -b" :funcoff "killall compfy" :var compositor_toggle :varname "compositor_toggle")
+                (toggle :texton "󰭶" :textoff "󱘂" :funcon "xinput enable 14" :funcoff "xinput disable 14" :var touchscreen_toggle :varname "touchscreen_toggle")
+                (toggle :texton "󰟸" :textoff "󰤳" :funcon "xinput enable 10" :funcoff "xinput disable 10" :var touchpad_toggle :varname "touchpad_toggle")
+            )
+            (box :orienation "h"
+                :space-evenly false
+                (label :class "side_icon" :text "󰃠")
+                (scale :orienation "h"
+                    :valign "start"
+                    :hexpand true
+                    :class "scale"
+                    :value brightness_value
+                    :min 0
+                    :max 101
+                    :round-digits 0
+                    :onchange "~/bin/brightness set $(echo '{}' | cut -d'.' -f1)"
+                )
+            )
+            (box :orienation "h"
+                :space-evenly false
+                (label :class "side_icon" :text "󱩌")
+                (scale :orienation "h"
+                    :valign "start"
+                    :hexpand true
+                    :class "scale"
+                    :value redshift_value
+                    :min 0
+                    :max 11
+                    :round-digits 0
+                    :onchange "$HOME/bin/set_redshift {}"
+                )
+            )
+            (box :orienation "h"
+                (button :class "button"
+                        :onclick "setxkbmap gb"
+                    " "
+                )
+            )
+        )
+    )
+)
+
+
+(defwidget toggle [texton textoff funcon funcoff var varname]
+    (button :class "toggle"
+            :onclick {var ? "eww update ${varname}=false; ${funcoff}" : "eww update ${varname}=true; ${funcon}"}
+            :width 120
+            :height 100
+            :timeout "200ms"
+    {var ? texton : textoff})
+)
+
+(defvar compositor_toggle true)
+(defvar touchscreen_toggle true)
+(defvar touchpad_toggle true)
+(defpoll brightness_value :interval "30s" :initial "100" "~/bin/brightness get")
+(deflisten redshift_value :initial "0" "tail -F /tmp/redshift_10")

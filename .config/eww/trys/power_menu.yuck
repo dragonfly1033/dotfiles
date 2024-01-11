@@ -1,0 +1,19 @@
+
+(defwidget power_menu_blocks [] 
+    (box    :class "root"
+        (box :orienation "h"
+            (button :class "button"
+                    :onclick "~/bin/confirmation ~/bin/shutdown-hook &"
+                "襤"
+            )
+            (button :class "button"
+                    :onclick "~/bin/confirmation reboot &"
+                "ﰇ"
+            )
+            (button :class "button"
+                    :onclick "~/bin/confirmation ~/bin/logout &"
+                ""
+            )
+        )
+    )
+)

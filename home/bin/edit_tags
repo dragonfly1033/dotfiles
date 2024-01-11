@@ -1,0 +1,40 @@
+#!/bin/python
+
+import music_tag as mt
+
+def ask_tag(f, t):
+    try:
+        res = input(f"Enter {t.title()} (current: {f[t]}) (empty to keep): ")
+        if res:
+            f[t] = res
+    except KeyError:
+        try:
+            res = input(f"Enter {t.title()} (current: {f.mfile[t]} ) (empty to keep): ")
+            if res:
+                f.mfile[t] = res
+        except KeyError:
+            f.mfile[t] = ''
+            res = input(f"Enter {t.title()} (current: {f.mfile[t]} ) (empty to keep): ")
+            if res:
+                f.mfile[t] = res       
+
+def edit_tag_interactive(file):
+    f = mt.load_file(file)
+    ask_tag(f, 'title')
+    ask_tag(f, 'artist')
+    ask_tag(f, 'album')
+    ask_tag(f, 'genre')
+    ask_tag(f, 'comments')   
+    f.save()
+    
+
+if __name__ == "__main__":
+    import sys
+
+    if len(sys.argv) < 2:
+        print("Usage: edit_tags <full file paths>")
+        quit()
+
+    for file in sys.argv[1:]:
+        edit_tag_interactive(file)
+

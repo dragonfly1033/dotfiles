@@ -57,6 +57,10 @@ awful.rules.rules = {
       properties = { titlebars_enabled = false, size_hints_honor = false }
     },
 
+    { rule_any = {class = { "Tk", "Display" }}, 
+      properties = { floating = true }
+    },
+
     { rule_any = {class = { "popterm-large" }},
       properties = { 
       	floating = true, 

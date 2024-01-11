@@ -10,7 +10,8 @@ action = sys.argv[1]
 a = str(subprocess.check_output(["brightnessctl", "get"]))[2:-3]
 
 if action == "get":
-    print(a)
+    new = round(min((int(a)/255)**0.5 * 100, 100))
+    print(new)
 elif action == "inc":
     extra = sys.argv[2]
     new = round(min((int(a)/255)**0.5 + int(extra)/100, 1)**2, 2) * 100

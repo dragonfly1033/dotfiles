@@ -43,10 +43,15 @@ done
 
 $sed_var "name=" "\"$theme\"" $HOME/.fehbg
 
-ln -sf ~/Pictures/wallpapers/$(cat ~/bin/.env/THEME).* ~/.dotfiles/files/lightdm_back_proxy
+sed -r "s/(background = \"0x)(.*)(\")/\1$newback\3/" -i $HOME/.config/alacritty/themes/theme.toml
+sed -r "s/(foreground = \"0x)(.*)(\")/\1$newtext\3/" -i $HOME/.config/alacritty/themes/theme.toml
 
-sed -r "s/(background: '0x)(.*)(')/\1$newback\3/" -i $HOME/.config/alacritty/themes/theme.yaml
-sed -r "s/(foreground: '0x)(.*)(')/\1$newtext\3/" -i $HOME/.config/alacritty/themes/theme.yaml
+sed -r "s/[$]accent: #.*/\$accent: #$newaccent;/" -i $HOME/.config/eww/theme.scss
+sed -r "s/[$]accent2: #.*/\$accent2: #$newaccent2;/" -i $HOME/.config/eww/theme.scss
+sed -r "s/[$]bg: #.*/\$bg: #$newback;/" -i $HOME/.config/eww/theme.scss
+sed -r "s/[$]fg: #.*/\$fg: #$newtext;/" -i $HOME/.config/eww/theme.scss
+sed -r "s/[$]fgd: #.*/\$fgd: #$newtextd;/" -i $HOME/.config/eww/theme.scss
+
 
 noUse=$2
 

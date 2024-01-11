@@ -1,0 +1,14 @@
+import = ["/home/dragonfly1033/.dotfiles/.config/alacritty/themes/theme.toml"]
+
+[cursor.style]
+shape = "Beam"
+
+[font]
+size = 11.0
+
+[font.normal]
+family = "JetBrainsMono NL Nerd Font"
+style = "Regular"
+
+[window]
+opacity = 1.0

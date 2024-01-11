@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 OK=$(echo -e "Yes\nNo" | rofi -dmenu -i -p " Are you sure?  ")
-if [[ "$OK" == "Yes" ]]; then
+
+if [ "$OK" == "Yes" ]; then
 	eval "$1"
 fi
+

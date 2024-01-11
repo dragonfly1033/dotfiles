@@ -13,7 +13,7 @@
 
 (defwidget inner [] 
 	(mycenterbox	:class "root"
-					:orientation "vertical"
+					:orientation "vertical" 
 
 		(label	:class "text time" 
 				:text "long text placeholder"

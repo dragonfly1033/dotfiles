@@ -12,21 +12,48 @@
 ;visibility
 
 ; (include "./sideBar.yuck")
-(include "./trys/sideBar.yuck")
+(include "./trys/toggles.yuck")
+(include "./trys/power_menu.yuck")
 
-(defwindow	main
+(defwindow	toggles
 	:monitor 0
 	:geometry (geometry	:x "0%"
 						:y "0%"
-						:width "24px"
-						:height "100%"
-						:anchor "bottom left")
+						:width "240px"
+						:height "10px"
+						:anchor "center")
 	:stacking "fg"
-	;:reserve (struts :distance "24px" :side "left")
 	:style "background-color: #00ffff"
-	(inner)
+	(toggles-block)
 )
 
+(defwindow	power_menu
+	:monitor 0
+	:geometry (geometry	:x "0%"
+						:y "0%"
+						:width "240px"
+						:height "10px"
+						:anchor "center")
+	:stacking "fg"
+	:style "background-color: #00ffff"
+	(power_menu_blocks)
+)
+
+
+
+
+
+(defwindow	test
+	:monitor 0
+	:geometry (geometry	:x "0%"
+						:y "0%"
+						:width "240px"
+						:height "10px"
+						:anchor "bottom left")
+	:stacking "fg"
+	:style "background-color: #00ffff"
+	(label :text "test")
+)
 
 
 

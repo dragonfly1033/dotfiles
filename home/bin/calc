@@ -4,6 +4,9 @@ from math import sin, cos, tan, atan2, acos, asin, pi, tau, e, sqrt, ceil, floor
 from math import gcd, lcm, perm, exp, log, log2, log10, pow, hypot, degrees, radians, inf
 from math import factorial as fact
 from math import comb as choose
+from random import random as rand
+from random import randint as rint
+import random
 
 import numpy as np
 
