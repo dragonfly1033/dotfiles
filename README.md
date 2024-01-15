@@ -11,32 +11,32 @@
 10. Reboot
 
 ## Apps
-WM - awesome
-compositor - compfy
-browser - firefox
-terminal - alacritty
-panel - polybar (may switch to eww)
-run launcher - rofi
-shell - bash (system) / zsh (interactive)
-pdf viewer - zathura
-image viewer / wallpaper setter - feh
-image editor - krita (may switch to gimp)
-paint program - pinta
-music player - pragha (may switch to quodlibet)
-audio editor - 
-video player - mpv
-video editor - avidemux
-screenshot - flameshot
-display manager - lightdm
-	greeter - webkit2
-	theme - litarvan
-bootsplash - plymouth
-	themes - [adi1090x GitHub Repo](https://github.com/adi1090x/plymouth-themes)
-terminal editor - micro
-code editor - vscodium
-gui file manager - pcmanfm
+WM - awesome \
+compositor - compfy \
+browser - firefox \
+terminal - alacritty \
+panel - polybar (may switch to eww) \
+run launcher - rofi \
+shell - bash (system) / zsh (interactive) \
+pdf viewer - zathura \
+image viewer / wallpaper setter - feh \
+image editor - krita (may switch to gimp) \
+paint program - pinta \
+music player - pragha (may switch to quodlibet) \
+audio editor -  \
+video player - mpv \
+video editor - avidemux \
+screenshot - flameshot \
+display manager - lightdm \
+	greeter - webkit2 \
+	theme - litarvan \
+bootsplash - plymouth \
+	themes - [adi1090x GitHub Repo](https://github.com/adi1090x/plymouth-themes) \
+terminal editor - micro \
+code editor - vscodium \
+gui file manager - pcmanfm \
 
 ### Notable alternatives
-ls -> eza
-cat -> bat
+ls -> eza \
+cat -> bat \
 
