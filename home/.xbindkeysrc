@@ -76,32 +76,36 @@
     m:0x10 + c:172
     Mod2 + XF86AudioPlay
 
-"playerctl play-pause"
+"playerctl -p pragha play-pause"
     m:0x10 + c:76
     Mod2 + F10
 
-"playerctl position 5-"
+"playerctl -p pragha position 5-"
     m:0x90 + c:59
     Mod2+Mod5 + comma
 
-"playerctl position 5+"
+"playerctl -p pragha position 5+"
     m:0x90 + c:60
     Mod2+Mod5 + period
 
-"playerctl previous"
+"playerctl -p pragha previous"
     m:0x90 + c:47
     Mod2+Mod5 + semicolon
     
-"playerctl next"
+"playerctl -p pragha next"
     m:0x90 + c:48
     Mod2+Mod5 + apostrophe
 
+# "notify-send hello"
+#     m:0x90 + c:48
+#     Mod2+Mod5 + apostrophe
+
 # Increase volume
-"pactl set-sink-volume @DEFAULT_SINK@ +1000"
+"pactl set-sink-volume @DEFAULT_SINK@ +1%"
    XF86AudioRaiseVolume
 
 # Decrease volume
-"pactl set-sink-volume @DEFAULT_SINK@ -1000"
+"pactl set-sink-volume @DEFAULT_SINK@ -1%"
    XF86AudioLowerVolume
 
 # Mute volume

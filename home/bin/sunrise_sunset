@@ -1,0 +1,41 @@
+#!/bin/python
+
+from time import time, localtime, strftime
+from math import ceil, sin as _sin, cos as _cos, asin as _arcsin, acos as _arccos, degrees, radians
+
+def sin(a): return _sin(radians(a))
+def cos(a): return _cos(radians(a))
+def arcsin(a): return degrees(_arcsin(a))
+def arccos(a): return degrees(_arccos(a))
+		
+
+def calc(time, longitude, latitude):
+	j_date = time / 86400.0 + 2440587.5
+	n = ceil(j_date - 2451545.0 + 0.0008)
+	J = n - (longitude / 360)
+	M = (357.5291 + 0.98560028 * J) % 360
+	C =	1.9148*sin(M) + 0.0200*sin(2*M) + 0.0003*sin(3*M)
+	l = (M + C + 180 + 102.9372) % 360
+	t = 2451545.0 + J + 0.0053*sin(M) - 0.0069 * sin(2*l)
+	d = arcsin(sin(l) * sin(23.4397))
+	o = arccos((sin(-0.833)-sin(latitude)*sin(d))/(cos(latitude)*cos(d)))
+	r = t - o/360
+	s = t + o/360
+
+	nr = (r - 2440587.5) * 86400
+	ns = (s - 2440587.5) * 86400
+
+	lnr, lns =  localtime(nr), localtime(ns)
+	fr, fs = strftime("%H:%M", lnr), strftime("%H:%M", lns)
+
+	return fr, fs
+
+time, latitude, longitude = time(), 52.009232, -0.387072
+
+r, s = calc(time, longitude, latitude)
+print(f"Sunrise-{r}\nSunset-{s}")
+
+
+
+
+

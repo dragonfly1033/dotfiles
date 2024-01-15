@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# cht.sh
+
+languages=$(echo "python js bash css ocaml java c cpp lua go rust" 
+

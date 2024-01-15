@@ -4,6 +4,22 @@ find $HOME -type d -not -path "$HOME/.cache/*" \
 		  -a -not -path "$HOME/.gradle/*" \
 		  -a -not -path "$HOME/.config/BraveSoftware/*" \
 		  -a -not -path "$HOME/Documents/Java/*" \
+		  -a -not -path "$HOME/Documents/Android*" \
+		  -a -not -path "*EFI*" \
+		  -a -not -path "*venv*" \
+		  -a -not -path "*hsqldb*" \
+		  -a -not -path "*Games/*/*" \
+		  -a -not -path "*.config/itch/*" \
+		  -a -not -path "*.wine*" \
+		  -a -not -path "*.local*" \
+		  -a -not -path "*.jdks*" \
+		  -a -not -path "*Android*" \
+		  -a -not -path "*unity3d*" \
+		  -a -not -path "*.dartServer*" \
+		  -a -not -path "*.android*" \
+		  -a -not -path "*MuseScore4*" \
+		  -a -not -path "*.lexaloffle*" \
+		  -a -not -path "*.java*" \
 		  -a -not -path "$HOME/.m2/*" \
 		  -a -not -path "$HOME/.config/cache/*" \
 		  -a -not -path "$HOME/.mozilla/*" \

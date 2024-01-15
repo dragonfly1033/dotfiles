@@ -6,8 +6,12 @@ echo "--------------------------------------------------------------------------
 
 read -p "Enter Disk Device(full path): " disk
 
-memSize="$(free -h --si | grep Mem | tr -s ' ' | cut -d' ' -f2)G"
+ram_size=$(free -h --si | grep Mem | tr -s ' ' | cut -d' ' -f2)
 
+if [ -z $ram_size ]; then
+	read -p 'Enter total RAM space number only (GB): ' ram_size
+fi
+	
 fdisk $disk << EOF
 g
 n
@@ -17,7 +21,7 @@ n
 n
 
 
-+$memSize
++$ram_size
 n
 
 
