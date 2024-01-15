@@ -26,17 +26,17 @@ music player - pragha (may switch to quodlibet) \
 audio editor -  \
 video player - mpv \
 video editor - avidemux \
-screenshot - flameshot \
-display manager - lightdm \
-	greeter - webkit2 \
-	theme - litarvan \
-bootsplash - plymouth \
-	themes - [adi1090x GitHub Repo](https://github.com/adi1090x/plymouth-themes) \
+screenshot - flameshot
 terminal editor - micro \
 code editor - vscodium \
-gui file manager - pcmanfm \
+gui file manager - pcmanfm
+* display manager - lightdm
+	* greeter - webkit2 
+	* theme - litarvan 
+* bootsplash - plymouth
+	* themes - [adi1090x GitHub Repo](https://github.com/adi1090x/plymouth-themes) 
 
 ### Notable alternatives
-ls -> eza \
-cat -> bat \
+ls --> eza \
+cat --> bat
 
