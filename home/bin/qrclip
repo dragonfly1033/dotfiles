@@ -1,0 +1,4 @@
+#!/bin/sh
+
+xclip -o -s c | qr | display &
+

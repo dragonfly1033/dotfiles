@@ -1,6 +1,7 @@
 export PF_INFO="ascii title os kernel pkgs palette"
 # pfetch
 # colorscript -r
+~/gap_rev | awk -F'|' '{print $1"|"$2}' | sed 's/|/|/' | figlet
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -8,6 +9,10 @@ export PF_INFO="ascii title os kernel pkgs palette"
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+
+# setopt complete_aliases
+# fpath+=( ~/.config/zsh )
+# autoload -Uz ~/.config/zsh/*
 
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -17,7 +22,14 @@ source /usr/share/zsh/plugins/zsh-auto-notify/zsh-auto-notify.zsh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-autoload -U compinit
+# autoload -U compinit
+
+[[ -s /home/dragonfly1033/.autojump/etc/profile.d/autojump.sh ]] && source /home/dragonfly1033/.autojump/etc/profile.d/autojump.sh
+
+autoload -U compinit && compinit -u
+
+# autoload -Uz compinit; compinit
+
 
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache
@@ -55,36 +67,6 @@ startAndDisown() {
     $@ & disown
 }
 
-cd_aliases() {
-	if [ "$1" = "py" ]; then
-		echo ~/Documents/Python
-	elif [ "$1" = "Sync" ]; then
-		echo ~/Documents/Sync
-	elif [ "$1" = "Music" ]; then
-		echo ~/Documents/Sync/Music
-	else
-		echo ""
-	fi
-}
-
-j() {
-	d=$(cd_aliases $1)
-	if [ -z "$d" ]; then
-		cd "$(find ~/Documents ~/Desktop ~/Downloads ~/.config ~/Pictures ~/.dotfiles -type d | fzf -e +i -f "$1" | head -1)"
-	else
-		cd $d
-	fi
-}
-
-cd_wrapper() {
-	d=$(cd_aliases $1)
-	if [ -z "$d" ]; then
-		cd $1
-	else
-		cd $d
-	fi
-}
-
 mkdirr() {
 	/usr/bin/mkdir $1 && cd $1
 }
@@ -93,9 +75,23 @@ package-list() {
 	pacman -Qe | cut -d' ' -f1
 }
 
-alias d=startAndDisown
-alias cd=cd_wrapper
+custom_bat() {
+	expanded=$(grep -e "^$1" ~/.config/zsh/file_aliases | cut -d' ' -f2 | sed "s|~|$HOME|")
+	bat -p "$1" 2> /dev/null || bat -p "$expanded"	
+}
 
+jarvis() {
+	gptf -q "$1" | speak
+}
+
+gptcode() {
+	gptf --code -q "$1" | glow
+}
+
+
+
+
+alias d=startAndDisown
 
 bindkey '\e[A' history-search-backward
 bindkey '\e[B' history-search-forward
@@ -116,11 +112,10 @@ export PAGER="bat -p"
 export TERMINAL="alacritty"
 export BROWSER="firefox"
 
-alias home="cd /mnt/c/Users/shrey"
-alias sv="cd $HOME/Documents/supervisions"
-alias music="cd $HOME/Documents/Sync/Music"
-alias pf="cd $HOME/Documents/Sync/PFiles"
 
+alias tap='tee /dev/stderr'
+alias tb='~/bin/time_brightness'
+alias home="cd /mnt/c/Users/shrey"
 alias ls='eza --group-directories-first --icons'
 alias sl='\ls'
 alias l='eza --group-directories-first --icons'
@@ -131,8 +126,8 @@ alias nano='micro'
 alias htop='btop -p 1'
 alias tree='tree -a -I .git -I .cache -I .mozilla -I .local -I backups -I pulse -I .vscode-oss -I VSCodium'
 alias grep='grep --color=auto'
-alias cat='bat -p'
-alias update='sudo pacman -Syu'
+alias cat='custom_bat'
+alias update='sudo pacman -Syyu'
 # alias install='sudo pacman -S'
 alias install='yay -S $(yay -Sl | sed -r "s|^([^ ]*) ([^ ]*) .*$|\2 \1|" | fzf | cut -d" " -f1)'
 # alias uninstall='sudo pacman -Rns'
@@ -141,6 +136,7 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
 alias code='codium'
+alias cam='mpv /dev/video0 || mpv /dev/video1'
 alias wall='feh --no-fehbg --bg-fill'
 alias vedit='avidemux3_qt5'
 alias pdf='zathura'
@@ -148,16 +144,20 @@ alias windows='sudo mount /dev/nvme0n1p3 /mnt/c'
 alias unwindows='sudo umount /dev/nvme0n1p3'
 alias rc='micro ~/.zshrc && source ~/.zshrc'
 alias m='micro'
+alias lc='wc -l'
 alias suod='sudo'
 alias sd='sudo systemctl'
+compdef sd='systemctl'
 alias sdu='systemctl --user'
+compdef sdu='systemctl'
 alias todo="$HOME/bin/note todo"
-alias temp="$HOME/bin/note temp"
+alias temp="micro /tmp/temp_note"
 alias df='df -h'
 alias du='du -sh'
 alias vlc='mpv'
 alias gcl='git clone'
 alias ga='git add'
+alias gs='git status'
 alias gc='git commit -m'
 alias gch='git checkout'
 alias gpom='git push origin master'
@@ -165,6 +165,12 @@ alias clip='xclip -selection clipboard'
 alias bc='bc -lq'
 alias sudo='sudo EDITOR=micro '
 alias gti='git'
+compdef gti='git'
 alias hist="history 1 -1 | cut -c 8- | sort -r | uniq | fzf | tr -d '\n' | clip"
-alias ytdap='yt-dlp -x --no-flat-playlist'
+alias ytdpa='yt-dlp -x --no-flat-playlist --exec after_move:touch'
 alias pyvenv='python -m venv venv && source ./venv/bin/activate'
+alias gpt='tgpt --provider openai --key "$(cat ~/.ssh/openaikey)" --model "gpt-3.5-turbo" --temperature=0 --top_p=0.75'
+alias gptc='tgpt --provider openai --key "$(cat ~/.ssh/openaikey)" --model "gpt-3.5-turbo" --temperature=1 --top_p=0.9'
+alias gptf='tgpt --provider openai --key "$(cat ~/.ssh/openaikey)" --model "gpt-3.5-turbo" --temperature=0 --top_p=0.5'
+alias speak='~/Documents/piper/piper --model ~/Documents/piper/voices/irish_woman/voice.onnx --sentence_silence 0.1 --output-raw 2>/dev/null | aplay -r 22050 -f S16_LE -t raw - 2>/dev/null'
+

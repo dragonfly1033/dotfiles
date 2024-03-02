@@ -1,0 +1,33 @@
+#!/bin/sh
+
+DOWN=~/Downloads
+
+n=$1
+if [ -z "$n" ]; then
+	n=1
+fi
+
+d=$(ls -At1 "$DOWN" | head -n "$n")
+echo "$DOWN/$d" | xclip -r -selection clipboard
+echo "$d"
+
+# ls -1 $DOWN | sort > /tmp/new_downloads
+# 
+# d=$(git diff /tmp/old_downloads /tmp/new_downloads | grep -e "^+[^+]+*" | sed -r 's/\+(.*)/\1/')
+# 
+# if [ -z "$d" ]; then
+# 	echo "No Addition"
+# 	ls -1 $DOWN | sort > /tmp/old_downloads
+# 	d=$(ls -1At $DOWN | head -n 1)
+# 	echo "$DOWN/$d" | xclip -selection clipboard
+# 	echo "$DOWN/$d"
+# else
+# 	echo "Addition $d"
+# 	echo "$DOWN/$d" > /tmp/last_download
+# 	echo "$DOWN/$d" | xclip -selection clipboard
+# 	echo "$DOWN/$d"
+# 	ls -1 $DOWN | sort > /tmp/old_downloads
+# fi
+
+
+# while true; do echo Downloads | entr -ds get_new_download; done

@@ -98,7 +98,7 @@ end
 -- tag.connect_signal("property::selected", function (t) handle_polybar(t) end)
 
 client.connect_signal("property::sticky", set_shape)
-client.connect_signal("property::floating", set_shape)
+-- client.connect_signal("property::floating", set_shape)
 
 client.connect_signal("property::sticky", set_border)
 client.connect_signal("property::floating", set_border)

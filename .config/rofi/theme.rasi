@@ -5,10 +5,10 @@
  */
 
 * {
-    background-color: #15131C;
+    background-color: #3f4b4b;
     border-color:          White;
-    text-color: #FDC8C7;
-    accent: #ED1E7C;
+    text-color: #bcb9aa;
+    accent: #af9773;
     font:            "Fira Code 12";
 }
 window {
@@ -26,10 +26,13 @@ listview {
     layout:     horizontal;
     spacing:    5px;
     lines:      100;
+    dynamic:    true; 
+    flow: horizontal;
+    layout: horizontal;
 }
 entry {
-    expand:     false;
-    width:      10em;
+	expand: 	false;
+    width:      15em;
     padding: 0px 3px;
 }
 element {
@@ -41,7 +44,8 @@ element selected {
 }
 prompt {
 	text-color: @background-color;
-    background-color: @accent;	
+    background-color: @accent;
+    vertical-align: 0.4;	
 }
 element-text, element-icon {
   background-color: inherit;

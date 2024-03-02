@@ -1,0 +1,32 @@
+#!/bin/sh
+
+help() {
+	echo "Usage: timer LENGTH"
+	echo ""
+	echo "     A timer script"
+	echo ""
+	echo "     LENGTH format:"
+	# echo "         [H[H]:M[M]:S[S] | M[M]:S[S] | S[S]]"
+	echo "         [H[H] M[M] S[S] | M[M] S[S] | S[S]]"
+	echo ""
+	echo "     EXAMPLES"
+	echo "         timer 1 10 		#sets a timer for 1m 10s"
+	exit 0
+}
+
+
+
+o1=$1
+o2=$2
+o3=$3
+
+
+if [ -z $o1 ]; then
+	help
+elif [ -z $o2 ]; then
+	termdown "${o1}s"
+elif [ -z $o3 ]; then
+	termdown "${o1}m ${o2}s"
+else
+	termdown "${o1}h ${o2}m ${o3}s"
+fi

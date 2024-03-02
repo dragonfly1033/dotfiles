@@ -1,0 +1,5 @@
+#!/bin/sh
+
+electron ~/bin/electron-apps/excalidraw.js
+
+

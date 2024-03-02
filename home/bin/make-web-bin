@@ -1,0 +1,18 @@
+#!/bin/sh
+
+read -p "Enter name: " name
+read -p "Enter full link: " l
+
+cp $HOME/bin/electron-apps/template.js $HOME/bin/electron-apps/$name.js
+sed -i "s|LINK|$l|" $HOME/bin/electron-apps/$name.js
+
+touch $HOME/bin/$name
+echo "#!/bin/sh" >> $HOME/bin/$name
+echo "" >> $HOME/bin/$name
+echo "electron ~/bin/electron-apps/$name.js" >> $HOME/bin/$name
+echo "" >> $HOME/bin/$name
+chmod +x $HOME/bin/$name
+
+
+
+

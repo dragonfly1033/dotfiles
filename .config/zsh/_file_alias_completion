@@ -1,0 +1,35 @@
+#compdef file_alias_completion
+
+_foo_tools_sh() {
+    typeset -A opt_args
+    local alternatives
+
+    alternatives=(
+        'args:rv options:_foo_tools_sh_options'
+    )
+
+    _alternative $alternatives && return 0
+
+    return 1
+}
+
+_foo_tools_sh_options() {
+    local -a arguments=()
+
+    while read i; do
+    	expanded=$(echo "$i" | cut -d' ' -f1)
+    	arguments+=( $expanded )
+    done < ~/.config/zsh/file_aliases 
+    
+    for i in $(ls -A1); do
+    	arguments+=( "$i" )
+    done
+    
+
+    _describe 'cmds' arguments
+
+    return 1
+}
+
+# invoke the completion command during autoload
+_foo_tools_sh "$@"

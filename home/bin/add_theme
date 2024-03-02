@@ -6,7 +6,12 @@ env = os.environ.get
 
 # name = input("Enter Name: ").replace(' ', '_')
 
-name = sys.argv[1]
+try:
+    name = sys.argv[1]
+    full_path = sys.argv[2]
+except IndexError:
+    print('Usage: add_theme <name> <full path to wallpaper>')
+    quit()
 
 # wall = input("Enter Wallpaper URL: ")
 # if wall:
@@ -20,11 +25,19 @@ name = sys.argv[1]
 # 	print("No Wallpaper Provided")
 
 # wall = input("Enter Wallpaper file name: ")
-if name:
-    os.system(f"feh --no-fehbg --bg-fill {env('HOME')}/Downloads/PIC/{name}.*")
-    os.rename(f"{env('HOME')}/Downloads/PIC/{name}.*", f"{env('HOME')}/Pictures/wallpapers/{name}.*")
-else:
-	print("No Wallpaper Provided")
+try:
+
+    ext = ''
+    for i in full_path[::-1]:
+        if i == '.':
+            break
+        ext += i
+
+    os.rename(f"{full_path}", f"{env('HOME')}/Pictures/wallpapers/{name}.{ext}")
+    os.system(f"feh --no-fehbg --bg-fill {env('HOME')}/Pictures/wallpapers/{name}.{ext}")
+except:
+    print('Usage: add_theme <name> <full path to wallpaper>')
+    quit()
 
 opt = input("Theme Now(y,n)? ")
 

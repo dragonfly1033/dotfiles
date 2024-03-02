@@ -10,11 +10,20 @@ import random
 
 import numpy as np
 
+phi = 1.61803399
+
 import sys
 sys.ps1 = ""
 sys.ps2 = ""
 
 print("Calculator")
+
+def sind(a): return sin(degrees(a))
+def cosd(a): return cos(degrees(a))
+def tand(a): return tan(degrees(a))
+def asind(a): return degrees(asin(a))
+def acosd(a): return degrees(acos(a))
+def atan2d(y, x): return degrees(atan2(a))
 
 def sign(a):
 	return 1 * (a > 0) -1 * (a < 0)
@@ -22,9 +31,11 @@ def sign(a):
 def help():
 	print("e, pi, tau, inf")
 	print("sin, cos, tan, asin, acos, atan2")
+	print("sind, cosd, tand, asind, acosd, atan2d")
 	print("degrees, radians, sqrt, ceil, floor")
 	print("pow, hypot, fact, sign, gcd, lcm")
 	print("perm, choose, exp, log, log2, log10")
 	print("numpy = np")
+	print("random, rint")
 
 

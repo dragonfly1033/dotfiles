@@ -4,7 +4,7 @@ import music_tag as mt
 
 def ask_tag(f, t):
     try:
-        res = input(f"Enter {t.title()} (current: {f[t]}) (empty to keep): ")
+        res = input(f"Enter {t.title()} (current: {f[t] if f[t] else file}) (empty to keep): ")
         if res:
             f[t] = res
     except KeyError:

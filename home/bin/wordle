@@ -1,4 +1,5 @@
+
 #!/bin/sh
 
-firefox -P Main --private-window "https://www.nytimes.com/games/wordle/index.html"
+electron ~/bin/electron-apps/wordle.js
 

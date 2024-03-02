@@ -1,0 +1,5 @@
+#!/bin/sh
+
+th=$(plymouth-set-default-theme -l | shuf -n1)
+echo "$th"
+sudo plymouth-set-default-theme -R "$th"

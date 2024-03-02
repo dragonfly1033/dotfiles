@@ -1,0 +1,4 @@
+#!/bin/sh
+
+firefox -P Main --private-window "$(xclip -o -s c | sed 's/www.youtube.com/yewtu.be/')"
+

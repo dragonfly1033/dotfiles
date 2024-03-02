@@ -1,16 +1,18 @@
 #!/bin/sh
 
-checkupdates | awk -F'[ -]' '{print $1}' | uniq -c
-txt=$(checkupdates | awk -F'[ -]' '{print $1}' | uniq)
+checkupdates | awk -F'[ -]' '{print $1}' | sort | uniq -c
+txt=$(checkupdates | awk -F'[ -]' '{print $1}' | sort | uniq)
+num=$(echo "$txt" | wc -l)
 
 read -p "Update (y/n)? " ans
 
 if [ $ans = "y" ]; then
-	sudo pacman -Syu
+	sudo pacman -Syu --noconfirm
 
 	if [[ $txt =~ "grub" ]]; then
 		sudo $HOME/bin/reinstall-grub
-		read nil
 	fi
+
+	notify-send -t 5000 "System Update Finished" "$num Updates Finished"
 fi
 

@@ -3,7 +3,7 @@
 s=$($HOME/bin/dmenu '' "Search: ")
 P=$(echo $s | cut -d' ' -f1)
 
-if [ -z "$s"]; then
+if [ -z "$s" ]; then
 	exit
 fi
 

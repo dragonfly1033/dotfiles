@@ -69,10 +69,10 @@ require("signals")
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
     awful.layout.suit.tile,
-    bling.layout.centered,
-    -- awful.layout.suit.spiral.dwindle,
     awful.layout.suit.tile.bottom,
+    bling.layout.centered,
     bling.layout.equalarea,
+    -- awful.layout.suit.spiral.dwindle,
     -- awful.layout.suit.floating,
     -- awful.layout.suit.tile.left,
     -- awful.layout.suit.tile.top,

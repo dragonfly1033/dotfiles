@@ -124,6 +124,72 @@ globalkeys = gears.table.join(
     awful.key({ ALT,  }, "s",     function () awful.client.incwfact(-0.05)    end,
               {description = "decrease height of client", group = "layout"}),
 
+
+    awful.key({ ALT, "Shift" }, "w",     function () 
+    									c = client.focus
+    									if c == nil then return end
+    									geom = c:geometry()
+    									
+										if client.focus.floating then
+											c:geometry({
+												x = geom.x,
+												y = 0,
+												width = geom.width,
+												height = geom.y + geom.height
+											})
+										end
+    							  end,
+              {description = "stick top of window to top of screen", group = "layout"}),
+
+    awful.key({ ALT, "Shift" }, "a",     function () 
+    									c = client.focus
+    									if c == nil then return end
+    									geom = c:geometry()
+    									    
+										if client.focus.floating then
+											c:geometry({
+												x = 0,
+												y = geom.y,
+												width = geom.x + geom.width,
+												height = geom.height
+											})
+										end
+    							  end,
+              {description = "stick left of window to left of screen", group = "layout"}),
+
+    awful.key({ ALT, "Shift" }, "s",     function () 
+    									c = client.focus
+    									if c == nil then return end
+    									geom = c:geometry()
+    									    
+										if client.focus.floating then
+											c:geometry({
+												x = geom.x,
+												y = geom.y,
+												width = geom.width,
+												height = 1080 - geom.y
+											})
+										end
+    							  end,
+              {description = "stick bottom of window to bottom of screen", group = "layout"}),
+
+    awful.key({ ALT, "Shift" }, "d",     function () 
+    									c = client.focus
+    									if c == nil then return end
+    									geom = c:geometry()
+    									    
+										if client.focus.floating then
+											c:geometry({
+												x = geom.x,
+												y = geom.y,
+												width = 1920 - geom.x,
+												height = geom.height
+											})
+										end
+    							  end,
+              {description = "stick right of window to right of screen", group = "layout"}),                        
+              
+
     awful.key({ ALT, "Control" }, "w",     function () awful.tag.incncol( 1, nil, true)    end,
               {description = "increase the number of columns", group = "layout"}),
               

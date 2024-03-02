@@ -44,7 +44,7 @@ athens,1,1
 brown_demask,1,0
 brown_kites,1,0
 chapel,1,1
-chinese_demon_girl,1,2
+chinese_demon_girl,0,2
 chinese_fantasy,1,1
 chinese_street,1,1
 chinese_myth,1,1
@@ -59,7 +59,7 @@ girl_over_shoulder,0,1
 girl_sketch,0,1
 great_wave,1,1
 green_chevron,1,2
-green_eyes,2,1
+green_eyes,0,1
 gruv_landscape,1,2
 kali,1,2
 leaves,1,2
@@ -74,7 +74,8 @@ raven,1,1
 root,1,2
 roses_latour,1,2
 skull_desk,1,2
-tiger_girl,2,1
+tiger_girl,0,1
 zabrocki_krakow,1,2
 pieta,1,0
 adam,1,1
+black,1,0

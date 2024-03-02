@@ -23,7 +23,7 @@ image viewer / wallpaper setter - feh \
 image editor - krita (may switch to gimp) \
 paint program - pinta \
 music player - pragha (may switch to quodlibet) \
-audio editor -  \
+audio editor - tenacity \
 video player - mpv \
 video editor - avidemux \
 screenshot - flameshot

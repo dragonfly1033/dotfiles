@@ -19,3 +19,4 @@ echo "Host github.com-$name" >> $HOME/.ssh/config
 echo "        Hostname github.com" >> $HOME/.ssh/config
 echo "        IdentityFile=$HOME/.ssh/$name" >> $HOME/.ssh/config
 
+echo "\033[0;31mREMEBER: add '-$name' to repo remote to become git@github.com-$name:...\033[0m"

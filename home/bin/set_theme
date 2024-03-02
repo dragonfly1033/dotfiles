@@ -52,7 +52,6 @@ sed -r "s/[$]bg: #.*/\$bg: #$newback;/" -i $HOME/.config/eww/theme.scss
 sed -r "s/[$]fg: #.*/\$fg: #$newtext;/" -i $HOME/.config/eww/theme.scss
 sed -r "s/[$]fgd: #.*/\$fgd: #$newtextd;/" -i $HOME/.config/eww/theme.scss
 
-
 noUse=$2
 
 if [[ "_$noUse" == "_" ]]; then

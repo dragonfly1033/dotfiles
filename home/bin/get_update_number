@@ -1,0 +1,16 @@
+#!/bin/sh
+
+ups=$(checkupdates | awk -F'[ -]' '{print $1}' | sort | uniq)
+n=$(echo "$ups" | wc -l)
+LIMIT=80
+
+message="$n"
+
+case "$n" in
+	"ERROR"*) echo "" ;;
+	*) 	if [ $n -ge $LIMIT ]; then
+			message="%{F#f00}$message"
+		fi
+		(echo "$ups" | grep -e "grub" > /dev/null ) && echo " $message !" || echo " $message"
+		;;
+esac
