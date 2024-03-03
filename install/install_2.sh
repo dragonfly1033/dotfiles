@@ -1,5 +1,7 @@
 #!/bin/sh
 
+username=$(whoami)
+
 echo "--------------------------------------------------------------------------------------"
 echo "INSTALL PROGRAMS"
 echo "--------------------------------------------------------------------------------------"
@@ -12,11 +14,6 @@ echo "--------------------------------------------------------------------------
 
 sudo pacman -Rns --noconfirm xf86-video-vesa > /dev/null
 
-pwd
-ls
-
-read -p "--------------------------------------------------------------------------------------" alsdkn
-
 echo "--------------------------------------------------------------------------------------"
 echo "LOGIN & SPLASH"
 echo "--------------------------------------------------------------------------------------"
@@ -26,7 +23,7 @@ sudo pacman -S --noconfirm --needed lightdm lightdm-webkit2-greeter lightdm-webk
 sudo cp /dotfiles/files/lightdm-plymouth.service /usr/lib/systemd/system
 sudo mkdir /usr/share/backgrounds
 sudo cp /dotfiles/files/black_background.png /usr/share/backgrounds
-sudo cp -r "/dotfiles/files/plymouth_themes/*" /usr/share/plymouth/themes
+sudo cp -r "/dotfiles/files/plymouth_themes"/* /usr/share/plymouth/themes
 
 # sed -i '/#animate/c\animate=false' /etc/ly/config.ini
 # sed -i '/#asterisk/c\asterisk=o' /etc/ly/config.ini
@@ -41,7 +38,7 @@ sudo sed -ri 's/^#?debug_mode.*/debug_mode=true/' /etc/lightdm/lightdm-webkit2-g
 sudo sed -ri 's/GRUB_CMDLINE_LINUX_DEFAULT=".*"/GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 splash udev.log_level=3 rd.udev.log_level=3 loglevel=3 vt.global_cursor_default=0"/' /etc/default/grub
 sudo sed -ri 's/^#?GRUB_DEFUALT=.*/GRUB_DEFAULT=0/' /etc/default/grub
 sudo sed -ri 's/^#?GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
-sudo echo "GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT" > /etc/default/grub
+echo "GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT" | sudo tee -a /etc/default/grub
  
 sudo sed -ri 's/MODULES=\((.*)\)$/MODULES=\(\1 amdgpu\)/' /etc/mkinitcpio.conf
 sudo sed -ri 's/HOOKS=\(base udev (.*)\)/HOOKS=\(base udev plymouth \1\)/' /etc/mkinitcpio.conf   
@@ -77,7 +74,7 @@ echo "--------------------------------------------------------------------------
 sudo sed -i "s/USER/$username/g" /dotfiles/files/cron/user
 sudo sed -i "s/USER/$username/g" /dotfiles/files/cron/root
 
-sudo crontab -u $username /dotfiles/files/cron/user
+sudo crontab -u "$username" /dotfiles/files/cron/user
 sudo crontab -u root /dotfiles/files/cron/root
 
 read -p "--------------------------------------------------------------------------------------" alsdkn
@@ -87,7 +84,7 @@ echo "CHANGE PERMS"
 echo "--------------------------------------------------------------------------------------"
 
 sudo chmod +x /dotfiles/home/bin
-sudo chmod +x "/dotfiles/home/*"
+sudo chmod +x "/dotfiles/home"/*
 sudo chmod -R +x /dotfiles/.config
 
 echo "--------------------------------------------------------------------------------------"
@@ -108,8 +105,8 @@ mkdir /home/$username/Documents
 mkdir /home/$username/Desktop
 mkdir /home/$username/Pictures
 ln -s "/home/$username/.dotfiles/wallpapers" /home/$username/Pictures/wallpapers
-ln -s "/home/$username/.dotfiles/.config/*" /home/$username/.config
-ln -s "/home/$username/.dotfiles/home/*" /home/$username
+ln -s "/home/$username/.dotfiles/.config"/* /home/$username/.config
+ln -s "/home/$username/.dotfiles/home"/* /home/$username
 
 git clone "https://github.com/BlingCorp/bling.git" "/home/$username/.config/awesome/bling" > /dev/null
 
@@ -118,16 +115,16 @@ echo "MOVE FONTS"
 echo "--------------------------------------------------------------------------------------"
 
 mkdir -p ~/.local/share/fonts/MyFonts
-sudo ln -s "/home/$username/.dotfiles/fonts/*" "/home/$username/.local/share/fonts/MyFonts"
+sudo ln -s "/home/$username/.dotfiles/fonts"/* "/home/$username/.local/share/fonts/MyFonts"
 
 echo "--------------------------------------------------------------------------------------"
 echo "INSTALL YAY"
 echo "--------------------------------------------------------------------------------------"
 
-git clone https://aur.archlinux.org/yay-bin.git > /dev/null
-cd yay-bin
+git clone https://aur.archlinux.org/yay-bin.git /home/$username/yay-bin > /dev/null
+cd /home/$username/yay-bin
 makepkg -si > /dev/null
-cd
+cd /home/$username/
 rm -rf yay-bin
 
 echo "--------------------------------------------------------------------------------------"

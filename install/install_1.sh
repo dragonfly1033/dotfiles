@@ -52,7 +52,7 @@ echo "--------------------------------------------------------------------------
 echo "INSTALL ESSENTIALS"
 echo "--------------------------------------------------------------------------------------"
 
-pacman -Syyu > /dev/null
+pacman -Syyu --noconfirm --needed > /dev/null
 pacman -S --noconfirm --needed micro sudo grub efibootmgr dosfstools os-prober mtools > /dev/null
 
 if [ $system = 'h' ]; then

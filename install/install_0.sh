@@ -65,6 +65,8 @@ echo "--------------------------------------------------------------------------
 echo "BASIC INSTALLS"
 echo "--------------------------------------------------------------------------------------"
 
+sed -ri 's/^#?ParallelDownloads.*/ParallelDownloads=5/' /etc/pacman.conf
+
 pacstrap -K /mnt base linux linux-firmware base-devel git
 
 echo "--------------------------------------------------------------------------------------"
