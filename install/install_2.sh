@@ -19,7 +19,7 @@ echo "--------------------------------------------------------------------------
 echo "LOGIN & SPLASH"
 echo "--------------------------------------------------------------------------------------"
 
-sudo pacman -S --noconfirm --needed lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan plymouth > /dev/null
+sudo pacman -S --noconfirm --needed lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan plymouth
 
 sudo cp /dotfiles/files/lightdm-plymouth.service /usr/lib/systemd/system
 sudo mkdir /usr/share/backgrounds

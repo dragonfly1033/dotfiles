@@ -65,7 +65,7 @@ echo "--------------------------------------------------------------------------
 echo "BASIC INSTALLS"
 echo "--------------------------------------------------------------------------------------"
 
-pacstrap -K /mnt base linux linux-firmware base-devel git > /dev/null
+pacstrap -K /mnt base linux linux-firmware base-devel git
 
 echo "--------------------------------------------------------------------------------------"
 echo "GENERATE FS TABLE"
