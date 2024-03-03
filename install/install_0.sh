@@ -65,7 +65,7 @@ echo "--------------------------------------------------------------------------
 echo "BASIC INSTALLS"
 echo "--------------------------------------------------------------------------------------"
 
-pacstrap /mnt base linux linux-firmware base-devel git 
+pacstrap /mnt base linux linux-firmware base-devel git > /dev/null
 
 echo "--------------------------------------------------------------------------------------"
 echo "GENERATE FS TABLE"
@@ -77,9 +77,10 @@ echo "--------------------------------------------------------------------------
 echo "GET DOTS"
 echo "--------------------------------------------------------------------------------------"
 
+pacman -Sy --needed --noconfirm
 pacman -S --needed --noconfirm git
 
-git clone https://github.com/dragonfly1033/dotfiles.git /mnt > /dev/null
+git clone https://github.com/dragonfly1033/dotfiles.git /mnt/dotfiles > /dev/null
 chmod +x "/mnt/dotfiles/install/install_*"
 
 echo "--------------------------------------------------------------------------------------"
