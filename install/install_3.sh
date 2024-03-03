@@ -1,21 +1,19 @@
-#!/bin/bash
+#!/bin/sh
+
+echo "--------------------------------------------------------------------------------------"
+echo "INSTALL YAY"
+echo "--------------------------------------------------------------------------------------"
+
+git clone https://aur.archlinux.org/yay-bin.git > /dev/null
+cd yay-bin
+makepkg -si > /dev/null
+cd
+
+echo "--------------------------------------------------------------------------------------"
+echo "INSTALL AUR PKGS"
+echo "--------------------------------------------------------------------------------------"
+
+yes '
+' | yay -S --needed --mflags "--noconfirm" "$(cat ~/.dotfiles/install/yay_pkgs | xargs)"
 
 
-
-echo "-------------------------------------------"
-echo "Install Yay Packages"
-
-yes | LANG=C yay -S --batchinstall --norebuild --answerclean All --answerdiff None --mflags "--noconfirm" $(cat ~/.dotfiles/install/yay_pkgs | xargs)
-
-echo "-------------------------------------------"
-echo "Move directories to correct places"
-
-mkdir Downloads
-mkdir Documents
-mkdir Desktop
-mkdir Pictures
-ln -s ~/.dotfiles/wallpapers ~/Pictures/wallpapers
-ln -s ~/.dotfiles/.config/* ~/.config
-ln -s ~/.dotfiles/home/* ~/.
-
-git clone "https://github.com/BlingCorp/bling.git" "~/.config/awesome/bling"

@@ -1,0 +1,45 @@
+#!/bin/sh
+
+a=$(pacman -Qne | cut -d' ' -f1 | ~/.dotfiles/diff.py ~/.dotfiles/install/pac_pkgs)
+
+echo "$a"
+read das
+
+additions=$(echo "$a" | grep "^+" | cut -d' ' -f2)
+removals=$(echo "$a" | grep "^-" | cut -d' ' -f2 | xargs | tr ' ' '|')
+
+
+for i in $(echo "$removals"); do
+	sed -r "/$i/ d" -i ~/.dotfiles/install/pac_pkgs
+done
+
+for i in $(echo "$additions"); do
+	read -p "Add $i (y/N)?" conf
+	if [ "$conf" == "y" ]; then
+		echo "$i" >> ~/.dotfiles/install/pac_pkgs
+	fi
+done
+
+
+echo "------------------------------------------------------------------"
+echo "YAY"
+echo "------------------------------------------------------------------"
+
+b=$(pacman -Qme | cut -d' ' -f1 | ~/.dotfiles/diff.py ~/.dotfiles/install/yay_pkgs)
+
+echo "$b"
+read das
+
+additions2=$(echo "$b" | grep "^+" | cut -d' ' -f2)
+removals2=$(echo "$b" | grep "^-" | cut -d' ' -f2 | xargs | tr ' ' '|')
+
+for i in $(echo "$removals2"); do
+	sed -r "/$i/ d" -i ~/.dotfiles/install/yay_pkgs
+done
+
+for i in $(echo "$additions2"); do
+	read -p "Add $i (y/N)?" conf
+	if [ "$conf" == "y" ]; then
+		echo "$i" >> ~/.dotfiles/install/yay_pkgs
+	fi
+done
