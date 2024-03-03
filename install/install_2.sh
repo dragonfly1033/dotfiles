@@ -130,6 +130,6 @@ echo "INSTALL AUR PKGS"
 echo "--------------------------------------------------------------------------------------"
 
 yes '
-' | yay -S --needed --mflags "--noconfirm" "$(cat ~/.dotfiles/install/yay_pkgs | xargs)"
+' | yay -S --needed --mflags "--noconfirm" $(cat ~/.dotfiles/install/yay_pkgs | xargs)
 
 
