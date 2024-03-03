@@ -4,16 +4,18 @@ echo "--------------------------------------------------------------------------
 echo "INSTALL PROGRAMS"
 echo "--------------------------------------------------------------------------------------"
 
-sudo pacman -S --noconfirm --needed "$(cat /dotfiles/install/pac_pkgs | xargs)" > /dev/null
-
-
-read alskdn
+sudo pacman -S --noconfirm --needed $(cat /dotfiles/install/pac_pkgs | xargs)
 
 echo "--------------------------------------------------------------------------------------"
 echo "Remove legacy graphics driver"
 echo "--------------------------------------------------------------------------------------"
 
 sudo pacman -Rns --noconfirm xf86-video-vesa > /dev/null
+
+pwd
+ls
+
+read -p "--------------------------------------------------------------------------------------" alsdkn
 
 echo "--------------------------------------------------------------------------------------"
 echo "LOGIN & SPLASH"
@@ -77,6 +79,8 @@ sudo sed -i "s/USER/$username/g" /dotfiles/files/cron/root
 
 sudo crontab -u $username /dotfiles/files/cron/user
 sudo crontab -u root /dotfiles/files/cron/root
+
+read -p "--------------------------------------------------------------------------------------" alsdkn
 
 echo "--------------------------------------------------------------------------------------"
 echo "CHANGE PERMS"

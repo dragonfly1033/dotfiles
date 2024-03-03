@@ -124,5 +124,8 @@ echo ""
 echo "exit"
 echo "umount -l /mnt"
 echo "reboot" 
+echo "" 
+echo "Take this oppoortunity to edit dotfiles/install/*_pkgs"
+echo "Run install_2.sh" 
 echo "-------------------------------------------"
 
