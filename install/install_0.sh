@@ -81,7 +81,7 @@ git clone https://github.com/dragonfly1033/dotfiles.git /mnt > /dev/null
 chmod +x "/mnt/dotfiles/install/install_*"
 
 echo "--------------------------------------------------------------------------------------"
-echo "After chroot run install_1.sh"
+echo "After chroot run /dotfiles/install/install_1.sh"
 echo "--------------------------------------------------------------------------------------"
 
 echo "--------------------------------------------------------------------------------------"
