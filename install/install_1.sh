@@ -52,6 +52,10 @@ echo "--------------------------------------------------------------------------
 echo "INSTALL ESSENTIALS"
 echo "--------------------------------------------------------------------------------------"
 
+rm -rf /etc/pacman.d/gnupg
+pacman-key --init > /dev/null
+pacman-key --populate archlinux > /dev/null
+
 pacman -Syyu --noconfirm --needed > /dev/null
 pacman -S --noconfirm --needed micro sudo grub efibootmgr dosfstools os-prober mtools > /dev/null
 

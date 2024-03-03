@@ -71,6 +71,8 @@ echo "--------------------------------------------------------------------------
 
 sed -ri 's/^#?ParallelDownloads.*/ParallelDownloads=5/' /etc/pacman.conf
 
+pacman -Syy --noconfirm --needed > /dev/null
+
 pacstrap -K /mnt base linux linux-firmware base-devel git
 
 echo "--------------------------------------------------------------------------------------"
