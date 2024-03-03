@@ -77,7 +77,6 @@ echo "--------------------------------------------------------------------------
 echo "GET DOTS"
 echo "--------------------------------------------------------------------------------------"
 
-pacman -Syu --needed --noconfirm
 pacman -S --needed --noconfirm git
 
 git clone https://github.com/dragonfly1033/dotfiles.git /mnt > /dev/null
