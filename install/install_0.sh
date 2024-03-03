@@ -12,7 +12,7 @@ echo "--------------------------------------------------------------------------
 echo "STARTING PARTITIONING"
 echo "--------------------------------------------------------------------------------------"
 	
-fdisk $disk << EOF
+fdisk $disk > /dev/null << EOF
 g
 n
 
@@ -53,9 +53,9 @@ boot_part="$disk"1
 swap_part="$disk"2
 root_part="$disk"3
 
-mkfs.fat -F32 $boot_part
-mkswap $swap_part
-mkfs.ext4 $root_part
+mkfs.fat -F32 $boot_part > /dev/null
+mkswap $swap_part > /dev/null
+mkfs.ext4 $root_part > /dev/null
 
 mount --mkdir $root_part /mnt
 mount --mkdir $boot_part /mnt/boot
@@ -76,6 +76,9 @@ genfstab -U /mnt >> /mnt/etc/fstab
 echo "--------------------------------------------------------------------------------------"
 echo "GET DOTS"
 echo "--------------------------------------------------------------------------------------"
+
+pacman -Syu
+pacman -S git
 
 git clone https://github.com/dragonfly1033/dotfiles.git /mnt > /dev/null
 chmod +x "/mnt/dotfiles/install/install_*"
