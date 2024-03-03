@@ -77,8 +77,6 @@ sudo sed -i "s/USER/$username/g" /dotfiles/files/cron/root
 sudo crontab -u "$username" /dotfiles/files/cron/user
 sudo crontab -u root /dotfiles/files/cron/root
 
-read -p "--------------------------------------------------------------------------------------" alsdkn
-
 echo "--------------------------------------------------------------------------------------"
 echo "CHANGE PERMS"
 echo "--------------------------------------------------------------------------------------"
