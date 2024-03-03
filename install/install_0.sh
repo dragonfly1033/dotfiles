@@ -77,8 +77,8 @@ echo "--------------------------------------------------------------------------
 echo "GET DOTS"
 echo "--------------------------------------------------------------------------------------"
 
-pacman -Sy --needed --noconfirm
-pacman -S --needed --noconfirm git
+pacman -Sy --needed --noconfirm > /dev/null
+pacman -S --needed --noconfirm git > /dev/null
 
 git clone https://github.com/dragonfly1033/dotfiles.git /mnt/dotfiles > /dev/null
 chmod +x "/mnt/dotfiles/install/install_*"

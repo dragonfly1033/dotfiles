@@ -4,6 +4,10 @@ read -p 'Enter Hostname: ' hostname
 read -p 'Enter Username: ' username
 read -p 'Enter System (h)ardware, (v)mware, virtual(b)ox: ' system
 
+pwd
+ls
+exit
+
 echo "--------------------------------------------------------------------------------------"
 echo "Set ROOT password"
 echo "--------------------------------------------------------------------------------------"
@@ -48,12 +52,12 @@ sed -ri 's/^#?ParallelDownloads.*/ParallelDownloads=5/' /etc/pacman.conf
 echo "[multilib]" >> /etc/pacman.conf
 echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 
-pacman -Syyu
 
 echo "--------------------------------------------------------------------------------------"
 echo "INSTALL ESSENTIALS"
 echo "--------------------------------------------------------------------------------------"
 
+pacman -Syyu > /dev/null
 pacman -S --noconfirm --needed micro sudo grub efibootmgr dosfstools os-prober mtools > /dev/null
 
 if [ $system = 'h' ]; then
@@ -183,7 +187,7 @@ echo "MOVE SYSTEM FILES"
 echo "--------------------------------------------------------------------------------------"
 
 cp /dotfiles/files/pfetch /usr/bin
-cp /dotfiles/files/ly/config.ini /etc/ly/
+# cp /dotfiles/files/ly/config.ini /etc/ly
 
 echo "--------------------------------------------------------------------------------------"
 echo "CRON"
@@ -231,7 +235,7 @@ ln -s "/home/$username/.dotfiles/wallpapers" /home/$username/Pictures/wallpapers
 ln -s "/home/$username/.dotfiles/.config/*" /home/$username/.config
 ln -s "/home/$username/.dotfiles/home/*" /home/$username
 
-git clone "https://github.com/BlingCorp/bling.git" "/home/$username/.config/awesome/bling"
+git clone "https://github.com/BlingCorp/bling.git" "/home/$username/.config/awesome/bling" > /dev/null
 
 echo "-------------------------------------------"
 echo "NOW RUN THESE:"
