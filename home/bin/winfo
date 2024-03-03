@@ -1,5 +1,10 @@
 #!/bin/sh
 
+s=$1
+if [ -n "$s" ]; then
+	sleep "$s"
+fi
+
 echo "PID	CLASS	GEOM"
 xprop | awk '/_NET_WM_PID/ || /WM_CLASS/{print}' | tr -d ' ' | cut -d'=' -f2
 xwininfo | awk '/geometry/' | tr -d ' ' | cut -d'y' -f2

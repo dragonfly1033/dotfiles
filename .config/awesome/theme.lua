@@ -19,7 +19,7 @@ theme.parent_filter_list   = {}--{"firefox", "Gimp", "Pcmanfm", "VSCodium"}
 -- class names list that should not swallow their parents
 theme.child_filter_list    = {}
 
-theme.parent_white_list    = {"Alacritty", "popterm-small", "popterm-medium", "popterm-large"}
+theme.parent_white_list    = {"Alacritty", "popterm-small", "popterm-medium", "popterm-large", "Virt-manager"}
 theme.child_white_list    = {}
 -- whether the filters above should be active
 theme.swallowing_filter = true
