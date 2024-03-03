@@ -44,6 +44,10 @@ echo "127.0.0.1   localhost" >> /etc/hosts
 echo "::1         localhost" >> /etc/hosts
 echo "127.0.1.1   hostname.localdomain   hostname" >> /etc/hosts
 
+sed -ri 's/^#?ParallelDownloads.*/ParallelDownloads=5/' /etc/pacman.conf
+echo "[multilib]" > /etc/pacman.conf
+echo "Include = /etc/pacman.d/mirrorlist" > /etc/pacman.conf
+
 echo "--------------------------------------------------------------------------------------"
 echo "INSTALL ESSENTIALS"
 echo "--------------------------------------------------------------------------------------"
