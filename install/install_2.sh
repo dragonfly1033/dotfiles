@@ -2,6 +2,12 @@
 
 username=$(whoami)
 
+if [ "$username" = "root" ]; then
+    echo "Remember to exit chroot, unmount and reboot"
+    echo "Run this script as user not root"
+    exit
+fi
+
 echo "--------------------------------------------------------------------------------------"
 echo "INSTALL PROGRAMS"
 echo "--------------------------------------------------------------------------------------"
