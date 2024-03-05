@@ -112,8 +112,6 @@ ln -s "/home/$username/.dotfiles/wallpapers" /home/$username/Pictures/wallpapers
 ln -s "/home/$username/.dotfiles/.config"/* /home/$username/.config
 ln -s "/home/$username/.dotfiles/home"/* /home/$username
 
-git clone "https://github.com/BlingCorp/bling.git" "/home/$username/.config/awesome/bling" > /dev/null
-
 echo "--------------------------------------------------------------------------------------"
 echo "MOVE FONTS"
 echo "--------------------------------------------------------------------------------------"
@@ -131,4 +129,7 @@ yes '
 ' | makepkg -si > /dev/null
 cd /home/$username
 rm -rf yay-bin
+
+echo ""
+
 

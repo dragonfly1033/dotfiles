@@ -5,6 +5,7 @@ configuration {
 	width: 100;
 	yoffset: 0;
 	xoffset: 0;
+ 	cache-dir: ".config/rofi";
 	run { display-name: " Run:  "; }
 /*	fixed-num-lines: true;*/
 /*	show-icons: false;*/
@@ -48,7 +49,6 @@ configuration {
 /*	combi-hide-mode-prefix: false;*/
 /*	combi-display-format: "{mode} {text}";*/
 /*	matching-negate-char: '-' /* unsupported */;*/
-/*	cache-dir: ;*/
 /*	window-thumbnail: false;*/
 /*	drun-use-desktop-cache: false;*/
 /*	drun-reload-desktop-cache: false;*/
