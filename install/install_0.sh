@@ -125,7 +125,7 @@ echo "--------------------------------------------------------------------------
 echo "CHROOT"
 echo "--------------------------------------------------------------------------------------"
 
-arch-chroot /mnt /bin/bash -c script -qc "username=\"$username\" hostname=\"$hostname\" system=\"$system\" size=\"$size\" /dotfiles/install/install_1.sh" /mnt/dotfiles/log_1
+arch-chroot /mnt /bin/bash -c "script -Eqc \"username=$username hostname=$hostname system=$system size=$size /dotfiles/install/install_1.sh\" /dotfiles/log_1"
 
 read -p "Install_1 fininshed. Continue?" alsdnskln
 
