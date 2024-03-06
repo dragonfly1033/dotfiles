@@ -1,9 +1,5 @@
 #!/bin/bash
 
-read -p 'Enter Hostname: ' hostname
-read -p 'Enter Username: ' username
-read -p 'Enter System (h)ardware, (v)mware, virtual(b)ox: ' system
-
 echo "--------------------------------------------------------------------------------------"
 echo "Set ROOT password"
 echo "--------------------------------------------------------------------------------------"
@@ -17,6 +13,14 @@ echo "--------------------------------------------------------------------------
 useradd -m $username > /dev/null
 passwd $username
 usermod -aG wheel,audio,video,optical,storage $username > /dev/null
+
+echo "--------------------------------------------------------------------------------------"
+echo "CHANGE TO ZSH"
+echo "--------------------------------------------------------------------------------------"
+
+mkdir /home/$username/.local/state/zsh
+
+su --command="chsh -s /bin/zsh" $username
 
 echo "--------------------------------------------------------------------------------------"
 echo "CLOCK & TIMEZONE"
@@ -122,14 +126,21 @@ pacman -S --noconfirm --needed networkmanager > /dev/null
 
 systemctl enable NetworkManager > /dev/null
 
-echo "-------------------------------------------"
-echo "NOW RUN THESE:"
-echo ""
-echo "exit"
-echo "umount -l /mnt"
-echo "reboot" 
-echo "" 
-echo "Take this oppoortunity to edit dotfiles/install/*_pkgs"
-echo "Run install_2.sh" 
-echo "-------------------------------------------"
+echo "--------------------------------------------------------------------------------------"
+echo "Setup install_2/3 hooks"
+echo "--------------------------------------------------------------------------------------"
+
+echo "sudo -s username=\"$username\" size=\"$size\" /dotfiles/install/install_2.sh" >> /home/$username/.bashrc
+echo "username=\"$username\" size=\"$size\" /dotfiles/install/install_3.sh" >> /home/$username/.bashrc
+
+# echo "-------------------------------------------"
+# echo "NOW RUN THESE:"
+# echo ""
+# echo "exit"
+# echo "umount -l /mnt"
+# echo "reboot" 
+# echo "" 
+# echo "Take this opportunity to edit dotfiles/install/*_pkgs"
+# echo "Run install_2.sh" 
+# echo "-------------------------------------------"
 

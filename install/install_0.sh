@@ -12,6 +12,30 @@ if [ -z $ram_size ]; then
 	read -p 'Enter total RAM space number only (GB): ' ram_size
 fi
 
+read -p 'Enter Hostname: ' hostname
+while [ -z "$hostname" ]; do
+	echo "Please enter a valid input."
+	read -p 'Enter Hostname: ' hostname
+done
+
+read -p 'Enter Username: ' username
+while [ -z "$username" ]; do
+	echo "Please enter a valid input."
+	read -p 'Enter Username: ' username
+done
+
+read -p 'Enter System (h)ardware, (v)mware, virtual(b)ox: ' system
+while [ "$system" != "h" ] &&  [ "$system" != "v" ] &&  [ "$system" != "b" ]; do
+	echo "Please enter a valid input."
+	read -p 'Enter System (h)ardware, (v)mware, virtual(b)ox: ' system
+done
+
+read -p 'Enter System Size (f)ull, (m)inimal: ' size
+while [ "$size" != "f" ] && [ "$size" != "m" ]; do
+	echo "Please enter a valid input."
+	read -p 'Enter System Size (f)ull, (m)inimal: ' size
+done
+
 echo "--------------------------------------------------------------------------------------"
 echo "STARTING PARTITIONING"
 echo "--------------------------------------------------------------------------------------"
@@ -99,7 +123,10 @@ echo "--------------------------------------------------------------------------
 echo "CHROOT"
 echo "--------------------------------------------------------------------------------------"
 
-arch-chroot /mnt
+arch-chroot /mnt /bin/bash -c "username=\"$username\" hostname=\"$hostname\" system=\"$system\" size=\"$size\" /mnt/dotfiles/install/install_0.sh"
+
+umount -l /mnt
+reboot
 
 
 

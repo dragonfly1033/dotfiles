@@ -1,4 +1,4 @@
-import = ["/home/dragonfly1033/.dotfiles/.config/alacritty/themes/theme.toml"]
+import = ["~/.dotfiles/.config/alacritty/themes/theme.toml"]
 
 [cursor.style]
 shape = "Beam"

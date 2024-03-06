@@ -1,8 +1,8 @@
 #!/bin/sh
 
-username=$(whoami)
+sed -r '/install_2/ d' -i /home/$username/.bashrc
 
-if [ "$username" = "root" ]; then
+if [ "$username" != "root" ]; then
     echo "Remember to exit chroot, unmount and reboot"
     echo "Run this script as user not root"
     exit
@@ -12,24 +12,28 @@ echo "--------------------------------------------------------------------------
 echo "INSTALL PROGRAMS"
 echo "--------------------------------------------------------------------------------------"
 
-sudo pacman -S --noconfirm --needed $(cat /dotfiles/install/pac_pkgs | xargs)
+if [ "$size" = "f" ]; then
+    pacman -S --noconfirm --needed $(cat /dotfiles/install/pac_pkgs | xargs)
+elif [ "$size" = "m" ]; then
+    pacman -S --noconfirm --needed $(cat /dotfiles/install/pac_min_pkgs | xargs)
+fi
 
 echo "--------------------------------------------------------------------------------------"
 echo "Remove legacy graphics driver"
 echo "--------------------------------------------------------------------------------------"
 
-sudo pacman -Rns --noconfirm xf86-video-vesa > /dev/null
+pacman -Rns --noconfirm xf86-video-vesa > /dev/null
 
 echo "--------------------------------------------------------------------------------------"
 echo "LOGIN & SPLASH"
 echo "--------------------------------------------------------------------------------------"
 
-sudo pacman -S --noconfirm --needed lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan plymouth
+pacman -S --noconfirm --needed lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan plymouth
 
-sudo cp /dotfiles/files/lightdm-plymouth.service /usr/lib/systemd/system
-sudo mkdir /usr/share/backgrounds
-sudo cp /dotfiles/files/black_background.png /usr/share/backgrounds
-sudo cp -r "/dotfiles/files/plymouth_themes"/* /usr/share/plymouth/themes
+cp /dotfiles/files/lightdm-plymouth.service /usr/lib/systemd/system
+mkdir /usr/share/backgrounds
+cp /dotfiles/files/black_background.png /usr/share/backgrounds
+cp -r "/dotfiles/files/plymouth_themes"/* /usr/share/plymouth/themes
 
 # sed -i '/#animate/c\animate=false' /etc/ly/config.ini
 # sed -i '/#asterisk/c\asterisk=o' /etc/ly/config.ini
@@ -37,99 +41,65 @@ sudo cp -r "/dotfiles/files/plymouth_themes"/* /usr/share/plymouth/themes
 # sed -i '/#margin_box_h/c\margin_box_h=25' /etc/ly/config.ini
 # sed -i '/#blank_password/c\blank_password=true' /etc/ly/config.ini
 
-sudo sed -ri 's/^#?greeter-session=.*/greeter-session=lightdm-webkit2-greeter/' /etc/lightdm/lightdm.conf
-sudo sed -ri 's/^#?webkit_theme.*/webkit_theme=litarvan/' /etc/lightdm/lightdm-webkit2-greeter.conf
-sudo sed -ri 's/^#?debug_mode.*/debug_mode=true/' /etc/lightdm/lightdm-webkit2-greeter.conf
+sed -ri 's/^#?greeter-session=.*/greeter-session=lightdm-webkit2-greeter/' /etc/lightdm/lightdm.conf
+sed -ri 's/^#?webkit_theme.*/webkit_theme=litarvan/' /etc/lightdm/lightdm-webkit2-greeter.conf
+sed -ri 's/^#?debug_mode.*/debug_mode=true/' /etc/lightdm/lightdm-webkit2-greeter.conf
 
-sudo sed -ri 's/GRUB_CMDLINE_LINUX_DEFAULT=".*"/GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 splash udev.log_level=3 rd.udev.log_level=3 loglevel=3 vt.global_cursor_default=0"/' /etc/default/grub
-sudo sed -ri 's/^#?GRUB_DEFUALT=.*/GRUB_DEFAULT=0/' /etc/default/grub
-sudo sed -ri 's/^#?GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
-echo "GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT" | sudo tee -a /etc/default/grub
+sed -ri 's/GRUB_CMDLINE_LINUX_DEFAULT=".*"/GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 splash udev.log_level=3 rd.udev.log_level=3 loglevel=3 vt.global_cursor_default=0"/' /etc/default/grub
+sed -ri 's/^#?GRUB_DEFUALT=.*/GRUB_DEFAULT=0/' /etc/default/grub
+sed -ri 's/^#?GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
+echo "GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT" | tee -a /etc/default/grub
  
-sudo sed -ri 's/MODULES=\((.*)\)$/MODULES=\(\1 amdgpu\)/' /etc/mkinitcpio.conf
-sudo sed -ri 's/HOOKS=\(base udev (.*)\)/HOOKS=\(base udev plymouth \1\)/' /etc/mkinitcpio.conf   
+sed -ri 's/MODULES=\((.*)\)$/MODULES=\(\1 amdgpu\)/' /etc/mkinitcpio.conf
+sed -ri 's/HOOKS=\(base udev (.*)\)/HOOKS=\(base udev plymouth \1\)/' /etc/mkinitcpio.conf   
 
-sudo grub-mkconfig -o /boot/grub/grub.cfg
+grub-mkconfig -o /boot/grub/grub.cfg
 
-sudo systemctl enable lightdm-plymouth.service
+systemctl enable lightdm-plymouth.service
 
-sudo plymouth-set-default-theme -R rings > /dev/null
+plymouth-set-default-theme -R rings > /dev/null
 
 echo "--------------------------------------------------------------------------------------"
 echo "XORG CONFS"
 echo "--------------------------------------------------------------------------------------"
 
-sudo cp /dotfiles/files/50-touchpad.conf /etc/X11/xorg.conf.d
-sudo chmod +xr /etc/X11/xorg.conf.d/50-touchpad.conf
-sudo cp /dotfiles/files/40-libinput.conf /usr/share/X11/xorg.conf.d
-sudo chmod +xr /usr/share/X11/xorg.conf.d/40-libinput.conf
-sudo cp /dotfiles/files/10-amdgpu.conf /usr/share/X11/xorg.conf.d
-sudo chmod +xr /usr/share/X11/xorg.conf.d/10-amdgpu.conf
+cp /dotfiles/files/50-touchpad.conf /etc/X11/xorg.conf.d
+chmod +xr /etc/X11/xorg.conf.d/50-touchpad.conf
+cp /dotfiles/files/40-libinput.conf /usr/share/X11/xorg.conf.d
+chmod +xr /usr/share/X11/xorg.conf.d/40-libinput.conf
+cp /dotfiles/files/10-amdgpu.conf /usr/share/X11/xorg.conf.d
+chmod +xr /usr/share/X11/xorg.conf.d/10-amdgpu.conf
 
 echo "--------------------------------------------------------------------------------------"
 echo "MOVE SYSTEM FILES"
 echo "--------------------------------------------------------------------------------------"
 
-sudo cp /dotfiles/files/pfetch /usr/bin
+cp /dotfiles/files/pfetch /usr/bin
 # cp /dotfiles/files/ly/config.ini /etc/ly
 
 echo "--------------------------------------------------------------------------------------"
 echo "CRON"
 echo "--------------------------------------------------------------------------------------"
 
-sudo sed -i "s/USER/$username/g" /dotfiles/files/cron/user
-sudo sed -i "s/USER/$username/g" /dotfiles/files/cron/root
+sed -i "s/USER/$username/g" /dotfiles/files/cron/user
+sed -i "s/USER/$username/g" /dotfiles/files/cron/root
 
-sudo crontab -u "$username" /dotfiles/files/cron/user
-sudo crontab -u root /dotfiles/files/cron/root
+crontab -u "$username" /dotfiles/files/cron/user
+crontab -u root /dotfiles/files/cron/root
 
 echo "--------------------------------------------------------------------------------------"
 echo "CHANGE PERMS"
 echo "--------------------------------------------------------------------------------------"
 
-sudo chmod +x /dotfiles/home/bin
-sudo chmod +x "/dotfiles/home"/*
-sudo chmod -R +x /dotfiles/.config
+chmod +x /dotfiles/home/bin
+chmod +x "/dotfiles/home"/*
+chmod -R +x /dotfiles/.config
 
 echo "--------------------------------------------------------------------------------------"
 echo "RELOCATE DOTS"
 echo "--------------------------------------------------------------------------------------"
 
-sudo chown -R $username /dotfiles
-sudo chgrp -R $username /dotfiles
+chown -R $username /dotfiles
+chgrp -R $username /dotfiles
 
-sudo mv /dotfiles /home/$username/.dotfiles
-
-echo "--------------------------------------------------------------------------------------"
-echo "LINK DOTS"
-echo "--------------------------------------------------------------------------------------"
-
-mkdir /home/$username/Downloads
-mkdir /home/$username/Documents
-mkdir /home/$username/Desktop
-mkdir /home/$username/Pictures
-ln -s "/home/$username/.dotfiles/wallpapers" /home/$username/Pictures/wallpapers
-ln -s "/home/$username/.dotfiles/.config"/* /home/$username/.config
-ln -s "/home/$username/.dotfiles/home"/* /home/$username
-
-echo "--------------------------------------------------------------------------------------"
-echo "MOVE FONTS"
-echo "--------------------------------------------------------------------------------------"
-
-mkdir -p ~/.local/share/fonts/MyFonts
-sudo ln -s "/home/$username/.dotfiles/fonts"/* "/home/$username/.local/share/fonts/MyFonts"
-
-echo "--------------------------------------------------------------------------------------"
-echo "INSTALL YAY"
-echo "--------------------------------------------------------------------------------------"
-
-git clone https://aur.archlinux.org/yay-bin.git /home/$username/yay-bin > /dev/null
-cd /home/$username/yay-bin
-yes '
-' | makepkg -si > /dev/null
-cd /home/$username
-rm -rf yay-bin
-
-echo ""
-
-
+mv /dotfiles /home/$username/.dotfiles
