@@ -1,7 +1,5 @@
 #!/bin/bash
 
-script /dotfiles/log_1
-
 echo "--------------------------------------------------------------------------------------"
 echo "Set ROOT password"
 echo "--------------------------------------------------------------------------------------"
@@ -126,8 +124,8 @@ echo "--------------------------------------------------------------------------
 echo "Setup install_2/3 hooks"
 echo "--------------------------------------------------------------------------------------"
 
-echo "sudo username=\"$username\" size=\"$size\" /dotfiles/install/install_2.sh" >> /home/$username/.bashrc
-echo "username=\"$username\" size=\"$size\" /dotfiles/install/install_3.sh" >> /home/$username/.bashrc
+echo "sudo script -qc 'username=\"$username\" size=\"$size\" /dotfiles/install/install_2.sh' /dotfiles/log_2" >> /home/$username/.bashrc
+echo "script -qc 'username=\"$username\" size=\"$size\" /dotfiles/install/install_3.sh' /home/$username/.dotfiles/log_3" >> /home/$username/.bashrc
 
 # echo "-------------------------------------------"
 # echo "NOW RUN THESE:"

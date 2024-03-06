@@ -1,7 +1,5 @@
 #!/bin/sh
 
-script /home/$username/.dotfiles/log_3
-
 sed -r '/install_3/ d' -i /home/$username/.bashrc
 
 # read -p 'Enter System Size (f)ull, (m)inimal: ' size

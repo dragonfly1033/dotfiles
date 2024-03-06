@@ -119,11 +119,13 @@ echo "--------------------------------------------------------------------------
 echo "After chroot run /dotfiles/install/install_1.sh"
 echo "--------------------------------------------------------------------------------------"
 
+clear
+
 echo "--------------------------------------------------------------------------------------"
 echo "CHROOT"
 echo "--------------------------------------------------------------------------------------"
 
-arch-chroot /mnt /bin/bash -c "username=\"$username\" hostname=\"$hostname\" system=\"$system\" size=\"$size\" /dotfiles/install/install_1.sh"
+arch-chroot /mnt /bin/bash -c script -qc "username=\"$username\" hostname=\"$hostname\" system=\"$system\" size=\"$size\" /dotfiles/install/install_1.sh" /mnt/dotfiles/log_1
 
 read -p "Install_1 fininshed. Continue?" alsdnskln
 

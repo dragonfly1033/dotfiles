@@ -1,7 +1,5 @@
 #!/bin/sh
 
-script /dotfiles/log_2
-
 sed -r '/install_2/ d' -i /home/$username/.bashrc
 
 if [ "$(whoami)" != "root" ]; then
