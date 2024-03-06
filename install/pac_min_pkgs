@@ -40,7 +40,6 @@ grub-customizer
 gzip
 htop
 lib32-vulkan-radeon
-libreoffice-still
 libtool
 lightdm
 lightdm-webkit2-greeter
@@ -58,9 +57,6 @@ mtools
 mtpfs
 network-manager-applet
 networkmanager
-noto-fonts
-noto-fonts-cjk
-noto-fonts-emoji
 numlockx
 openssh
 os-prober
@@ -73,7 +69,6 @@ pavucontrol
 pcmanfm
 perl-image-exiftool
 pipewire-alsa
-pipewire-docs
 pipewire-pulse
 pkgconf
 playerctl
@@ -154,8 +149,6 @@ zsh-autosuggestions
 zsh-completions
 zsh-syntax-highlighting
 gtk4
-shellcheck
-tenacity
 plymouth
 polybar
 fzf
