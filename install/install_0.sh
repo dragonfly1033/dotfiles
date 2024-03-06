@@ -123,7 +123,7 @@ echo "--------------------------------------------------------------------------
 echo "CHROOT"
 echo "--------------------------------------------------------------------------------------"
 
-arch-chroot /mnt /bin/bash -c "username=\"$username\" hostname=\"$hostname\" system=\"$system\" size=\"$size\" /mnt/dotfiles/install/install_0.sh"
+arch-chroot /mnt /bin/bash -c "username=\"$username\" hostname=\"$hostname\" system=\"$system\" size=\"$size\" /dotfiles/install/install_1.sh"
 
 umount -l /mnt
 reboot
