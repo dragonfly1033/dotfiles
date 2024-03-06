@@ -19,17 +19,17 @@ mkdir /home/$username/Documents
 mkdir /home/$username/Desktop
 mkdir /home/$username/Pictures
 
-for i in $(ls -A /home/$username/dotfiles/.config); do
+for i in $(ls -A /home/$username/.dotfiles/.config); do
     ln -s "/home/$username/.dotfiles/.config/$i" "/home/$username/.config"
 done
 
-for i in $(ls -A /home/$username/dotfiles/home); do
+for i in $(ls -A /home/$username/.dotfiles/home); do
     ln -s "/home/$username/.dotfiles/home/$i" "/home/$username"
 done
 
 mkdir -p ~/.local/share/fonts/MyFonts
 
-for i in $(ls -A /home/$username/dotfiles/fonts); do
+for i in $(ls -A /home/$username/.dotfiles/fonts); do
     ln -s "/home/$username/.dotfiles/fonts/$i" "/home/$username/.local/share/fonts/MyFonts"
 done
 
