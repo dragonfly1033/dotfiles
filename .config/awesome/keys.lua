@@ -321,7 +321,12 @@ clientkeys = gears.table.join(
     awful.key({ ALT, "Control" }, "m", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),            
               
-    awful.key({ ALT,           }, "p",      function (c) c.sticky = not c.sticky end,
+    awful.key({ ALT,           }, "p",      function (c) 
+    											if c.sticky then
+    												c:move_to_tag(awful.screen.focused().selected_tag)
+    											end
+    											c.sticky = not c.sticky 
+    										end,
               {description = "toggle pin", group = "client"}),
 
     awful.key({ ALT,           }, "F11", function (c) c.fullscreen = not c.fullscreen end,
