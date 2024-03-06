@@ -1,17 +1,10 @@
 #!/bin/sh
 
-echo "--------------------------------------------------------------------------------------"
-echo "INSTALL YAY"
-echo "--------------------------------------------------------------------------------------"
-
-git clone https://aur.archlinux.org/yay-bin.git /home/$username/yay-bin > /dev/null
-cd /home/$username/yay-bin
-yes '
-' | makepkg -si > /dev/null
-cd /home/$username
-rm -rf yay-bin
-
-echo ""
+read -p 'Enter System Size (f)ull, (m)inimal: ' size
+while [ "$size" != "f" ] && [ "$size" != "m" ]; do
+	echo "Please enter a valid input."
+	read -p 'Enter System Size (f)ull, (m)inimal: ' size
+done
 
 echo "--------------------------------------------------------------------------------------"
 echo "INSTALL AUR PKGS"

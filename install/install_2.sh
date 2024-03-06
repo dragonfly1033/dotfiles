@@ -105,3 +105,5 @@ chown -R $username /dotfiles
 chgrp -R $username /dotfiles
 
 mv /dotfiles /home/$username/.dotfiles
+
+read -p "Install 2 finished. Continue? " alkdnksdbn
