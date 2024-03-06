@@ -1,5 +1,7 @@
 #!/bin/bash
 
+script /dotfiles/log_1
+
 echo "--------------------------------------------------------------------------------------"
 echo "Set ROOT password"
 echo "--------------------------------------------------------------------------------------"
@@ -18,7 +20,7 @@ echo "--------------------------------------------------------------------------
 echo "CHANGE TO ZSH"
 echo "--------------------------------------------------------------------------------------"
 
-mkdir /home/$username/.local/state/zsh
+mkdir -p /home/$username/.local/state/zsh
 
 su --command="chsh -s /bin/zsh" $username
 
@@ -130,7 +132,7 @@ echo "--------------------------------------------------------------------------
 echo "Setup install_2/3 hooks"
 echo "--------------------------------------------------------------------------------------"
 
-echo "sudo -s username=\"$username\" size=\"$size\" /dotfiles/install/install_2.sh" >> /home/$username/.bashrc
+echo "sudo username=\"$username\" size=\"$size\" /dotfiles/install/install_2.sh" >> /home/$username/.bashrc
 echo "username=\"$username\" size=\"$size\" /dotfiles/install/install_3.sh" >> /home/$username/.bashrc
 
 # echo "-------------------------------------------"

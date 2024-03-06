@@ -22,5 +22,5 @@ white = "0x707880"
 yellow = "0xde935f"
 
 [colors.primary]
-background = "0x000000"
-foreground = "0xe8e8e8"
+background = "0x001A36"
+foreground = "0xD7E1D8"

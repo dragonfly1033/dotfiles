@@ -125,6 +125,8 @@ echo "--------------------------------------------------------------------------
 
 arch-chroot /mnt /bin/bash -c "username=\"$username\" hostname=\"$hostname\" system=\"$system\" size=\"$size\" /dotfiles/install/install_1.sh"
 
+read -p "Install_1 fininshed. Continue?" alsdnskln
+
 umount -l /mnt
 reboot
 

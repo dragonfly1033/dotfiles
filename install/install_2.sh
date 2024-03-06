@@ -1,8 +1,10 @@
 #!/bin/sh
 
+script /dotfiles/log_2
+
 sed -r '/install_2/ d' -i /home/$username/.bashrc
 
-if [ "$username" != "root" ]; then
+if [ "$(whoami)" != "root" ]; then
     echo "Remember to exit chroot, unmount and reboot"
     echo "Run this script as user not root"
     exit
