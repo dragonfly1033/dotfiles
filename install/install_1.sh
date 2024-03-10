@@ -125,7 +125,7 @@ echo "Setup install_2/3 hooks"
 echo "--------------------------------------------------------------------------------------"
 
 echo "sudo username=\"$username\" size=\"$size\" /dotfiles/install/install_2.sh"  >> /home/$username/.bashrc
-echo "username=\"$username\" size=\"$size\" /dotfiles/install/install_3.sh" >> /home/$username/.bashrc
+echo "username=\"$username\" size=\"$size\" /home/$username/.dotfiles/install/install_3.sh" >> /home/$username/.bashrc
 
 # echo "-------------------------------------------"
 # echo "NOW RUN THESE:"

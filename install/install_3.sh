@@ -33,4 +33,10 @@ done
 
 ln -s "/home/$username/.dotfiles/wallpapers" /home/$username/Pictures/wallpapers
 
+echo "--------------------------------------------------------------------------------------"
+echo "Setup install_post hook"
+echo "--------------------------------------------------------------------------------------"
+
+echo "/home/$username/.dotfiles/install/install_post.sh" >> /home/$username/.bashrc
+
 reboot
