@@ -17,3 +17,13 @@ elif [ "$size" = "m" ]; then
     yes '
     ' | yay -S --sudoloop --needed --mflags "--noconfirm" $(cat ~/.dotfiles/install/yay_min_pkgs | xargs)
 fi
+
+
+git clone https://github.com/elkowar/eww ~/eww
+cd eww
+cargo build --release --no-default-features --features x11
+cd target/release
+chmod +x eww
+mv eww ~/.local/bin
+cd
+rm -rf eww

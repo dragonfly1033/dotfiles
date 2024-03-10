@@ -14,7 +14,12 @@ for i in $(echo "$removals"); do
 done
 
 for i in $(echo "$additions"); do
-	read -p "Add $i (y/N)?" conf
+	if [ "$i" = "pfetch" ] || [ "$i" = "eww" ]; then
+		conf="no"
+	else
+		read -p "Add $i (y/N)?" conf
+	fi
+	
 	if [ "$conf" == "y" ]; then
 		echo "$i" >> ~/.dotfiles/install/pac_pkgs
 	fi

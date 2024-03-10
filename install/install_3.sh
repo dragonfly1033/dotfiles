@@ -28,7 +28,7 @@ done
 mkdir -p ~/.local/share/fonts/MyFonts
 
 for i in $(ls -A /home/$username/.dotfiles/fonts); do
-    ln -s "/home/$username/.dotfiles/fonts/$i" "/home/$username/.local/share/fonts/MyFonts"
+    ln -s "/home/$username/.dotfiles/fonts/$i" "/home/$username/.local/share/fonts"
 done
 
 ln -s "/home/$username/.dotfiles/wallpapers" /home/$username/Pictures/wallpapers
