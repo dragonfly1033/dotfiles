@@ -1,5 +1,0 @@
-#!/bin/sh
-# 0 = false, 1 = true, 2 = either
-
-safe=1
-light=2

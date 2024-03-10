@@ -13,9 +13,6 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 
--- awful.spawn.once(os.getenv("HOME").."/bin/theme random 1")
--- awful.spawn.once("cat /home/dragonfly1033/bin/.env/THEME | xargs notify-send")
--- awful.spawn.once("cat /home/dragonfly1033/.fehbg | grep name= | xargs notify-send")
 
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
@@ -111,8 +108,6 @@ awful.mouse.drag_to_tag.enabled = false
 
 -- awful.spawn.once("firefox -P Weeb", {tag = "7"})
 -- awful.spawn.once("firefox -P Pol",  {tag = "8"})
--- naughty.notify({text="source "..os.getenv("HOME").."/bin/.env/THEME_META && "..os.getenv("HOME").."/bin/get_themes \"$safe\" \"$light\" | shuf -n 1"})
-
 -- awful.spawn.once("firefox -P Main --MOZ_LOG=all:5 --MOZ_LOG_FILE="..os.getenv("HOME").."/moz_log", {tag = "1"})
 -- awful.spawn.once("firefox -P Main", {tag = "1"})
 -- awful.spawn.once("firefox -P Chill", {tag = "9"})

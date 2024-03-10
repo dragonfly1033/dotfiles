@@ -1,11 +1,12 @@
 #!/bin/sh
 
-source $HOME/bin/.env/THEME_META
+safe=$(~/bin/vars get THEME_SAFE)
+light=$(~/bin/vars get THEME_LIGHT)
 
 THEME=$1
 NOUSE=$2
 
-if [[ -z $THEME ]]; then
+if [ -z "$THEME" ]; then
 	LIST=$(python $HOME/bin/get_themes $safe $light)
 	THEME=$(echo "random"$'\n'"$LIST" | rofi -dmenu -i -p " Theme:  ")
 elif [[ $THEME == "random" ]]; then

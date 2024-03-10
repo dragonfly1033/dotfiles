@@ -30,3 +30,9 @@ elif [ -z $o3 ]; then
 else
 	termdown "${o1}h ${o2}m ${o3}s"
 fi
+
+for i in $(seq 10); do
+	notify-send "Timer for $o1 $o2 $o3 Complete"
+done
+
+mpv --loop ~/Documents/Sounds/alarm.opus

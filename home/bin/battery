@@ -4,28 +4,28 @@ battery=$(acpi | grep -v "unavailable" | awk -F", " '{ print $2 }' | tr -d '%')
 charging=$(acpi | grep -v "unavailable" | awk -F", " '{ print $1 }' | awk -F": " '{ print $2 }')
 full=$(acpi | grep -v "unavailable" | grep -e "Full")
 
-LOW_BATTERY_SENT=$(cat $HOME/bin/.env/LOW_BATTERY_SENT)
-VERY_LOW_BATTERY_SENT=$(cat $HOME/bin/.env/VERY_LOW_BATTERY_SENT)
+LOW_BATTERY_SENT=$(~/bin/vars get LOW_BATTERY_SENT)
+VERY_LOW_BATTERY_SENT=$(~/bin/vars get VERY_LOW_BATTERY_SENT)
 
 if [ "$charging" = "Discharging" ] && [ "$battery" -le 5 ]; then
 	DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send -u critical "Gonna Die" ":( $battery%"
 	
 elif [ "$charging" = "Discharging" ] && [ "$battery" -le 10 ]; then
-	if [ $VERY_LOW_BATTERY_SENT != "true" ]; then
+	if [ "$VERY_LOW_BATTERY_SENT" != "true" ]; then
 		DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send -u critical "Very Low Battery" "Plug in charger RIGHT NOW!!!"
-		echo "true" > $HOME/bin/.env/VERY_LOW_BATTERY_SENT
+		~/bin/vars set VERY_LOW_BATTERY_SENT true
 	fi
 elif [ "$charging" = "Discharging" ] && [ "$battery" -le 20 ]; then
-	if [ $LOW_BATTERY_SENT != "true" ]; then
+	if [ "$LOW_BATTERY_SENT" != "true" ]; then
 		DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send -t 30000 -u critical "Low Battery" "Plug in charger!"
-		echo "true" > $HOME/bin/.env/LOW_BATTERY_SENT
+		~/bin/vars set LOW_BATTERY_SENT true
 	fi
-elif [ -n "$full" ] && [ "$charging" == "Charging" ]; then
+elif [ -n "$full" ] && [ "$charging" = "Charging" ]; then
 	DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send -t 30000 -u critical "Full Battery" "Unplug in charger!"
-elif [ "$battery" -ge 98 ] && [ "$charging" == "Charging" ]; then
+elif [ "$battery" -ge 98 ] && [ "$charging" = "Charging" ]; then
 	DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send -t 30000 -u critical "Full Battery" "Unplug in charger!"
 
 else
-	echo "false" > $HOME/bin/.env/LOW_BATTERY_SENT
-	echo "false" > $HOME/bin/.env/VERY_LOW_BATTERY_SENT
+	~/bin/vars set LOW_BATTERY_SENT false
+	~/bin/vars set VERY_LOW_BATTERY_SENT false
 fi

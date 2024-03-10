@@ -5,6 +5,6 @@ rat=$1
 new=$(echo "($rat / 10)*3200+3200" | bc -lq | cut -d'.' -f1)
 
 echo "$rat" >> /tmp/redshift_10
-echo "$new" > $HOME/bin/.env/REDSHIFT_TEMP
+~/bin/vars set REDSHIFT_TEMP "$new"
 
-redshift -PO $new
+redshift -PO "$new"

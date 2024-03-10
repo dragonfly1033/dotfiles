@@ -34,7 +34,6 @@ make-bin ~/bin/make-bin
 mine ~/bin/mine
 note ~/bin/note
 paccache-clear ~/bin/paccache-clear
-pending ~/bin/pending
 polybar_swap ~/bin/polybar_swap
 pslide ~/bin/pslide
 reinstall-grub ~/bin/reinstall-grub

@@ -1,5 +1,10 @@
 #!/bin/sh
 
 th=$(plymouth-set-default-theme -l | shuf -n1)
-echo "$th"
+p=$(~/bin/vars get PLYMOUTH)
+~/bin/vars set PLYMOUTH_OLD "$p"
+
+echo "$th" 
+~/bin/vars set PLYMOUTH "$th"
+
 sudo plymouth-set-default-theme -R "$th"

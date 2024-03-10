@@ -1,9 +1,11 @@
 #!/bin/sh
 
-POLYBAR_BOTTOM=$(cat $HOME/bin/.env/POLYBAR_BOTTOM)
-if [ $POLYBAR_BOTTOM == "true" ]; then
-	echo "false" > $HOME/scipts/.env/POLYBAR_BOTTOM
-elif [ $POLYBAR_BOTTOM == "false" ]; then
-	echo "true" > $HOME/bin/.env/POLYBAR_BOTTOM
+POLYBAR_BOTTOM=$(grep -e "^bottom" ~/.config/polybar/config.ini | cut -d'=' -f2)
+
+if [ "$POLYBAR_BOTTOM" = "true" ]; then
+	sed -r 's/bottom=.*/bottom=false/' -i ~/.config/polybar/config.ini
+elif [ "$POLYBAR_BOTTOM" = "false" ]; then
+	sed -r 's/bottom=.*/bottom=true/' -i ~/.config/polybar/config.ini
 fi
+
 polybar-msg cmd restart

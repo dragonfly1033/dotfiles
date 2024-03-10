@@ -2,10 +2,10 @@
 
 theme=$1
 
-if [ -z $theme ]; then
-	theme=$(cat $HOME/bin/.env/THEME)
+if [ -z "$theme" ]; then
+	theme=$(~/bin/vars get THEME)
 else
-	echo $theme > $HOME/bin/.env/THEME
+	~/bin/vars set THEME "$theme"
 fi
 
 path="${HOME}/.config/themes/${theme}"
@@ -17,47 +17,47 @@ newback=$(awk '{print $3}' "${path}")
 newtext=$(awk '{print $4}' "${path}")
 newtextd=$(awk '{print $5}' "${path}")
 
-$sed_var "theme.border_focus = " "\"#$newaccent\"" $HOME/.config/awesome/theme.lua
-$sed_var "theme.border_normal = " "\"#$newback\"" $HOME/.config/awesome/theme.lua
-$sed_var "theme.hotkeys_bg = " "\"#$newback\"" $HOME/.config/awesome/theme.lua
-$sed_var "theme.bg_urgent = " "\"#$newback\"" $HOME/.config/awesome/theme.lua
-$sed_var "theme.hotkeys_modifiers_fg = " "\"#$newtext\"" $HOME/.config/awesome/theme.lua
-$sed_var "theme.hotkeys_fg = " "\"#$newtext\"" $HOME/.config/awesome/theme.lua
+~/bin/sed_var "theme.border_focus = " "\"#$newaccent\"" ~/.config/awesome/theme.lua
+~/bin/sed_var "theme.border_normal = " "\"#$newback\"" ~/.config/awesome/theme.lua
+~/bin/sed_var "theme.hotkeys_bg = " "\"#$newback\"" ~/.config/awesome/theme.lua
+~/bin/sed_var "theme.bg_urgent = " "\"#$newback\"" ~/.config/awesome/theme.lua
+~/bin/sed_var "theme.hotkeys_modifiers_fg = " "\"#$newtext\"" ~/.config/awesome/theme.lua
+~/bin/sed_var "theme.hotkeys_fg = " "\"#$newtext\"" ~/.config/awesome/theme.lua
 
-$sed_var "background-alt = " "#$newaccent2" $HOME/.config/polybar/config.ini
-$sed_var "primary = " "#$newaccent" $HOME/.config/polybar/config.ini
-$sed_var "background = " "#$newback" $HOME/.config/polybar/config.ini
-$sed_var "foreground = " "#$newtext" $HOME/.config/polybar/config.ini
-$sed_var "disabled = " "#$newtextd" $HOME/.config/polybar/config.ini
-$sed_var "secondary = " "#$newaccent2" $HOME/.config/polybar/config.ini
+~/bin/sed_var "background-alt = " "#$newaccent2" ~/.config/polybar/config.ini
+~/bin/sed_var "primary = " "#$newaccent" ~/.config/polybar/config.ini
+~/bin/sed_var "background = " "#$newback" ~/.config/polybar/config.ini
+~/bin/sed_var "foreground = " "#$newtext" ~/.config/polybar/config.ini
+~/bin/sed_var "disabled = " "#$newtextd" ~/.config/polybar/config.ini
+~/bin/sed_var "secondary = " "#$newaccent2" ~/.config/polybar/config.ini
 
-$sed_var "accent: " "#$newaccent;" $HOME/.config/rofi/theme.rasi
-$sed_var "background-color: " "#$newback;" $HOME/.config/rofi/theme.rasi
-$sed_var "text-color: " "#$newtext;" $HOME/.config/rofi/theme.rasi
+~/bin/sed_var "accent: " "#$newaccent;" ~/.config/rofi/theme.rasi
+~/bin/sed_var "background-color: " "#$newback;" ~/.config/rofi/theme.rasi
+~/bin/sed_var "text-color: " "#$newtext;" ~/.config/rofi/theme.rasi
 
-for i in $(ls -1d $HOME/.mozilla/firefox/*/ | sed '/firefox\/.*\..*\/$/ !d'); do
+for i in $(ls -1d ~/.mozilla/firefox/*/ | sed '/firefox\/.*\..*\/$/ !d'); do
 	$sed_var "  --my-accent: " "#$newaccent;" "$i""chrome/resources/userChrome.css"
 	$sed_var "  --my-foreground: " "#$newtext;" "$i""chrome/resources/userChrome.css"
 	$sed_var "  --my-background: " "#$newback;" "$i""chrome/resources/userChrome.css"
 done
 
-$sed_var "name=" "\"$theme\"" $HOME/.fehbg
+$sed_var "name=" "\"$theme\"" ~/.fehbg
 
-sed -r "s/(background = \"0x)(.*)(\")/\1$newback\3/" -i $HOME/.config/alacritty/themes/theme.toml
-sed -r "s/(foreground = \"0x)(.*)(\")/\1$newtext\3/" -i $HOME/.config/alacritty/themes/theme.toml
+sed -r "s/(background = \"0x)(.*)(\")/\1$newback\3/" -i ~/.config/alacritty/themes/theme.toml
+sed -r "s/(foreground = \"0x)(.*)(\")/\1$newtext\3/" -i ~/.config/alacritty/themes/theme.toml
 
-sed -r "s/[$]accent: #.*/\$accent: #$newaccent;/" -i $HOME/.config/eww/theme.scss
-sed -r "s/[$]accent2: #.*/\$accent2: #$newaccent2;/" -i $HOME/.config/eww/theme.scss
-sed -r "s/[$]bg: #.*/\$bg: #$newback;/" -i $HOME/.config/eww/theme.scss
-sed -r "s/[$]fg: #.*/\$fg: #$newtext;/" -i $HOME/.config/eww/theme.scss
-sed -r "s/[$]fgd: #.*/\$fgd: #$newtextd;/" -i $HOME/.config/eww/theme.scss
+sed -r "s/[$]accent: #.*/\$accent: #$newaccent;/" -i ~/.config/eww/theme.scss
+sed -r "s/[$]accent2: #.*/\$accent2: #$newaccent2;/" -i ~/.config/eww/theme.scss
+sed -r "s/[$]bg: #.*/\$bg: #$newback;/" -i ~/.config/eww/theme.scss
+sed -r "s/[$]fg: #.*/\$fg: #$newtext;/" -i ~/.config/eww/theme.scss
+sed -r "s/[$]fgd: #.*/\$fgd: #$newtextd;/" -i ~/.config/eww/theme.scss
 
 noUse=$2
 
-if [[ "_$noUse" == "_" ]]; then
+if [ "_$noUse" = "_" ]; then
 	for i in $(xwininfo -tree -root | grep 'Navigator' | tr -d ' ' | cut -d'"' -f1); do
 		xdotool key --window "$i" --clearmodifiers "ctrl+h" &
 	done
 
-	$HOME/bin/awesome_restart
+	~/bin/awesome_restart
 fi

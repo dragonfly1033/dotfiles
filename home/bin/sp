@@ -1,0 +1,15 @@
+#!/bin/sh
+
+w=$(~/bin/dmenu "" "Word: ")
+echo "$w" | tee /tmp/word
+
+new=$(dmenu "$(aspell -a < /tmp/word | tail +2 | cut -d':' -f2 | tr -d ' ' | tr ',' '\n')" "Words: ")
+echo "$new"
+
+if [ -z "$new" ]; then
+	new=$w
+elif [ "$new" = "*" ]; then
+	new="$w"
+fi
+
+xdotool type "$new"
