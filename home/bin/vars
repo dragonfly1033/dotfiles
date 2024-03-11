@@ -12,7 +12,11 @@ op="$1"
 v="$2"
 
 if [ "$op" = "get" ]; then
-	grep -e "^$v=" "$HOME/bin/.env/vars" | cut -d'=' -f2
+	if [ -z "$v" ]; then
+		cat "$HOME/bin/.env/vars"
+	else
+		grep -e "^$v=" "$HOME/bin/.env/vars" | cut -d'=' -f2
+	fi
 elif [ "$op" = "set" ]; then
 	sed -r "s/$v=.*/$v=$3/" -i "$HOME/bin/.env/vars"
 else

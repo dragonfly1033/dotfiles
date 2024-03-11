@@ -2,7 +2,7 @@
 
 username=$(whoami)
 
-sed -r '/install_3/ d' -i /home/$username/.bashrc
+sed -r '/install_post/ d' -i /home/$username/.bashrc
 
 echo "--------------------------------------------------------------------------------------"
 echo "CHANGE TO ZSH"
