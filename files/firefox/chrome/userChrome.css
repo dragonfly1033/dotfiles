@@ -5,6 +5,10 @@
  -moz-box-ordinal-group: 0 !important;
 }
 
+findbar {
+  order: -1 !important;
+}
+
 /*===KeyFox by AlfarexGuy2019===*/ 
 
 /*===COLORS===*/

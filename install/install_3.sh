@@ -26,11 +26,15 @@ for i in $(ls -A /home/$username/.dotfiles/home); do
     ln -s "/home/$username/.dotfiles/home/$i" "/home/$username"
 done
 
+mkdir -p /home/$username/.local/share/fonts
+
 for i in $(ls -A /home/$username/.dotfiles/fonts); do
     ln -s "/home/$username/.dotfiles/fonts/$i" "/home/$username/.local/share/fonts"
 done
 
 ln -s "/home/$username/.dotfiles/wallpapers" /home/$username/Pictures/wallpapers
+
+sed "s!name=.*!name=\"$(/home/$username/bin/vars get THEME)\"!" -i /home/$username/.fehbg
 
 echo "--------------------------------------------------------------------------------------"
 echo "Setup install_post hook"

@@ -46,5 +46,14 @@ cat --> bat
 
 ### TODO
 
-- auto configure firefox legacy css val
-- auto configure 
+- auto configure firefox extentions
+    - CanvasBlocker
+    - uBlock Origin
+    - Decentraleyes
+    - ClearURLs
+    - Temporary Containers
+    - Redirector
+    - URLs List
+    - Return YouTube Dislike
+    - Unhook
+    ? Simple Tab Groups / Tab Stash

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+domain=$1
+
+if [ -z "$domain" ]; then
+	echo "Usage: "
+	echo "	isitdown <url>"
+	exit 0
+fi
+
+ret=$(curl -s "https://www.isitdownrightnow.com/check.php?domain=$domain")
+
+(echo "$ret" | grep "DOWN" > /dev/null) && echo "Down"
+(echo "$ret" | grep "UP" > /dev/null) && echo "Up"

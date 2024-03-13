@@ -26,27 +26,15 @@ source /usr/share/zsh/plugins/zsh-auto-notify/auto-notify.plugin.zsh
 
 [[ -s /home/dragonfly1033/.autojump/etc/profile.d/autojump.sh ]] && source /home/dragonfly1033/.autojump/etc/profile.d/autojump.sh
 
-autoload -U compinit && compinit -u
+autoload -U compinit -d ~/.cache/zsh/zcompdump-"$ZSH_VERSION" && compinit -u ~/.cache/zsh/zcompdump-"$ZSH_VERSION"
 
-# autoload -Uz compinit; compinit
-
-
-export XDG_CONFIG_HOME=$HOME/.config
-export XDG_CACHE_HOME=$HOME/.cache
-export XDG_DATA_HOME=$HOME/.local/share
-export XDG_STATE_HOME=$HOME/.local/state
-
-compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-"$ZSH_VERSION"
-
-export GTK2_RC_FILES=$XDG_CONFIG_HOME/gtk-2.0/gtkrc
-export PYTHONSTARTUP=$XDG_CONFIG_HOME/python/pythonrc
-export LESSHIST=$XDG_STATE_HOME/less/history
-export XDG_CONFIG_HOME=$HOME/.config
+# compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-"$ZSH_VERSION"
 
 export HISTFILE=$XDG_STATE_HOME/zsh/history
 export HISTSIZE=10000
 export SAVEHIST=10000
 setopt appendhistory
+setopt hist_ignore_all_dups
 setopt SHARE_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt EXTENDED_HISTORY
@@ -88,7 +76,10 @@ gptcode() {
 	gptf --code -q "$1" | glow
 }
 
-
+cinfo() {
+	whatis $1
+	which $1
+}
 
 
 alias d=startAndDisown
@@ -107,12 +98,8 @@ bindkey  "^[[1;5H"  backward-kill-line
 bindkey  "^[[1;5F"  kill-line
 
 # export PATH="$HOME/Documents/AndroidStudioProjects/flutter/bin:$HOME/bin:$HOME/Games/itchio:$PATH"
-export EDITOR="micro"
-export PAGER="bat -p"
-export TERMINAL="alacritty"
-export BROWSER="firefox"
 
-
+alias cdc='cd "$OLDPWD"'
 alias tap='tee /dev/stderr'
 alias tb='~/bin/time_brightness'
 alias home="cd /mnt/c/Users/shrey"
@@ -166,7 +153,7 @@ alias bc='bc -lq'
 alias sudo='sudo EDITOR=micro '
 alias gti='git'
 compdef gti='git'
-alias hist="history 1 -1 | cut -c 8- | sort -r | uniq | fzf | tr -d '\n' | clip"
+alias hist="history 1 -1 | cut -c 8- | fzf --tac | tr -d '\n' | tap | clip"
 alias ytdpa='yt-dlp -x --no-flat-playlist --exec after_move:touch'
 alias pyvenv='python -m venv venv && source ./venv/bin/activate'
 alias gpt='tgpt --provider openai --key "$(cat ~/.ssh/openaikey)" --model "gpt-3.5-turbo" --temperature=0 --top_p=0.75'

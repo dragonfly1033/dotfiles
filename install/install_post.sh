@@ -14,6 +14,11 @@ su --command="chsh -s /bin/zsh" $username
 
 
 /home/$username/.dotfiles/install/install_yay.sh
-/home/$username/.dotfiles/install/install_firefox_patch.sh
 /home/$username/.dotfiles/install/install_vscodium.sh
 /home/$username/.dotfiles/install/install_yay_pkgs.sh
+
+firefox --headless &
+
+/home/$username/.dotfiles/install/install_firefox_patch.sh
+
+pkill firefox
