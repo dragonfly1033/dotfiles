@@ -1,0 +1,9 @@
+#!/bin/sh
+
+read -p "Enter name: " name
+
+mkdir "$HOME/Documents/Python/$name"
+touch "$HOME/Documents/Python/$name/main.py"
+cd "$HOME/Documents/Python/$name" || exit
+python -m venv venv
+

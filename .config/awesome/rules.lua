@@ -57,9 +57,22 @@ awful.rules.rules = {
       properties = { titlebars_enabled = false, size_hints_honor = false }
     },
 
-    { rule_any = {class = { "Tk", "Display" }}, 
+    { rule_any = {class = { "Tk", "Display", "MEGAsync", "goog", "Min" }}, 
       properties = { floating = true }
     },
+
+    { rule_any = {class = { "Min" }},
+      properties = {
+      	floating = true,
+      	width = 920,
+      	height = 750,
+      	x = 500,
+      	y = 165,
+      	placement = awful.placement.centered
+      }
+    	
+    },
+
 
     { rule_any = {class = { "popterm-large" }},
       properties = { 

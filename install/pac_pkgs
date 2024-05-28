@@ -36,6 +36,7 @@ flex
 font-manager
 fontforge
 foremost
+fzf
 gawk
 gcc
 gettext
@@ -131,7 +132,6 @@ texmaker
 tk
 tlp
 tree
-ttf-jetbrains-mono-nerd
 unzip
 veracrypt
 vim
@@ -212,4 +212,10 @@ tmux
 bind
 plymouth
 polybar
-fzf
+alsa-utils
+aspell-en
+gdb
+gnu-netcat
+hwdetect
+nmap
+openvpn

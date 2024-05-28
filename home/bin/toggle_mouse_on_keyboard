@@ -1,0 +1,21 @@
+#!/bin/sh
+
+state="$1"
+
+if [ "$state" = "set" ]; then
+    setxkbmap -option keypad:pointerkeys
+    sed -r '57,63 s/# (.*)/\1/' -i ~/.xbindkeysrc
+    killall xbindkeys
+    xbindkeys &
+elif [ "$state" = "unset" ]; then
+    setxkbmap -option
+    sed -r '57,63 s/(.*)/# \1/' -i ~/.xbindkeysrc
+    killall xbindkeys
+    xbindkeys &
+else
+    echo "Usage: toggle_mouse_on_keyboard (set/unset)"
+    exit
+fi
+    
+
+

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+electron ~/bin/electron-apps/mail.js
+

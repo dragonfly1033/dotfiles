@@ -1,0 +1,14 @@
+#!/bin/sh
+
+dev_id=$(xinput | grep "Touchpad" | sed -r 's/.*id=([0-9]+).*/\1/')
+prop_id=$(xinput list-props "$dev_id" | grep -e "Disable While Typing" | sed '/.*Default.*/d' | sed -r 's/.*\(([0-9]+)\).*/\1/')
+
+new_state="$1"
+
+if [ -z "$new_state" ]; then
+    echo "Usage toggle_touchpad_while_typing 0(on)/1(off)"
+    exit 
+fi
+
+xinput set-int-prop "$dev_id" "$prop_id" 8 "$new_state"
+

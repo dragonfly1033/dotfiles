@@ -4,6 +4,7 @@ read -p "Enter name: " name
 read -p "Enter full link: " l
 
 cp $HOME/bin/electron-apps/template.js $HOME/bin/electron-apps/$name.js
+sed -i "s|NAME|$name|g" $HOME/bin/electron-apps/$name.js
 sed -i "s|LINK|$l|" $HOME/bin/electron-apps/$name.js
 
 touch $HOME/bin/$name

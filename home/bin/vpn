@@ -1,0 +1,6 @@
+#!/bin/sh
+
+servers=$(sudo ls /etc/openvpn/client)
+server=$(echo "$servers" | fzf)
+sudo openvpn "/etc/openvpn/client/$server"
+

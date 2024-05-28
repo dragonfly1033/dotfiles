@@ -24,15 +24,15 @@ o3=$3
 if [ -z $o1 ]; then
 	help
 elif [ -z $o2 ]; then
-	termdown "${o1}s"
+	termdown "${o1}s" || exit 0
 elif [ -z $o3 ]; then
-	termdown "${o1}m ${o2}s"
+	termdown "${o1}m ${o2}s" || exit 0
 else
-	termdown "${o1}h ${o2}m ${o3}s"
+	termdown "${o1}h ${o2}m ${o3}s" || exit 0
 fi
 
 for i in $(seq 10); do
 	notify-send "Timer for $o1 $o2 $o3 Complete"
 done
 
-mpv --loop ~/Documents/Sounds/alarm.opus
+mpv --volume=40 --loop ~/Documents/Sounds/alarm.opus

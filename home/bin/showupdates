@@ -7,10 +7,11 @@ num=$(echo "$txt" | wc -l)
 read -p "Update (y/n)? " ans
 
 if [ $ans = "y" ]; then
-	sudo pacman -Syu --noconfirm
+	
+	(sudo pacman -Syu --noconfirm) || read unused
 
 	if [[ $txt =~ "grub" ]]; then
-		sudo $HOME/bin/reinstall-grub
+		(sudo $HOME/bin/reinstall-grub) || read unused
 	fi
 
 	notify-send -t 5000 "System Update Finished" "$num Updates Finished"

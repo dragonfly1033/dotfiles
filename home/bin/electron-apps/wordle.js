@@ -1,5 +1,6 @@
 const electron = require('electron');
 const { app, BrowserWindow } = electron;
+app.setName("Wordle");
 
 let mainWindow;
 
@@ -10,7 +11,7 @@ app.on('ready', () => {
         height: 700
     });
 
-    mainWindow.setTitle('Excalidraw');
+    mainWindow.setTitle('Wordle');
     mainWindow.loadURL('https://www.nytimes.com/games/wordle/index.html');
 
     mainWindow.on('closed', () => {

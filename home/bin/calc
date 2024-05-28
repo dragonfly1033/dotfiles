@@ -7,6 +7,7 @@ from math import comb as choose
 from random import random as rand
 from random import randint as rint
 import random
+from fractions import Fraction as Frac
 
 import numpy as np
 
@@ -18,12 +19,29 @@ sys.ps2 = ""
 
 print("Calculator")
 
-def sind(a): return sin(degrees(a))
-def cosd(a): return cos(degrees(a))
-def tand(a): return tan(degrees(a))
+def sind(a): return sin(radians(a))
+def cosd(a): return cos(radians(a))
+def tand(a): return tan(radians(a))
 def asind(a): return degrees(asin(a))
 def acosd(a): return degrees(acos(a))
 def atan2d(y, x): return degrees(atan2(a))
+
+def is_prime(n):
+	prime = True
+	for i in range(2, int(sqrt(n))+1):
+		if n % i == 0:
+			return False
+	return True
+
+def decomp(n):
+	facts = []
+	for i in range(2, int(sqrt(n))+1):
+		if is_prime(i):
+			tmp = n
+			while tmp % i == 0:
+				facts.append(i)
+				tmp /= i
+	return facts
 
 def sign(a):
 	return 1 * (a > 0) -1 * (a < 0)

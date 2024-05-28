@@ -1,5 +1,6 @@
 const electron = require('electron');
 const { app, BrowserWindow } = electron;
+app.setName("Excalidraw");
 
 let mainWindow;
 

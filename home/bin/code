@@ -2,9 +2,12 @@
 
 ddmenu_dir=~/bin/dmenu_dir
 
-CONF=$($ddmenu_dir ~/Documents/Python)
+lang=$(dmenu "Python\nGo\nHTML" "Lang: ")
+
+CONF=$($ddmenu_dir ~/Documents/"$lang")
 
 if [ $CONF != 'NONE' ]; then 
+	#notify-send "$CONF" 
 	eval "vscodium $CONF" 
 fi	
 

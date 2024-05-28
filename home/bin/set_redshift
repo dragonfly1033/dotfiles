@@ -2,7 +2,7 @@
 
 rat=$1
 
-new=$(echo "($rat / 10)*3200+3200" | bc -lq | cut -d'.' -f1)
+new=$(echo "($rat / 10)*4000+2400" | bc -lq | cut -d'.' -f1)
 
 echo "$rat" >> /tmp/redshift_10
 ~/bin/vars set REDSHIFT_TEMP "$new"

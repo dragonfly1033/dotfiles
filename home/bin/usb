@@ -1,0 +1,99 @@
+#!/bin/python
+
+import subprocess as sp
+import sys
+
+args = sys.argv[1:]
+
+if len(args) != 1 or args[0] not in ['add', 'eject', 'list', 'go']:
+    print('''Usage: usb [ add | eject | list | go]''')
+    quit()
+
+ws = [12, 8, 7, 20, 20]
+
+def select(mounted):
+    if mounted == True:
+        filter = "| tr ' ' ',' | grep -v \",$\""
+    elif mounted == False:
+        filter = "| tr ' ' ',' | grep \",$\""
+    elif mounted is None:
+        filter = ""
+        
+    res = sp.run(["lsblk --raw -o TYPE,NAME,SIZE,FSTYPE,LABEL,MOUNTPOINTS | grep -v 'disk' | sed '1d' | grep -v 'nvme' | cut -d' ' -f2,3,4,5,6"+filter], stdout=sp.PIPE, shell=True)
+    # res = sp.run(["lsblk --raw -o TYPE,NAME,SIZE,FSTYPE,LABEL,MOUNTPOINTS | grep -v 'disk' | sed '1d' | cut -d' ' -f2,3,4,5,6"+filter], stdout=sp.PIPE, shell=True)
+    res = str(res.stdout)[2:-1]
+    res = res.replace('\\xe2\\x94\\x9c\\xe2\\x94\\x80', '')
+    res = res.replace('\\xe2\\x94\\x94\\xe2\\x94\\x80', '')
+    res = res.replace('\\\\x20', '-')
+    parts = res.split("\\n")
+    
+    s = '\n'.join([
+        ''.join([
+            f"{v:<{ws[i]}}" for i, v in enumerate(row.split(','))
+        ]) for row in parts if row
+    ])
+
+    if mounted is None:
+        print(''.join([f"{v:<{ws[i]}}" for i, v in enumerate(["NAME","SIZE","FS","LABEL","MOUNT"])]))
+        print(s)
+        quit()
+    
+    fzf = sp.Popen(["fzf", "--height=~100%", "--no-sort", "--multi", "--layout=reverse"], stdin=sp.PIPE, stdout=sp.PIPE)
+    selected = str(fzf.communicate(s.encode())[0])[2:-1].split('\\n')
+    for i in range(len(selected)):
+        if not selected[i]: 
+            selected.remove(selected[i])
+            continue
+        selected[i] = selected[i].split(' ')[0]
+
+    if not selected:
+        quit()
+    return selected
+
+def mountpoints():
+    res = sp.run(["lsblk --raw -o MOUNTPOINTS | sed '1d;/^$/d' | grep -iv swap"], stdout=sp.PIPE, shell=True)
+    res = str(res.stdout)[2:-1]
+    res = res.replace('\\\\x20', ' ')
+    mounts = res.split("\\n")
+    for i in range(len(mounts)):
+        if not mounts[i]: mounts.remove(mounts[i])
+
+    return mounts
+
+def getmount(part):
+    res = sp.run(["lsblk --raw -o NAME,MOUNTPOINTS | grep "+part+" | cut -d' ' -f2"], stdout=sp.PIPE, shell=True)
+    res = str(res.stdout)[2:-1]
+    res = res.replace('\\n', '')
+    res = res.replace('\\\\x20', ' ')
+    return res
+
+
+
+
+
+mount_options = [f'/mnt/usb{i}' for i in range(1, 13)]
+
+if args[0] == 'add':
+    mounts = mountpoints()
+    for m in mounts:
+        if m not in mount_options: continue
+        mount_options.remove(m)
+    parts = select(False)
+    sp.run(';'.join([f"sudo mount /dev/{p} {mount_options[i]}" for i, p in enumerate(parts)]), shell=True)
+elif args[0] == 'eject':
+    mounts = mountpoints()
+    for m in mounts:
+        if m not in mount_options: continue
+        mount_options.remove(m)
+    parts = select(True)
+    sp.run(';'.join([f"sudo umount {getmount(p)}" for p in parts]), shell=True)
+    sp.run(';'.join([f"sudo eject /dev/{p[:3]}" for p in parts]), shell=True)
+elif args[0] == 'list':
+    parts = select(None)
+    print(parts)
+elif args[0] == 'go':
+    parts = select(True)
+    if len(parts) > 1:
+        print("usb go can only return one mountpoint")
+        quit()
+    print(getmount(parts[0]))

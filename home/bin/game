@@ -7,6 +7,7 @@
 dmenu=$HOME/bin/dmenu
 
 game=$($dmenu "Ravenfield
+supertuxkart
 Bloodletter
 Hyper Time Disruptor
 RERUN
@@ -38,5 +39,6 @@ elif [ "$game" == "Rexuiz" ]; then
 elif [ "$game" == "Headmaster" ]; then
 	DIR="$game_dir/the-headmaster/TheHeadmaster-0.14.3public-pc"
 	(cd $DIR && exec "$DIR/TheHeadmaster.sh")
-	
+elif [ "$game" == "supertuxkart" ]; then
+    supertuxkart
 fi

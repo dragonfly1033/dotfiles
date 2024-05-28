@@ -19,6 +19,10 @@ su --command="chsh -s /bin/zsh" $username
 
 firefox --headless &
 
+sleep 4
+
 /home/$username/.dotfiles/install/install_firefox_patch.sh
+
+sleep 2
 
 pkill firefox

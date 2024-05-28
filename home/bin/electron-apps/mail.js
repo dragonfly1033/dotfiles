@@ -1,6 +1,6 @@
 const electron = require('electron');
 const { app, BrowserWindow } = electron;
-app.setName('NAME');
+app.setName('mail');
 
 let mainWindow;
 
@@ -11,8 +11,8 @@ app.on('ready', () => {
         height: 700
     });
 
-    mainWindow.setTitle('NAME');
-    mainWindow.loadURL('LINK');
+    mainWindow.setTitle('mail');
+    mainWindow.loadURL('https://mail.google.com');
 
     mainWindow.on('closed', () => {
         mainWindow = null;

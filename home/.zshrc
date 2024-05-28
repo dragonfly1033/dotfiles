@@ -44,11 +44,18 @@ setopt cdsilent
 setopt autocd
 setopt complete_aliases
 
+eval "$(fzf --zsh)"
+
 export AUTO_NOTIFY_THRESHOLD=20
 export AUTO_NOTIFY_TITLE="%command has finished"
 export AUTO_NOTIFY_BODY="%elapsed seconds | exit code %exit_code"
 export AUTO_NOTIFY_EXPIRE_TIME=10000
 AUTO_NOTIFY_IGNORE+=("micro" "m" "man" "less" "bat" "krita" "python")
+
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
 
 # start programs from shell but immediately disown them
 startAndDisown() {
@@ -110,7 +117,7 @@ alias s='eza --group-directories-first --icons'
 alias la='eza --group-directories-first -lahg --icons'
 alias diff='git diff'
 alias nano='micro'
-alias htop='btop -p 1'
+alias htop='btop'
 alias tree='tree -a -I .git -I .cache -I .mozilla -I .local -I backups -I pulse -I .vscode-oss -I VSCodium'
 alias grep='grep --color=auto'
 alias cat='custom_bat'
@@ -138,7 +145,7 @@ compdef sd='systemctl'
 alias sdu='systemctl --user'
 compdef sdu='systemctl'
 alias todo="$HOME/bin/note todo"
-alias temp="micro /tmp/temp_note"
+alias temp="/bin/rm $HOME/.config/micro/backups/%tmp%tmp; micro /tmp/tmp"
 alias df='df -h'
 alias du='du -sh'
 alias vlc='mpv'
@@ -160,4 +167,6 @@ alias gpt='tgpt --provider openai --key "$(cat ~/.ssh/openaikey)" --model "gpt-3
 alias gptc='tgpt --provider openai --key "$(cat ~/.ssh/openaikey)" --model "gpt-3.5-turbo" --temperature=1 --top_p=0.9'
 alias gptf='tgpt --provider openai --key "$(cat ~/.ssh/openaikey)" --model "gpt-3.5-turbo" --temperature=0 --top_p=0.5'
 alias speak='~/Documents/piper/piper --model ~/Documents/piper/voices/irish_woman/voice.onnx --sentence_silence 0.1 --output-raw 2>/dev/null | aplay -r 22050 -f S16_LE -t raw - 2>/dev/null'
-
+alias scrcpy='scrcpy -S'
+alias whatismyip='curl "ifconfig.me"'
+alias cdusb='cd `usb go`'

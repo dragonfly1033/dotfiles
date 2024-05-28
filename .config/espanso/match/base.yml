@@ -14,35 +14,6 @@ global_vars:
 
 
 matches:
-  # Print the output of a shell command
-  - regex: "shell\\((?P<commandInput>.*)\\)"
-    replace: "{{output}}"
-    vars:
-      - name: output
-        type: shell
-        params:
-          cmd: "{{commandInput}}"
-
-  - trigger: "lc"
-    replace: " | wc -l"
-    word: true
-
-  - trigger: ";lower"
-    replace: "{{output}}"
-    vars:
-      - name: output
-        type: shell
-        params:
-          cmd: "python -c \"print('{{clipboard}}'.lower())\""
-
-  - trigger: ";title"
-    replace: "{{output}}"
-    vars:
-      - name: output
-        type: shell
-        params:
-          cmd: "python -c \"print('{{clipboard}}'.title())\""
-
   - trigger: "rg14"
     replace: "shreyrg14@gmail.com"
 
@@ -59,6 +30,15 @@ matches:
     replace: "probably"
   - trigger: "idk"
     replace: "I don't know"
+
+  - regex: 'shell:(?P<command>[a-zA-Z/ \-+$\(\)\\.0-9]+):'
+    replace: "{{result}}"
+    vars:
+      - name: result
+        type: shell
+        params:
+          cmd: "$ESPANSO_COMMAND"
+          debug: true
 
 
         

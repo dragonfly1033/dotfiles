@@ -57,3 +57,13 @@ cat --> bat
     - Return YouTube Dislike
     - Unhook
     ? Simple Tab Groups / Tab Stash
+- Fonts
+    - Text
+        - Cantarell
+        - Free Sans
+        ? Hack 
+    - Code
+        - JetBrains
+        - Fira Code
+        - Ubuntu Mono
+        ? Source Code Pro (Proprietary)

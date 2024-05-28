@@ -52,6 +52,26 @@
 #"rxvt"
 #  Control + b:2 + Release
 
+##########################################################################
+
+# "xdotool click --delay 0 1"
+#     m:0x0 + c:59
+#     comma
+# 
+# "xdotool click --delay 0 3"
+#     m:0x0 + c:47
+#     semicolon
+
+# "xdotool mouseup --delay 0 1 && xdotool mouseup --delay 0 3"
+#     m:0x0 + c:65
+#     space
+
+##########################################################################
+
+
+
+
+
 "brightness inc 10"
     m:0x0 + c:233
     XF86MonBrightnessUp
@@ -121,6 +141,10 @@
     m:0x0 + c:248
     NoSymbol
 
+"xdotool mousedown 2"
+    m:0x14 + c:49
+    Control+Mod2 + grave
+    
 ##################################
 # End of xbindkeys configuration #
 ##################################

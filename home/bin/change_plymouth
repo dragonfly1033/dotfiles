@@ -1,6 +1,6 @@
 #!/bin/sh
 
-th=$(plymouth-set-default-theme -l | shuf -n1)
+th=$(plymouth-set-default-theme -l | sed -r '/(bgrt|tribar|text|glow|details|fade|script|solar|spinfinity|spinner)/d' | shuf -n1)
 p=$(~/bin/vars get PLYMOUTH)
 ~/bin/vars set PLYMOUTH_OLD "$p"
 

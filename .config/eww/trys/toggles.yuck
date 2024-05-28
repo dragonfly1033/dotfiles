@@ -8,6 +8,10 @@
                 (toggle :texton "󱄄" :textoff "󰶐" :funcon "compfy -b" :funcoff "killall compfy" :var compositor_toggle :varname "compositor_toggle")
                 (toggle :texton "󰭶" :textoff "󱘂" :funcon "xinput enable 14" :funcoff "xinput disable 14" :var touchscreen_toggle :varname "touchscreen_toggle")
                 (toggle :texton "󰟸" :textoff "󰤳" :funcon "xinput enable 10" :funcoff "xinput disable 10" :var touchpad_toggle :varname "touchpad_toggle")
+                (toggle :texton "󰡖" :textoff "󰄷" 
+                                :funcon "awesome-client 'local bling=require(\"bling\"); bling.module.window_swallowing.start()'" 
+                                :funcoff "awesome-client 'local bling=require(\"bling\"); bling.module.window_swallowing.stop()'" 
+                                :var swallowing_toggle :varname "swallowing_toggle")
             )
             (box :orienation "h"
                 :space-evenly false
@@ -42,7 +46,7 @@
 						:onclick "setxkbmap gb"
                     " "
                 )
-                (toggle :texton "󰟸+  " :textoff "󰤳+  " :funcon "xinput set-int-prop 10 334 8 0" :funcoff "xinput set-int-prop 10 334 8 1" :var touchpad_while_typing_toggle :varname "touchpad_while_typing_toggle")
+                (toggle :texton "󰟸+  " :textoff "󰤳+  " :funcon "~/bin/toggle_touchpad_while_typing 0" :funcoff "~/bin/toggle_touchpad_while_typing 1" :var touchpad_while_typing_toggle :varname "touchpad_while_typing_toggle")
             )
         )
     )
@@ -61,6 +65,7 @@
 (defvar compositor_toggle true)
 (defvar touchscreen_toggle true)
 (defvar touchpad_toggle true)
+(defvar swallowing_toggle true)
 (defvar touchpad_while_typing_toggle false)
 (defpoll brightness_value :interval "30s" :initial "100" "~/bin/brightness get")
 (deflisten redshift_value :initial "0" "tail -F /tmp/redshift_10")

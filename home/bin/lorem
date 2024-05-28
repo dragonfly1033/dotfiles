@@ -1,0 +1,12 @@
+#!/bin/sh
+
+paragraphs=$1
+
+if [ -z "$1" ]; then
+	paragraphs="1"
+fi
+
+ans=$(curl "loripsum.net/api/$paragraphs/plaintext" 2> /dev/null)
+echo "$ans" | xclip -selection clipboard
+echo "$ans"
+

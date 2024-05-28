@@ -52,6 +52,10 @@ sed -r "s/[$]bg: #.*/\$bg: #$newback;/" -i ~/.config/eww/theme.scss
 sed -r "s/[$]fg: #.*/\$fg: #$newtext;/" -i ~/.config/eww/theme.scss
 sed -r "s/[$]fgd: #.*/\$fgd: #$newtextd;/" -i ~/.config/eww/theme.scss
 
+rm -rf /usr/share/backgrounds/*
+cp ~/Pictures/wallpapers/"$theme"* /usr/share/backgrounds
+
+
 noUse=$2
 
 if [ "_$noUse" = "_" ]; then
