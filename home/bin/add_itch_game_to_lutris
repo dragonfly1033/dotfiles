@@ -1,0 +1,64 @@
+#!/bin/python
+
+def help():
+    print("Usage: add_itch_game_to_lutris <executable path>")
+    quit()
+
+import sys, os, time, json, sqlite3 as sql
+
+args = sys.argv
+
+bin_path = args[1]
+
+if not bin_path:
+    help()
+
+if not os.path.exists(bin_path) or not os.path.isfile(bin_path):
+    help()
+    
+bin_path = os.path.abspath(bin_path)
+work_dir = os.path.dirname(bin_path)
+ts = int(time.time())
+
+name = input("Enter game name: ")
+slug = name.lower().replace(" ", "-")
+
+home = os.environ["HOME"]
+
+with open(f"{home}/.cache/lutris/game-paths.json", "r") as f:
+    games = json.load(f)
+
+idnum = max([int(i) for i in games.keys()]) + 1
+
+games[str(idnum)] = bin_path
+
+with open(f"{home}/.cache/lutris/game-paths.json", "w") as f:
+    json.dump(games, f)
+
+yml = f"""game:
+  exe: {bin_path}
+  working_dir: {work_dir}
+linux: {{}}
+system: {{}}"""
+
+with open(f"{home}/.config/lutris/games/{slug}-{ts}.yml", "w") as f:
+    f.write(yml)
+
+
+try:
+    con = sql.connect(f"{home}/.local/share/lutris/pga.db")
+    cur = con.cursor()
+    cur.execute(f'''INSERT INTO games (id, name, sortname, slug, installer_slug, parent_slug, platform, runner, executable, directory, updated, lastplayed, installed, installed_at, year, configpath, has_custom_banner, has_custom_icon, has_custom_coverart_big, playtime, hidden, service, service_id, discord_id) 
+                    VALUES ({idnum}, "{name}", "", "{slug}", :null, :null, "Linux", "linux", :null, "", :null, {ts}, 1, {ts}, :null, "{slug}-{ts}", 0, 0, 0, 0.0, :null, :null, :null, :null)''', {'null':None})
+    con.commit()
+except sql.Error as e:
+    print("sql error: ", e)
+finally:
+    if con:
+        con.close()
+
+
+
+
+
+

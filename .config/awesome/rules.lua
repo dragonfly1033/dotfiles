@@ -116,7 +116,7 @@ awful.rules.rules = {
 	  }
 	},
 
-    { rule_any = {class = { "Pavucontrol" }},
+    { rule_any = {class = { "pavucontrol" }},
 	  properties = { 
 		floating = true,
 		ontop = true, 

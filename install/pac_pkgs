@@ -36,7 +36,6 @@ flex
 font-manager
 fontforge
 foremost
-fzf
 gawk
 gcc
 gettext
@@ -68,7 +67,6 @@ m4
 make
 mate-polkit
 micro
-mlocate
 mpv
 mtools
 mtpfs
@@ -219,3 +217,4 @@ gnu-netcat
 hwdetect
 nmap
 openvpn
+fzf

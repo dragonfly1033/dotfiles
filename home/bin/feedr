@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd /home/dragonfly1033/Documents/HTML/feedr/out/feedr-linux-x64
+./feedr
+

@@ -1,0 +1,129 @@
+#!/bin/python
+
+"""
+Module for parsing args
+short args: -h
+short kwargs: -f <file>
+long args: --help
+long kwargs: --file <file>
+short arg groups: -hvfg
+long kwarg optional '=' delim: --file=<file>
+
+
+
+Input:
+    semicolon separated list of variables
+        each variable has a pipe separated list of args
+        followed by a ? if there is no expected value
+    VARIABLE_NAME:-h?
+    VARIABLE_NAME:-h|--help?
+    VARIABLE_NAME:--longtoggle?
+    VARIABLE_NAME:--file
+
+Output:
+
+VARIABLE_NAME="" (arg not given)
+VARIABLE_NAME="1" (arg present but not values given (and none expected))
+VARIABLE_NAME="some value if value given"
+
+OR
+
+echo "error message"
+exit 1
+
+"""
+
+# FLAG:
+#   -f | --flag?
+# SHORT:
+#   -s | --short
+# ANOTHA:
+#   -a?
+
+# -f --short val
+# -fa --short=val
+# --flag -s "val val2"
+# --flag -as "\"val\""
+# -fas val\ val2
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+def fail():
+    print("exit 1")
+    quit()
+
+def help():
+    eprint("Usage: argparse <definition> <args>")
+    eprint("")
+    eprint("DEFINITION")
+    eprint("    semicolon separated list of key-value pairs where the key")
+    eprint("    is a bash variable name and the value is a pipe separated")
+    eprint("    list of long/short flags followed by a ? if there is no")
+    eprint("    expected value.")
+    fail()
+
+
+import sys
+
+if len(sys.argv) <= 2:
+    eprint(str(sys.argv))
+    help()
+
+DEBUG = False
+if sys.argv[1] == "--debug":
+    DEBUG = True    
+    definition, args =  sys.argv[2], sys.argv[3:]
+else:
+    definition, args =  sys.argv[1], sys.argv[2:]
+
+variables = definition.split(";")
+desc = {}
+
+for v in variables:
+    if not v:
+        continue
+    name, flags = v.split(":")
+    val, flags = (not flags.endswith("?")), flags.removesuffix("?")
+    for f in flags.split("|"):
+        desc[f.removeprefix("--").removeprefix("-")] = {"name": name, "hasVal": val}
+
+
+ret = ""
+
+grab_val = False
+
+for i, a in enumerate(args):
+    if grab_val:
+        grab_val = False
+        ret += f"\"{a.replace('"', "\\\"")}\"\n"
+        continue
+
+    if a.startswith("--"):
+        if "=" in a:
+            f, v = a.split("=")
+            f = f.removeprefix("--")
+            ret += f"{desc[f]['name']}=\"{v}\"\n"
+        else:
+            f = a.removeprefix("--")
+            if desc[f]["hasVal"]:
+                ret += f"{desc[f]['name']}="
+                grab_val = True
+                continue
+            else:
+                ret += f"{desc[f]['name']}=\"true\"\n"
+
+    elif a.startswith("-"):
+        fs = a.removeprefix("-")
+        for f in fs:
+            if desc[f]["hasVal"]:
+                if f != fs[-1]:
+                    eprint("flags with values should be at end when combined with other flags")
+                    fail()
+                ret += f"{desc[f]['name']}="
+                grab_val = True
+            else:
+                ret += f"{desc[f]['name']}=\"true\"\n"
+if DEBUG:
+    eprint(ret)
+print(ret)

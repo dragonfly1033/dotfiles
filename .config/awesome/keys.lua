@@ -226,6 +226,13 @@ globalkeys = gears.table.join(
     awful.key({ ALT },         "x",     function () awful.spawn.with_shell('rofi -show run -sort -i') end,
               {description = "run prompt", group = "launcher"}),    
 
+    awful.key({ ALT },         "t",     function () 
+                                                c = client.focus
+                                                c:emit_signal("unmanage") 
+                                                c.floating = true
+                                        end,
+              {description = "un swallow", group = "client"}), 
+
     awful.key({ ALT },         "b",     function () 
     										if bar_status then
     											awful.spawn.with_shell('polybar-msg cmd hide') 
@@ -336,11 +343,12 @@ clientkeys = gears.table.join(
 				function (c)  
 					local screen = awful.screen.focused()
 					local tags = screen.tags
-					local tag = screen.selected_tag.index
-					-- for i=#tags,tag+1,-1 do -- for last free
-					for i=tag+1,#tags,1 do -- for next free
-						if #tags[i]:clients() == 0 then
-							c:move_to_tag(tags[i])
+					local tag = screen.selected_tag.index - 1
+					-- for i=-1,-#tags+1,-1 do -- for last free
+					for i=1,#tags-1,1 do -- for next free
+					    new = (tag+i)%(#tags)
+						if #tags[new+1]:clients() == 0 then
+							c:move_to_tag(tags[new+1])
 							return
 						end
 					end
@@ -351,11 +359,12 @@ clientkeys = gears.table.join(
 				function (c)  
 					local screen = awful.screen.focused()
 					local tags = screen.tags
-					local tag = screen.selected_tag.index
-					-- for i=1,tag-1 do -- for first free
-					for i=tag-1,1,-1 do -- for prev free
-						if #tags[i]:clients() == 0 then
-							c:move_to_tag(tags[i])
+					local tag = screen.selected_tag.index - 1
+					-- for i=1,#tags-1,1 do -- for first free
+					for i=-1,-#tags+1,-1 do -- for prev free
+					    new = (tag+i)%(#tags)
+						if #tags[new+1]:clients() == 0 then
+							c:move_to_tag(tags[new+1])
 							return
 						end
 					end

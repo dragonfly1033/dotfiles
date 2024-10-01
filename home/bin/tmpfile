@@ -1,0 +1,10 @@
+#!/bin/sh
+
+t=$(mktemp)
+
+chmod +x "$t"
+echo "$t" | xclip -r -selection clipboard
+
+$EDITOR "$t"
+
+

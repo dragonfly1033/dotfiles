@@ -1,0 +1,22 @@
+#!/bin/sh
+
+input_file="$1"
+output_file="$2"
+
+if ! [ -e "$1" ] || ! [ -e "$2" ]; then
+    echo "wrong path"
+    exit 1
+fi
+
+echo "Tags will be transferred from $input_file to $output_file"
+echo "Are you sure(y/N): "
+read -r conf
+
+if [ "$conf" != "y" ]; then
+    exit 1
+fi
+
+ffmpeg -i "$input_file" -i "$output_file" -map 1 -c copy -map_metadata 0 -map_metadata:s:a 0:s:a /tmp/tmpAudio.opus && cp /tmp/tmpAudio.opus "$output_file" || exit 1
+
+
+

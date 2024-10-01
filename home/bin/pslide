@@ -1,4 +1,4 @@
 #!/bin/sh
 
-(cd ~/Documents/Sync/PFiles && ($HOME/bin/loop 10 '$HOME/bin/slide "Niamh AmeliaC BethW HannahC .spec" 5' & nohup))
+(cd ~/Documents/Sync/PFiles && ($HOME/bin/loop 10 '$HOME/bin/slide "Niamh AmeliaC BethW HannahC AmberF ScarlettW .spec" 5' &))
 

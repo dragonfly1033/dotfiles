@@ -34,3 +34,6 @@ run pragha -x
 # notify-send "Startup Succesful!" "$(cat /tmp/startup_log)"
 
 run ~/bin/change_plymouth
+
+~/bin/vars set UPDATES "$(~/bin/get_update_number c)"
+

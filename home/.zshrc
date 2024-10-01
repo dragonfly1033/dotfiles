@@ -1,7 +1,7 @@
 export PF_INFO="ascii title os kernel pkgs palette"
 # pfetch
 # colorscript -r
-~/gap_rev | awk -F'|' '{print $1"|"$2}' | sed 's/|/|/' | figlet
+~/gap_rev | figlet
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -88,6 +88,11 @@ cinfo() {
 	which $1
 }
 
+tmp () {
+    ~/bin/tmpfile
+    cd /tmp
+}
+
 
 alias d=startAndDisown
 
@@ -129,6 +134,7 @@ alias uninstall='yay -Rns $(yay -Qe | sed -r "s/([^ ]*) .*/\1/" | fzf)'
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
+alias find='find -L'
 alias code='codium'
 alias cam='mpv /dev/video0 || mpv /dev/video1'
 alias wall='feh --no-fehbg --bg-fill'
@@ -146,7 +152,7 @@ alias sdu='systemctl --user'
 compdef sdu='systemctl'
 alias todo="$HOME/bin/note todo"
 alias temp="/bin/rm $HOME/.config/micro/backups/%tmp%tmp; micro /tmp/tmp"
-alias df='df -h'
+alias df='df -h -x tmpfs'
 alias du='du -sh'
 alias vlc='mpv'
 alias gcl='git clone'
@@ -155,7 +161,7 @@ alias gs='git status'
 alias gc='git commit -m'
 alias gch='git checkout'
 alias gpom='git push origin master'
-alias clip='xclip -selection clipboard'
+alias clip='xclip -r -selection clipboard'
 alias bc='bc -lq'
 alias sudo='sudo EDITOR=micro '
 alias gti='git'
@@ -170,3 +176,4 @@ alias speak='~/Documents/piper/piper --model ~/Documents/piper/voices/irish_woma
 alias scrcpy='scrcpy -S'
 alias whatismyip='curl "ifconfig.me"'
 alias cdusb='cd `usb go`'
+alias incog='unset HISTFILE; sed "$d" -i ~/.local/state/zsh/history'

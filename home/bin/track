@@ -1,0 +1,18 @@
+#!/bin/sh
+
+data=$(ps aux --sort=%cpu | awk '{print $1"&"$2"&"$11}' | tail -n 20 | tac | column -t -s'&' | fzf)
+
+if [ -z "$data" ]; then
+    exit 1
+fi
+
+user=$(echo "$data" | awk '{print $2}')
+pid=$(echo "$data" | awk '{print $2}')
+
+if [ "$user" = "root" ]; then
+    sudo progress -m -p "$pid"
+else
+    progress -m -p "$pid"
+fi
+
+

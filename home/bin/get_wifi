@@ -1,3 +1,25 @@
 #!/bin/sh
 
-(ping -q -c 1 8.8.8.8 2>/dev/null 1>/dev/null ) && echo "󰖩" || echo "󰖪"
+prev_state=$(~/bin/vars get WIFI_CONNECTED)
+cur_state=$(nmcli g | sed '1d' | awk '{print $2}')
+if [ "$cur_state" = "full" ]; then
+    echo "󰖩"
+    ~/bin/vars set WIFI_CONNECTED true
+else
+    echo "󰖪"
+    ~/bin/vars set WIFI_CONNECTED false
+fi
+
+new_state=$(~/bin/vars get WIFI_CONNECTED)
+
+if [ "$prev_state" != "$new_state" ]; then
+    if [ "$new_state" = "true" ]; then
+        word="Connected"
+        symb="󰖩"
+    else
+        word="Disonnected" 
+        symb="󰖪"
+    fi
+        
+    notify-send "<b>$symb   Wi-Fi $word</b>"
+fi

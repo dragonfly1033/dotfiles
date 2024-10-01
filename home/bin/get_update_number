@@ -6,9 +6,11 @@ LIMIT=80
 
 message="$n"
 
+plain="$1"
+
 case "$n" in
 	"ERROR"*) echo "" ;;
-	*) 	if [ $n -ge $LIMIT ]; then
+	*) 	if [ "$n" -ge "$LIMIT" ] && [ -z "$plain" ]; then
 			message="%{F#f00}$message"
 		fi
 		(echo "$ups" | grep -e "grub" > /dev/null ) && echo " $message !" || echo " $message"

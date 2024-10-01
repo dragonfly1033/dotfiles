@@ -53,7 +53,7 @@ naughty.config.presets.critical.bg = "#aa0000"
 
 
 local bling = require("bling")
--- bling.module.window_swallowing.start()
+bling.module.window_swallowing.start()
 
 require("scratchpads")
 require("keys")

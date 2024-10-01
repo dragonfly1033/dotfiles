@@ -1,14 +1,32 @@
 #!/bin/sh
 
 domain=$1
+term="true"
+
+if [ -z "$domain" ]; then
+    domain=$(~/bin/dmenu "" "Domain: ")
+    term="false"
+fi
 
 if [ -z "$domain" ]; then
 	echo "Usage: "
 	echo "	isitdown <url>"
+	if [ "$term" = "false" ]; then
+	    notify-send -u critical -t 5000 "Error" "No Domain Given"
+	fi
 	exit 0
 fi
 
 ret=$(curl -s "https://www.isitdownrightnow.com/check.php?domain=$domain")
 
-(echo "$ret" | grep "DOWN" > /dev/null) && echo "Down"
-(echo "$ret" | grep "UP" > /dev/null) && echo "Up"
+if (echo "$ret" | grep "DOWN" > /dev/null); then 
+    echo "Down"
+	if [ "$term" = "false" ]; then
+	    notify-send -t 5000 "Down" "Site not responding"
+	fi
+elif (echo "$ret" | grep "UP" > /dev/null); then
+    echo "Up"
+	if [ "$term" = "false" ]; then
+	    notify-send -t 5000 "Up" "Site is responding"
+	fi
+fi

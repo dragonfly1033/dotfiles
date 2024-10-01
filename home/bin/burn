@@ -1,0 +1,20 @@
+#!/bin/sh
+
+img="$1"
+
+if [ -z "$img" ] || [ ! -f "$img" ]; then
+    echo "iso path not found: $img" 
+    echo "Usage: burn <iso path>"
+    exit 1
+fi
+
+dev=$(find /dev/disk/by-id -not -type d | sed '/.*part.*/d' | fzf)
+
+if [ -z "$dev" ]; then
+    echo "device not found: $dev" 
+    echo "Usage: burn <iso path>"
+    exit 1
+fi
+
+cp "$img" "$dev"
+

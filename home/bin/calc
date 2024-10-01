@@ -1,13 +1,14 @@
 #!/bin/python -i
 
-from math import sin, cos, tan, atan2, acos, asin, pi, tau, e, sqrt, ceil, floor
+from math import sin, cos, tan, atan2, atan, acos, asin, pi, tau, e, sqrt, ceil, floor
 from math import gcd, lcm, perm, exp, log, log2, log10, pow, hypot, degrees, radians, inf
 from math import factorial as fact
 from math import comb as choose
 from random import random as rand
 from random import randint as rint
 import random
-from fractions import Fraction as Frac
+from fractions import Fraction as F
+import os
 
 import numpy as np
 
@@ -24,7 +25,8 @@ def cosd(a): return cos(radians(a))
 def tand(a): return tan(radians(a))
 def asind(a): return degrees(asin(a))
 def acosd(a): return degrees(acos(a))
-def atan2d(y, x): return degrees(atan2(a))
+def atand(a): return degrees(atan(a))
+def atan2d(y, x): return degrees(atan2(y, x))
 
 def is_prime(n):
 	prime = True
@@ -34,17 +36,22 @@ def is_prime(n):
 	return True
 
 def decomp(n):
-	facts = []
-	for i in range(2, int(sqrt(n))+1):
-		if is_prime(i):
-			tmp = n
-			while tmp % i == 0:
-				facts.append(i)
-				tmp /= i
-	return facts
+	os.system(f"factor {n}")
 
 def sign(a):
 	return 1 * (a > 0) -1 * (a < 0)
+
+def D(n):
+    return [i for i in range(1, n+1) if n%i==0]
+
+def CD(m, n):
+    return [i for i in range(1, max(m, n)+1) if m%i==0 and n%i==0]
+
+def gcd(m, n):
+    if m%n == 0:
+        return n
+    else:
+        return gcd(n, m%n)
 
 def help():
 	print("e, pi, tau, inf")

@@ -13,7 +13,7 @@ if [ -z $name ]; then
 	# read -p "Enter name: " name
 	# $view "$HOME/Documents/notes/$name.txt"
 	
-	$view "$HOME/Documents/notes/$(ls $HOME/Documents/notes | cut -d'.' -f1 | fzf --print-query | tail -1).txt"
+	$view "$HOME/Documents/notes/$(ls $HOME/Documents/notes | cut -d'.' -f1 | fzf --preview 'bat -p '"$HOME/Documents/notes/"'{}.txt' --preview-window=right,70% --print-query | tail -1).txt"
 	
 	# $view $HOME/Documents/notes/temp-$(date +"%y-%m-%d--%H-%M-%S").txt
 elif [ $name == "help" ]; then

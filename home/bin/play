@@ -1,0 +1,38 @@
+#!/bin/sh
+
+mypid="$$"
+
+link="$1"
+
+if [ -z "$link" ]; then
+    exit 1
+fi
+
+# https://www.youtube.com/watch?v=724Z2xdjRqA
+
+yt-dlp --abort-on-error -f "bv[ext=webm][height<=?1080]" -o ~/bin/.env/vidpipe "$link" &
+yt-dlp --abort-on-error -f "ba" -o ~/bin/.env/audpipe "$link" &
+
+(ffmpeg -i ~/bin/.env/vidpipe -i ~/bin/.env/audpipe -c:v copy -c:a copy -f webm - | mpv --really-quiet --speed=2.0 -) &
+
+pids=$(python -c "import subprocess, re, os
+process = subprocess.Popen(['pstree', '-p', '$mypid'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+out, err = process.communicate()
+ppid = process.pid
+out = out.decode('utf-8')
+
+pss = re.findall(r'\(([0-9]+)\)', out)
+pss.remove('$mypid')
+pss.remove(str(os.getpid()))
+pss.remove(str(ppid))
+print(' '.join(pss))")
+
+for p in $(jobs -p); do
+    if ! wait "$p"; then
+        for r in $pids; do
+            kill -9 "$r"
+        done
+        exit
+    fi    
+done
+

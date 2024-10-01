@@ -2,5 +2,5 @@
 
 servers=$(sudo ls /etc/openvpn/client)
 server=$(echo "$servers" | fzf)
-sudo openvpn "/etc/openvpn/client/$server"
+sudo openvpn  --config "/etc/openvpn/client/$server" --auth-user-pass "$HOME/.ssh/vpn.txt" --auth-nocache
 

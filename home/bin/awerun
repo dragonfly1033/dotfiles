@@ -1,5 +1,16 @@
 #!/bin/sh
 
+if [ "$1" = "--help" ]; then
+    echo "USAGE: awerun <lua file|lua string> [delay duration]"
+    exit 0
+fi
+
+if [ -f "$1" ]; then
+    script=$(cat "$1")
+else
+    script="$1"
+fi
+
 
 cmd="
 local gears = require('gears')
@@ -23,7 +34,7 @@ end
 
 function print(s, d)
 	d = d or '\n'
-	stdout_str = stdout_str .. d .. s
+	stdout_str = stdout_str .. tostring(s) .. d
 end
 
 function print_table(t)
@@ -40,7 +51,7 @@ local client = client.focus
 
 stdout_str = ''
 
-$(cat $1)
+$script
 
 stdout_str = stdout_str .. '\n'
 return stdout_str
@@ -54,4 +65,4 @@ fi
 
 sleep "$dur"
 
-awesome-client "$cmd" | sed '1d;$d'
+awesome-client "$cmd"

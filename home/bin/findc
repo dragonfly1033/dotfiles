@@ -1,6 +1,11 @@
 #!/bin/sh
 
-find $HOME -type d -not -path "$HOME/.cache/*" \
+all_args="$@"
+dirr="$1"
+rest=$(echo "$dir" | sed 's/$dirr//')
+
+
+find . -maxdepth 4 -not -path "$HOME/.cache/*" \
 		  -a -not -path "$HOME/.gradle/*" \
 		  -a -not -path "$HOME/.config/BraveSoftware/*" \
 		  -a -not -path "$HOME/Documents/Java/*" \
@@ -8,7 +13,6 @@ find $HOME -type d -not -path "$HOME/.cache/*" \
 		  -a -not -path "*EFI*" \
 		  -a -not -path "*venv*" \
 		  -a -not -path "*hsqldb*" \
-		  -a -not -path "*Games/*/*" \
 		  -a -not -path "*.config/itch/*" \
 		  -a -not -path "*.wine*" \
 		  -a -not -path "*.local*" \
@@ -38,7 +42,7 @@ find $HOME -type d -not -path "$HOME/.cache/*" \
 		  -a -not -path "$HOME/.config/libreoffice/*" \
 		  -a -not -path "$HOME/.vscode-oss/*" \
 		  -a -not -path "$HOME/.local/lib/*" \
-		  -a -not -path "$HOME/.config/VSCodium/*" | fzf --cycle
+		  -a -not -path "$HOME/.config/VSCodium/*"
 
 # #!/bin/sh
 # 

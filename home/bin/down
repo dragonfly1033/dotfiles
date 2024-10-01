@@ -7,8 +7,8 @@ if [ -z "$n" ]; then
 	n=1
 fi
 
-d=$(ls -At1 "$DOWN" | head -n "$n")
-echo "$DOWN/$d" | xclip -r -selection clipboard
+d=$(ls -At1 "$DOWN" | sed '/.*STG.*/d' | head -n "$n")
+echo "\"$DOWN/$d\"" | xclip -r -selection clipboard
 echo "$d"
 
 # ls -1 $DOWN | sort > /tmp/new_downloads

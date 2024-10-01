@@ -103,6 +103,8 @@ client.connect_signal("property::sticky", set_shape)
 client.connect_signal("property::sticky", set_border)
 client.connect_signal("property::floating", set_border)
 client.connect_signal("request::activate", set_border)
+client.connect_signal("swallow", set_border)
+
 
 client.connect_signal("property:minimized", function(c) c.minimized = false end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)

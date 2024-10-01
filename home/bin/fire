@@ -1,8 +1,8 @@
 #!/bin/sh
 
 ddmenu=~/bin/dmenu
-PROF=$($ddmenu "Main\nChill\nPolitics\nAnime\nIncog\nPriv" "Profile:")
-# PROF=$($ddmenu "Main\nPriv" "Profile: ")
+# PROF=$($ddmenu "Main\nChill\nPolitics\nAnime\nIncog\nPriv" "Profile:")
+PROF=$($ddmenu "Main\nPriv" "Profile: ")
 
 if [ $PROF == 'Main' ]; then
 	firefox -P Main
@@ -16,4 +16,11 @@ elif [ $PROF == 'Incog' ]; then
 	firefox -P Inc
 elif [ $PROF == 'Priv' ]; then
 	firefox --private-window -P Main
+elif [ $PROF == '2' ]; then
+	~/bin/awerun 'awful.spawn.spawn("firefox -P Pol", {tag = "8"})'
+	~/bin/awerun 'awful.spawn.spawn("firefox -P Chill", {tag = "9"})'
+elif [ $PROF == '3' ]; then
+	~/bin/awerun 'awful.spawn.spawn("firefox -P Weeb", {tag = "7"})'
+	~/bin/awerun 'awful.spawn.spawn("firefox -P Pol", {tag = "8"})'
+	~/bin/awerun 'awful.spawn.spawn("firefox -P Chill", {tag = "9"})'
 fi

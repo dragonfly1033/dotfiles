@@ -116,6 +116,7 @@ local function manage_clientspawn(c)
 
         helpers.client.sync(c, parent_client)
         helpers.client.turn_off(parent_client)
+        c:emit_signal("swallow")
     end
     end)
 end

@@ -1,0 +1,14 @@
+include gruvbox-light-soft
+
+set selection-clipboard "clipboard"
+
+map v recolor
+
+map <F1> focus_inputbar ":exec change_zathura_theme gruvbox-light-soft"
+map <F2> focus_inputbar ":exec change_zathura_theme gruvbox-dark-hard"
+map <F3> focus_inputbar ":source"
+
+map <C-l> feedkeys "<F1><Return><F3><Return>"
+map <C-d> feedkeys "<F2><Return><F3><Return>"
+
+set scroll-step 100
