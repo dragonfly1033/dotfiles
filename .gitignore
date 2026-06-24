@@ -3,3 +3,5 @@
 */.vscode
 */.vscode/*
 */pslide
+*/node-modules
+*/bin/electron-apps/*.json
