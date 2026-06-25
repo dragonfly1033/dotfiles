@@ -25,12 +25,21 @@ input_confirm () {
 }
 
 part () {
-    if echo "$1" | grep nvme; then
+    if echo "$1" | grep -q nvme > /dev/null; then
         echo "$1p$2"
     else
         echo "$1$2"
     fi
 }
+
+echo "---------------------------"
+echo "VERIFY BOOT MODE"
+echo "---------------------------"
+
+if ! [ "$(cat /sys/firmware/efi/fw_platform_size || true)" = "64" ]; then
+    echo "System must be booted into 64-bit uefi"
+    exit 1
+fi
 
 echo "---------------------------"
 echo "INSTALL PACKAGES FOR SCRIPT"
@@ -61,6 +70,7 @@ hostname=$(input_notnull "Enter Hostname: ") || exit 1
 timezone=$(timedatectl list-timezones | /usr/bin/fzf --prompt "Enter Timezone: ") || exit 1
 gpu=$(printf "amd\nnvidia" | /usr/bin/fzf --prompt "Enter GPU: ") || exit 1
 display_server=$(printf "xorg\nwayland\nnone" | /usr/bin/fzf --prompt "Enter Display Server: ") || exit 1
+machine=$(printf "vbox\nvmware\nhardware" | /usr/bin/fzf --prompt "Enter Machine: ") || exit 1
 app_suite="n"
 if ! [ "$display_server" = "none" ]; then
     app_suite=$(input_confirm "Install Application Suite?(y/N)") || exit 1
@@ -202,6 +212,7 @@ export hostname='"$hostname"'
 export timezone='"$timezone"'
 export gpu='"$gpu"'
 export display_server='"$display_server"'
+export machine='"$machine"'
 export app_suite='"$app_suite"'
 /dotfiles/install/chroot.sh
 '

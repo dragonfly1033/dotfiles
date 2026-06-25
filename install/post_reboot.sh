@@ -1,7 +1,9 @@
 #!/bin/sh
 
+set -e
+
 get_packages () {
-    cat ~/.dotfiles/install/packages | grep -E ".*,$1,.*$2.*,$3" | cut -d',' -f1 | xargs
+    cat ~/.dotfiles/install/packages.csv | grep -E ".*,$1,.*$2.*,$3" | cut -d',' -f1 | xargs
 }
 
 error="required variable not set, must be run from start_install.sh"
@@ -15,18 +17,9 @@ hostname="${hostname:?$error}"
 timezone="${timezone:?$error}"
 gpu="${gpu:?$error}"
 display_server="${display_server:?$error}"
+machine="${machine:?$error}"
 app_suite="${app_suite:?$error}"
 
-
-echo "------------------------"
-echo "CLEANUP HOOK"
-echo "------------------------"
-
-sed -r '/# START HOOK/,/# END HOOK/d' -i "/home/$username/.zshrc"
-
-# systemctl disable post-reboot-install.service
-# rm -f /etc/systemd/system/post-reboot-install.service
-# systemctl daemon-reload
 
 echo "------------------------"
 echo "INSTALL YAY PKGS"
@@ -55,45 +48,57 @@ echo "------------------------"
 echo "INSTALL VSCODIUM EXTENTIONS"
 echo "------------------------"
 
-if pacman -Qe | grep vscodium; then
-    /usr/bin/vscodium --install-extension albymor.increment-selection
-    /usr/bin/vscodium --install-extension Catppuccin.catppuccin-vsc
-    /usr/bin/vscodium --install-extension DrMerfy.overtype
-    /usr/bin/vscodium --install-extension earshinov.simple-alignment
-    /usr/bin/vscodium --install-extension James-Yu.latex-workshop
-    /usr/bin/vscodium --install-extension mads-hartmann.bash-ide-vscode
-    /usr/bin/vscodium --install-extension MattPerlick.markdown-preview-editor
-    /usr/bin/vscodium --install-extension medo64.render-crlf
-    /usr/bin/vscodium --install-extension moshfeu.diff-merge
-    /usr/bin/vscodium --install-extension ms-python.python
-    /usr/bin/vscodium --install-extension PKief.material-icon-theme
-    /usr/bin/vscodium --install-extension ritwickdey.LiveServer
-    /usr/bin/vscodium --install-extension sdras.night-owl
-    /usr/bin/vscodium --install-extension shd101wyy.markdown-preview-enhanced
-    /usr/bin/vscodium --install-extension zaaack.markdown-editor
+if pacman -Qe | grep -q vscodium; then
+    /usr/bin/vscodium --install-extension albymor.increment-selection || true
+    /usr/bin/vscodium --install-extension Catppuccin.catppuccin-vsc || true
+    /usr/bin/vscodium --install-extension DrMerfy.overtype || true
+    /usr/bin/vscodium --install-extension earshinov.simple-alignment || true
+    /usr/bin/vscodium --install-extension James-Yu.latex-workshop || true
+    /usr/bin/vscodium --install-extension mads-hartmann.bash-ide-vscode || true
+    /usr/bin/vscodium --install-extension MattPerlick.markdown-preview-editor || true
+    /usr/bin/vscodium --install-extension medo64.render-crlf || true
+    /usr/bin/vscodium --install-extension moshfeu.diff-merge || true
+    /usr/bin/vscodium --install-extension ms-python.python || true
+    /usr/bin/vscodium --install-extension PKief.material-icon-theme || true
+    /usr/bin/vscodium --install-extension ritwickdey.LiveServer || true
+    /usr/bin/vscodium --install-extension sdras.night-owl || true
+    /usr/bin/vscodium --install-extension shd101wyy.markdown-preview-enhanced || true
+    /usr/bin/vscodium --install-extension zaaack.markdown-editor || true
 fi
 
 echo "------------------------"
 echo "PATCH FIREFOX"
 echo "------------------------"
 
-firefox --headless &
+if pacman -Qe | grep -q firefox; then
+    firefox --headless &
 
-sleep 4
+    sleep 4
 
-for i in $(find ~ -maxdepth 3 -type d -path "/home/$username/.mozilla/firefox/*.*"); do
-    cp -r ~/.dotfiles/files/firefox/chrome "$i"/chrome
-    rm -rf "$i"/startupCache/*
-    cat ~/.dotfiles/files/firefox/user.js >> "$i"/prefs.js
-done
+    for i in $(find ~ -maxdepth 3 -type d -path "/home/$username/.mozilla/firefox/*.*"); do
+        cp -r ~/.dotfiles/files/firefox/chrome "$i"/chrome
+        rm -rf "$i"/startupCache/*
+        cat ~/.dotfiles/files/firefox/user.js >> "$i"/prefs.js
+    done
 
-sudo cp -r ~/.dotfiles/files/firefox/defaults "/usr/lib/firefox"
-sudo cp ~/.dotfiles/files/firefox/config.js /usr/lib/firefox
-sudo cp ~/.dotfiles/files/firefox/config-prefs.js /usr/lib/firefox/defaults/pref
+    sudo cp -r ~/.dotfiles/files/firefox/defaults "/usr/lib/firefox"
+    sudo cp ~/.dotfiles/files/firefox/config.js /usr/lib/firefox
+    sudo cp ~/.dotfiles/files/firefox/config-prefs.js /usr/lib/firefox/defaults/pref
 
-sleep 2
+    sleep 2
 
-pkill firefox
+    pkill firefox || true
+fi
+
+echo "------------------------"
+echo "CLEANUP HOOK"
+echo "------------------------"
+
+sed -r '/# START HOOK/,/# END HOOK/d' -i "/home/$username/.zshrc"
+
+# systemctl disable post-reboot-install.service
+# rm -f /etc/systemd/system/post-reboot-install.service
+# systemctl daemon-reload
 
 echo "------------------------"
 echo "DONE!!!!!!!!!!!!!!!!"

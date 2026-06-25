@@ -1,8 +1,3 @@
-steam
-excal
-ss
-aps
-maps
 maps
 maps
 2
@@ -17,4 +12,9 @@ qpw
 lutr
 exca
 vbox
+vm
+blueman-man
+blue
+maps
+ss
 vm

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 install_aur () {
     AUR_PKG="$1"
     AUR_URL="https://aur.archlinux.org/${AUR_PKG}.git"
@@ -31,6 +33,7 @@ hostname="${hostname:?$error}"
 timezone="${timezone:?$error}"
 gpu="${gpu:?$error}"
 display_server="${display_server:?$error}"
+machine="${machine:?$error}"
 app_suite="${app_suite:?$error}"
 
 echo "------------------------"
@@ -114,6 +117,11 @@ elif [ "$display_server" = "wayland" ]; then
     fi
 fi
 
+if [ "$machine" = "vbox" ]; then
+    pacman -S --noconfirm --needed mesa xorg-xwayland xwayland-satellite virtualbox-guest-utils xf86-video-vesa vulkan-swrast vulkan-virtio
+    systemctl enable vboxservice.service
+fi
+
 echo "------------------------"
 echo "MOVE SYSTEM FILES"
 echo "------------------------"
@@ -181,7 +189,7 @@ done
 
 # delete perms and user
 rm -f /etc/sudoers.d/temp_aur_builder_perms >/dev/null
-userdel -r aurbuilder >/dev/null
+userdel -r aurbuilder >/dev/null || true
 
 # build packages
 pacman -U --noconfirm /tmp/aur-build-*/*.pkg.tar.*
@@ -192,37 +200,37 @@ echo "------------------------"
 echo "LOGIN & SPLASH"
 echo "------------------------"
 
-pacman -S --noconfirm --needed lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan plymouth
+if ! [ "$display_server" = "none" ]; then
+    pacman -S --noconfirm --needed lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan plymouth
 
-cp /dotfiles/files/lightdm-plymouth.service /usr/lib/systemd/system
-mkdir /usr/share/backgrounds
-cp /dotfiles/files/black_background.png /usr/share/backgrounds
-cp -r "/dotfiles/files/plymouth_themes"/* /usr/share/plymouth/themes
+    mkdir -p /usr/share/backgrounds
+    cp /dotfiles/files/black_background.png /usr/share/backgrounds
+    cp -r "/dotfiles/files/plymouth_themes"/* /usr/share/plymouth/themes
 
-sed -ri 's/^#?greeter-session=.*/greeter-session=nody-greeter/' /etc/lightdm/lightdm.conf
-sed -ri 's/^#?webkit_theme.*/webkit_theme=litarvan/' /etc/lightdm/lightdm-webkit2-greeter.conf
-sed -ri 's/^#?debug_mode.*/debug_mode=true/' /etc/lightdm/lightdm-webkit2-greeter.conf
+    sed -ri 's/^#?greeter-session=.*/greeter-session=nody-greeter/' /etc/lightdm/lightdm.conf
+    sed -ri 's/^#?webkit_theme.*/webkit_theme=litarvan/' /etc/lightdm/lightdm-webkit2-greeter.conf
+    sed -ri 's/^#?debug_mode.*/debug_mode=true/' /etc/lightdm/lightdm-webkit2-greeter.conf
 
-sed -ri 's/^( *theme:).*/\1 litarvan/' /etc/lightdm/web-greeter.yml
-sed -ri 's/^( *debug:).*/\1 True/' /etc/lightdm/web-greeter.yml
-sed -ri 's/^( *battery:).*/\1 True/' /etc/lightdm/web-greeter.yml
+    sed -ri 's/^( *theme:).*/\1 litarvan/' /etc/lightdm/web-greeter.yml
+    sed -ri 's/^( *debug:).*/\1 True/' /etc/lightdm/web-greeter.yml
+    sed -ri 's/^( *battery:).*/\1 True/' /etc/lightdm/web-greeter.yml
 
-sed -ri 's/GRUB_CMDLINE_LINUX_DEFAULT=".*"/GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 splash udev.log_level=3 rd.udev.log_level=3 loglevel=3 vt.global_cursor_default=0"/' /etc/default/grub
-sed -ri 's/^#?GRUB_DEFAULT=.*/GRUB_DEFAULT=0/' /etc/default/grub
-sed -ri 's/^#?GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
-echo "GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT" | tee -a /etc/default/grub
- 
-sed -ri 's/MODULES=\((.*)\)$/MODULES=\(\1 amdgpu\)/' /etc/mkinitcpio.conf
-sed -ri 's/HOOKS=\(base udev (.*)\)/HOOKS=\(base udev plymouth \1\)/' /etc/mkinitcpio.conf   
+    sed -ri 's/GRUB_CMDLINE_LINUX_DEFAULT=".*"/GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 splash udev.log_level=3 rd.udev.log_level=3 loglevel=3 vt.global_cursor_default=0"/' /etc/default/grub
+    sed -ri 's/^#?GRUB_DEFAULT=.*/GRUB_DEFAULT=0/' /etc/default/grub
+    sed -ri 's/^#?GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
+    echo "GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT" | tee -a /etc/default/grub
+    
+    sed -ri 's/MODULES=\((.*)\)$/MODULES=\(\1 amdgpu\)/' /etc/mkinitcpio.conf
+    sed -ri 's/HOOKS=\(base udev (.*)\)/HOOKS=\(base udev plymouth \1\)/' /etc/mkinitcpio.conf   
 
-mkinitcpio -P
+    mkinitcpio -P
 
-grub-mkconfig -o /boot/grub/grub.cfg
+    grub-mkconfig -o /boot/grub/grub.cfg
 
-systemctl enable lightdm-plymouth.service
+    systemctl enable lightdm.service
 
-plymouth-set-default-theme -R rings > /dev/null
-
+    plymouth-set-default-theme -R rings > /dev/null
+fi
 
 echo "------------------------"
 echo "CRON"
@@ -233,6 +241,8 @@ sed -i "s/USER/$username/g" /dotfiles/files/cron/root
 
 crontab -u "$username" /dotfiles/files/cron/user
 crontab -u root /dotfiles/files/cron/root
+
+systemctl enable cronie
 
 echo "------------------------"
 echo "CHANGE PERMS"
@@ -262,20 +272,24 @@ mkdir "/home/$username/Pictures" || true
 mkdir "/home/$username/.config" || true
 
 for i in "/home/$username/.dotfiles/.config"/*; do
-    ln -s "$i" "/home/$username/.config"
+    ln -sfn "$i" "/home/$username/.config"
 done
 
 for i in "/home/$username/.dotfiles/home"/*; do
-    ln -s "$i" "/home/$username"
+    ln -sfn "$i" "/home/$username"
+done
+
+for i in "/home/$username/.dotfiles/home"/.*; do
+    ln -sfn "$i" "/home/$username"
 done
 
 mkdir -p "/home/$username/.local/share/fonts"
 
 for i in "/home/$username/.dotfiles/fonts"/*; do
-    ln -s "$i" "/home/$username/.local/share/fonts"
+    ln -sfn "$i" "/home/$username/.local/share/fonts"
 done
 
-ln -s "/home/$username/.dotfiles/wallpapers" "/home/$username/Pictures/wallpapers"
+ln -sfn "/home/$username/.dotfiles/wallpapers" "/home/$username/Pictures/wallpapers"
 
 if [ "$display_server" = "xorg" ]; then
     sed "s!name=.*!name=\"$("/home/$username/bin/vars" get THEME)\"!" -i "/home/$username/.fehbg"
@@ -287,7 +301,6 @@ echo "--------------------------------"
 
 echo "
 # START HOOK
-sudo \\
 disk=\"$disk\" \\
 swap=\"$swap\" \\
 filesystem=\"$filesystem\" \\
@@ -298,8 +311,9 @@ hostname=\"$hostname\" \\
 timezone=\"$timezone\" \\
 gpu=\"$gpu\" \\
 display_server=\"$display_server\" \\
+machine=\"$machine\" \\
 app_suite=\"$app_suite\" \\
-/dotfiles/install/post-reboot.sh
+/home/$username/.dotfiles/install/post_reboot.sh
 # END HOOK
 " >> "/home/$username/.zshrc"
 
@@ -323,6 +337,7 @@ app_suite=\"$app_suite\" \\
 # Environment=\"timezone=$timezone\"
 # Environment=\"gpu=$gpu\"
 # Environment=\"display_server=$display_server\"
+# Environment=\"machine=$machine\"
 # Environment=\"app_suite=$app_suite\"
 
 # [Install]

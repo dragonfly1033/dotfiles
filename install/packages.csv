@@ -261,5 +261,5 @@ ungoogled-chromium-bin,yay,xorg+wayland,gui_light
 ventoy-bin,yay,xorg+wayland,gui_light
 vscodium-bin,yay,xorg+wayland,gui_light
 xdg-ninja,yay,xorg+wayland,gui_light
-yay,yay,xorg+wayland,cli
+yay-bin,yay,xorg+wayland,cli
 zsh-auto-notify,yay,xorg+wayland,cli
