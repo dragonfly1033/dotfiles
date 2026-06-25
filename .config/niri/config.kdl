@@ -1,0 +1,359 @@
+
+// This config is in the KDL format: https://kdl.dev
+// "/-" comments out the following node.
+// Check the wiki for a full description of the configuration:
+// https://yalter.github.io/niri/Configuration:-Introduction
+
+
+input {
+    mod-key "Alt"
+
+    keyboard {
+        repeat-delay 300
+        repeat-rate 40
+        numlock
+
+        xkb {
+            layout "gb"
+            options "lv3:caps_switch"
+        }
+    }
+
+    touchpad {
+        tap
+        natural-scroll
+        click-method "clickfinger"
+        tap-button-map "left-right-middle"
+        accel-speed 0.3
+        accel-profile "adaptive"
+        dwt 
+    }
+
+    mouse {
+    }
+
+    trackpoint {
+    }
+
+    touch {
+        map-to-output "eDP-1"
+    }
+
+    focus-follows-mouse max-scroll-amount="25%"
+}
+
+output "HDMI-A-1" {
+    position x=0 y=0
+    focus-at-startup
+}
+
+output "eDP-1" {
+    focus-at-startup
+}
+
+layout {
+    gaps 12 // 3*focus_ring_width
+
+    always-center-single-column
+    
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.75
+    }
+
+    default-column-width { proportion 0.5; }
+
+    focus-ring {
+        width 4
+        active-color "#7fc8ff"
+        inactive-color "#505050"
+
+        // active-gradient from="#80c8ff" to="#c7ff7f" angle=45
+        // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
+    }
+    
+    border {
+        off
+
+        width 4
+        active-color "#ffc87f"
+        inactive-color "#505050"
+
+        // Color of the border around windows that request your attention.
+        urgent-color "#9b0000"
+
+        // active-gradient from="#e5989b" to="#ffb4a2" angle=45 relative-to="workspace-view" in="oklch longer hue"
+    }
+
+    shadow {
+        // on
+        
+        softness 30
+        spread 5
+        offset x=0 y=5
+        color "#0007"
+    }
+
+    tab-indicator {}
+
+    // Essentially outer gap. Use -(gaps/2) to remove outer gap so gaps only applies between windows
+    // 0 will mean outer = inner
+    struts {
+        left    -0
+        right   -0
+        top     -0
+        bottom  -0
+    }
+}
+
+gestures {
+    hot-corners {
+        top-right
+    }
+}
+
+binds {
+    Alt+Shift+Slash { show-hotkey-overlay; }
+
+    // Evaluate fuzzel to replace rofi
+    Alt+X hotkey-overlay-title="Spawn run launcher" { spawn-sh "rofi -show run -sort -i"; }  
+    Alt+Return hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
+    Mod5+C hotkey-overlay-title="Open Calculator" { spawn-sh "alacritty --class poptermS --hold -e calc"; }
+    Mod5+H hotkey-overlay-title="Open Btop" { spawn-sh "alacritty --class poptermL -e btop"; }
+    Mod5+P hotkey-overlay-title="Open volume control" { spawn "pavucontrol"; }
+
+    Mod5+B hotkey-overlay-title="Toggle Bar" { spawn-sh "~/.config/quickshell/toggle-bar.sh"; }
+    
+    
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "pactl set-sink-volume @DEFAULT_SINK@ +1%"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "pactl set-sink-volume @DEFAULT_SINK@ -1%"; }
+    XF86AudioMute        allow-when-locked=true { spawn-sh "pactl set-sink-mute @DEFAULT_SINK@ toggle"; }
+
+    XF86AudioPlay        allow-when-locked=true { spawn-sh "playerctl --player playerctld play-pause"; }
+    XF86AudioStop        allow-when-locked=true { spawn-sh "playerctl --player playerctld stop"; }
+    XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl --player playerctld previous"; }
+    XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl --player playerctld next"; }
+    
+    Mod5+bracketleft    allow-when-locked=true { spawn-sh "playerctl --player playerctld position 5-"; }
+    Mod5+bracketright   allow-when-locked=true { spawn-sh "playerctl --player playerctld position 5+"; }
+    Mod5+semicolon      allow-when-locked=true { spawn-sh "playerctl --player playerctld previous"; }
+    Mod5+apostrophe     allow-when-locked=true { spawn-sh "playerctl --player playerctld next"; }
+    Mod5+comma          allow-when-locked=true { spawn-sh "pactl set-sink-volume @DEFAULT_SINK@ -1%"; }
+    Mod5+period         allow-when-locked=true { spawn-sh "pactl set-sink-volume @DEFAULT_SINK@ +1%"; }
+    Mod5+numbersign     allow-when-locked=true { spawn-sh "pactl set-sink-mute @DEFAULT_SINK@ toggle"; }
+    Mod5+equal        allow-when-locked=true { spawn-sh "playerctl --player playerctld play-pause"; }
+
+    XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
+
+    Super+Shift+C repeat=false { close-window; }
+
+    // Alt on everything
+    // Default focus
+    // +Shift  move
+    // +Ctrl workspace/monitor
+
+    Alt+A   { focus-column-left; }
+    Alt+S   { focus-window-down; }
+    Alt+W   { focus-window-up; }
+    Alt+D   { focus-column-right; }
+    Alt+Q   { focus-column-first; }
+    Alt+E   { focus-column-last; }
+    
+    Alt+Shift+A  { move-column-left; }
+    Alt+Shift+S  { move-window-down; }
+    Alt+Shift+W  { move-window-up; }
+    Alt+Shift+D  { move-column-right; }
+    Alt+Shift+Q  { move-column-to-first; }
+    Alt+Shift+E  { move-column-to-last; }
+
+    Alt+Ctrl+S  { focus-workspace-down; }
+    Alt+Ctrl+W  { focus-workspace-up; }
+    Alt+Ctrl+A  { focus-monitor-left; }
+    Alt+Ctrl+D  { focus-monitor-right; }
+    
+    Alt+Ctrl+Shift+S  { move-column-to-workspace-down; }
+    Alt+Ctrl+Shift+W  { move-column-to-workspace-up; }
+    Alt+Ctrl+Shift+A  { move-column-to-monitor-left; }
+    Alt+Ctrl+Shift+D  { move-column-to-monitor-right; }
+
+    // Alt+Shift+Page_Down { move-workspace-down; }
+    // Alt+Shift+Page_Up   { move-workspace-up; }
+    
+    Alt+1 { focus-workspace 1; }
+    Alt+2 { focus-workspace 2; }
+    Alt+3 { focus-workspace 3; }
+    Alt+4 { focus-workspace 4; }
+    Alt+5 { focus-workspace 5; }
+    Alt+6 { focus-workspace 6; }
+    Alt+7 { focus-workspace 7; }
+    Alt+8 { focus-workspace 8; }
+    Alt+9 { focus-workspace 9; }
+    Alt+Shift+1 { move-column-to-workspace 1; }
+    Alt+Shift+2 { move-column-to-workspace 2; }
+    Alt+Shift+3 { move-column-to-workspace 3; }
+    Alt+Shift+4 { move-column-to-workspace 4; }
+    Alt+Shift+5 { move-column-to-workspace 5; }
+    Alt+Shift+6 { move-column-to-workspace 6; }
+    Alt+Shift+7 { move-column-to-workspace 7; }
+    Alt+Shift+8 { move-column-to-workspace 8; }
+    Alt+Shift+9 { move-column-to-workspace 9; }
+
+    Super+Tab { focus-workspace-previous; }
+    Super+Shift+Tab repeat=false { toggle-overview; }
+
+    Alt+Z   { consume-or-expel-window-left; }
+    Alt+C   { consume-or-expel-window-right; }
+    Alt+Shift+Z   { consume-window-into-column; }
+    Alt+Shift+C   { expel-window-from-column; }
+
+    Alt+G { maximize-column; }
+    Alt+H { set-column-width  "50%"; }
+    Alt+M { maximize-window-to-edges; }
+
+    // Alt+C { center-column; }
+
+    Super+A { set-column-width  "-2%"; }
+    Super+D { set-column-width  "+2%"; }
+    Super+S { set-window-height "-2%"; }
+    Super+W { set-window-height "+2%"; }
+
+    Alt+F       { toggle-window-floating; }    
+    Alt+P       { spawn-sh "nirid msg pin_window"; }    
+    Alt+T { toggle-column-tabbed-display; }
+
+    Super+P { screenshot; }
+    
+    Super+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+
+    Ctrl+Alt+Delete { spawn-sh "qs ipc call Logout activate"; }
+    Ctrl+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn-sh "qs ipc call Lock activate"; }
+    // Ctrl+Alt+P { power-off-monitors; }
+}
+
+recent-windows {
+    debounce-ms 5000
+    open-delay-ms 100
+}
+
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+animations {
+    window-resize {
+        off
+    }
+}
+
+
+workspace "main" 
+workspace "chill"
+
+
+window-rule {
+    // Global settings
+    clip-to-geometry true
+    geometry-corner-radius 16 // quickshell radius - 2*focus_ring_width
+}
+
+window-rule {
+    match is-floating=true
+    border {
+        on
+        width 4
+        active-color "#C00000"
+        inactive-color "#C00000"
+    }
+}
+
+window-rule {
+    // Open floating
+    match app-id="blueman-manager"
+    match app-id="Tor Browser"
+    match app-id="Pcmanfm"
+    match app-id="^popterm"
+    match app-id="pavucontrol$"
+    match title="lift-sel"
+
+    open-floating true
+}
+
+
+window-rule {
+    match app-id="org.pulseaudio.pavucontrol"
+    default-column-width { fixed 828; }
+    default-window-height { fixed 800; }
+    default-floating-position x=546 y=140
+}
+
+window-rule {
+    match app-id="poptermL"
+    default-column-width { fixed 1500; }
+    default-window-height { fixed 800; }
+    default-floating-position x=210 y=140
+}
+window-rule {
+    match app-id="poptermM"
+    default-column-width { fixed 1000; }
+    default-window-height { fixed 600; }
+    default-floating-position x=460 y=240
+}
+window-rule {
+    match app-id="poptermS"
+    default-column-width { fixed 700; }
+    default-window-height { fixed 600; }
+    default-floating-position x=610 y=240
+}
+
+window-rule {
+    match app-id="firefox$"
+    open-maximized-to-edges true
+    
+}
+
+window-rule {
+    match app-id="chromium$"
+    open-maximized-to-edges true
+}
+
+window-rule {
+    // Open the Firefox picture-in-picture player as floating by default.
+    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    open-floating true
+    open-maximized-to-edges false
+}
+
+window-rule {
+    match app-id="stack-firefox"
+    open-on-workspace "chill"
+    default-column-display "tabbed"
+    open-focused true
+}
+
+
+// switch-events {
+//     lid-close { spawn "notify-send" "The laptop lid is closed!"; }
+//     lid-open { spawn "notify-send" "The laptop lid is open!"; }
+// }
+
+cursor {
+    // Hide the cursor after one second of inactivity.
+    hide-after-inactive-ms 3000
+}
+
+environment {
+    QT_QPA_PLATFORMTHEME "qt6ct"
+    ELECTRON_OZONE_PLATFORM_HINT "auto"
+}
+
+prefer-no-csd
+
+screenshot-path "~/Pictures/screenshots/Screenshot_%Y-%m-%d %H-%M-%S.png"
+
+spawn-sh-at-startup "~/.config/niri/move_workspaces_to_main_monitor.sh"
+spawn-at-startup "dbus-update-activation-environment"
+spawn-sh-at-startup "time_brightness"
+spawn-sh-at-startup "qs -nd"

@@ -1,0 +1,40 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+profiles.transient = """$character"""
+
+right_format = "$cmd_duration"
+
+# Which is equivalent to
+format = """
+╭╴  $username\
+$hostname\
+$localip\
+$shlvl\
+$kubernetes\
+$directory\
+${custom.jj}\
+$docker_context\
+$env_var\
+$custom\
+$sudo\
+$line_break\
+╰─\
+$character"""
+
+
+add_newline = false
+
+[sudo]
+disabled = true
+symbol = "√ "
+style = "bold red"
+format = "[$symbol]($style)"
+
+[custom.jj]
+command = "prompt"
+format = "$output"
+ignore_timeout = true
+shell = ["starship-jj", "--ignore-working-copy", "starship"]
+use_stdin = false
+when = true

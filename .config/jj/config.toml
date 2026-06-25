@@ -1,0 +1,76 @@
+[user]
+name = "dragonfly1033"
+email = "mail@example.com"
+
+[ui]
+editor = "micro"
+default-command = "log"
+
+[aliases]
+# `jj la` shows full history of all working branches  
+l = ["log", "-r", "my_branches_from_common"]
+la = ["log", "-r", "my_branches_from_root"]
+fixup = ["util", "exec", "--", "~/.config/jj/fixup.sh"]
+ch = ["util", "exec", "--", "~/.config/jj/checkout.sh"]
+sync = ["util", "exec", "--", "~/.config/jj/sync.sh"]
+blame = ["util", "exec", "--", "~/.config/jj/blame.sh"]
+pr = ["util", "exec", "--", "~/.config/jj/push.sh"]
+pv = ["edit", "@-"]
+nx = ["edit", "@+"]
+all = ["log", "all()"]
+
+[revsets]
+log = "this_branch"
+
+[revset-aliases]
+remote_branch_heads = "git_refs()"
+not_my_branch_heads = "remote_branch_heads ~ bookmarks()"
+my_branches_from_root = "~(trunk()..not_my_branch_heads)"
+my_branches_from_common = "parents(trunk()..bookmarks()):: & my_branches_from_root"
+this_branch = "(trunk()..@):: | (trunk()..@)-"
+
+
+[colors]
+local_bookmarks = "blue"
+remote_bookmarks = "green"
+
+[templates]
+log = "my_log"
+
+[template-aliases]
+desc='''
+if(root,
+  "",
+  "{:@:}"++
+    separate(", ",
+      format_short_change_id_with_change_offset(self),
+      if(description,
+          description.trim_end(),
+          label(if(empty, ""), "")
+      )
+    )
+)
+'''
+
+my_log = '''
+if(root,
+  format_root_commit(self),
+  label(if(current_working_copy, "working_copy"),
+    separate(" ",
+      format_short_change_id_with_change_offset(self),
+      format_short_commit_id(self.commit_id()),
+      author.name(),
+      local_bookmarks,
+      if(remote_bookmarks, "⟶ " ++ remote_bookmarks),
+      "\n",
+      separate(" ",
+        if(empty, label("empty", "(empty)")),
+        if(description,
+          description.trim_end() ++ "\n",
+          label(if(empty, "empty"), description_placeholder),
+        ),
+      ) ++ "\n",
+    ),
+  )
+)
+'''

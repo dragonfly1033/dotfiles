@@ -1,0 +1,32 @@
+
+pinned-windows {
+    
+}
+
+maximize-solo {
+    dont-shrink {
+        match-window app-id="firefox$"
+        match-window app-id="chromium$"
+        match-window app-id="codium$"
+    }
+
+    ignore {
+        match-window is-floating=#true
+        match-window app-id="firefox$" title="^Picture-in-Picture$"
+    }
+}
+
+auto-tab {
+    threshold 3
+}
+
+swallow {
+    can-swallow {
+        match-window app-id=".*"
+    }
+
+    can-be-swallowed {
+        match-window app-id="Alacritty$"
+        match-window app-id="^popterm"
+    }    
+}

@@ -1,0 +1,21 @@
+filetype: prolog
+
+detect:
+    filename: "\\.pl$"
+    signature: "^%.*$"
+
+rules:
+    - constant.string: "[a-z][a-zA-Z0-9]*"
+    - statement: "\\b(is)\\b"
+    - identifier: "[a-z][a-zA-Z0-9]*\\("
+    - symbol.operator: "([:+<=>,/*]|-|\\|)"
+    - symbol.brackets: "([(){}]|\\[|\\]|\\.)"
+
+    # - identifier: "[A-Z][0-9a-zA-Z]*"
+    - constant.string: 
+        start: "'"
+        end: "'"
+        rules:
+            - constant.string: "[a-zA-Z0-9 ]"
+    - constant.number: "[0-9]+\\.?[0-9]*"
+    - comment: "(^|\\s)%.*$"

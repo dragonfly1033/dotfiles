@@ -2,7 +2,7 @@
 
 1. ```loadkeys uk```
 2. Setup networking
-3. ...
+3. "https://raw.githubusercontent.com/dragonfly1033/dotfiles/refs/heads/master/install/start_install.sh"
 
 ### TODO
 

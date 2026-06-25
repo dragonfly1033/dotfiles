@@ -5,3 +5,6 @@ home/bin/electron-apps/node_modules
 */bin/electron-apps/*.json
 install/progress
 */__pycache__
+*/micro/backups
+*/jj/repos
+.config/niri/nirid-dev

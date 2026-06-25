@@ -1,0 +1,8 @@
+[submodule ".config/niri/nirid"]
+	path = .config/niri/nirid
+	url = git@github.com-nirid:dragonfly1033/nirid.git
+	branch = main
+[submodule ".config/quickshell"]
+	path = .config/quickshell
+	url = git@github.com-quickshell:dragonfly1033/quickshell.git
+	branch = main

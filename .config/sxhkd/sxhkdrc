@@ -1,0 +1,80 @@
+####################################
+# Converted from xbindkeys → sxhkd #
+####################################
+
+XF86MonBrightnessUp
+    brightness inc 1
+
+XF86MonBrightnessDown
+    brightness dec 1
+
+Num_Lock
+    numlockx on
+
+XF86AudioNext
+    playerctl --player playerctld next
+
+XF86AudioPrev
+    playerctl --player playerctld previous
+
+XF86AudioPlay
+    playerctl --player playerctld play-pause
+
+    
+mod2 + F10
+    playerctl -a pause
+
+mod5 + comma
+    playerctl -p pragha position 5-
+
+mod5 + period
+    playerctl -p pragha position 5+
+
+mod5 + semicolon
+    playerctl --player playerctld previous
+    # playerctl -p pragha previous
+
+mod5 + apostrophe
+    playerctl --player playerctld next
+    # playerctl -p pragha next
+
+F12
+    awesome-client 'panic()'
+
+# F1
+#     awesome-client 'panic()'
+
+XF86AudioRaiseVolume
+    pactl set-sink-volume @DEFAULT_SINK@ +1%
+
+XF86AudioLowerVolume
+    pactl set-sink-volume @DEFAULT_SINK@ -1%
+
+XF86AudioMute
+    pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+control + grave
+    xdotool mousedown 2
+
+
+# START minecraft
+
+# v
+#     bash -c "if ~/bin/awerun 'print(client)' | grep -i minecraft; then notify-send 'mine'; else xdotool key v; fi"
+
+# END minecraft
+
+
+
+# START mouse_on_kb
+
+# comma
+#     xdotool click --delay 0 1
+
+# semicolon
+#     xdotool click --delay 0 3
+
+# END mouse_on_kb
+
+
+

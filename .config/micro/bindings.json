@@ -1,0 +1,7 @@
+{
+    "Alt-/": "lua:comment.comment",
+    "CtrlUnderscore": "lua:comment.comment",
+    "\u001bcontrolback": "DeleteWordLeft",
+    "\u001bcontrolback": "DeleteWordLeft",
+    "Ctrl-l": "SelectLine",
+}
