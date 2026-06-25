@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from typing import TextIO
 
 
 REPO_ROOT = Path(__file__).resolve().parent
@@ -43,6 +44,32 @@ PACKAGE_DESCRIPTIONS: dict[str, str] = {}
 
 class QuitRequested(Exception):
     pass
+
+
+TTY_IN: TextIO | None = None
+TTY_OUT: TextIO | None = None
+
+
+def prompt_input(prompt: str) -> str:
+    global TTY_IN, TTY_OUT
+
+    if sys.stdin.isatty():
+        return input(prompt)
+
+    try:
+        if TTY_IN is None:
+            TTY_IN = Path("/dev/tty").open()
+        if TTY_OUT is None:
+            TTY_OUT = Path("/dev/tty").open("w")
+    except OSError:
+        print(prompt, end="", flush=True)
+        return ""
+
+    print(prompt, end="", file=TTY_OUT, flush=True)
+    line = TTY_IN.readline()
+    if not line:
+        return ""
+    return line.rstrip("\n")
 
 
 def relative(path: Path) -> str:
@@ -254,7 +281,7 @@ def ask_yes_no(prompt: str, default: bool = False) -> bool:
     suffix = "[Y/n]" if default else "[y/N]"
 
     while True:
-        answer = input(f"{prompt} {suffix}, q to quit ").strip().lower()
+        answer = prompt_input(f"{prompt} {suffix}, q to quit ").strip().lower()
 
         if not answer:
             return default
@@ -275,7 +302,7 @@ def choose_metadata(package: str) -> tuple[str, str] | None:
     print("  stop: q or quit")
 
     while True:
-        answer = input(f"Selection for {package} [skip]: ").strip().lower()
+        answer = prompt_input(f"Selection for {package} [skip]: ").strip().lower()
         if not answer or answer in {"s", "skip"}:
             return None
         if answer in {"q", "quit", "exit"}:
