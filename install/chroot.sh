@@ -16,7 +16,7 @@ install_aur () {
 }
 
 get_packages () {
-    cat /dotfiles/install/packages | grep -E ".*,$1,.*$2.*,$3" | cut -d',' -f1 | xargs
+    cat /dotfiles/install/packages.csv | grep -E ".*,$1,.*$2.*,$3" | cut -d',' -f1 | xargs
 }
 
 
