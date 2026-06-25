@@ -25,7 +25,7 @@ input_confirm () {
 }
 
 part () {
-    if grep nvme "$1"; then
+    if echo "$1" | grep nvme; then
         echo "$1p$2"
     else
         echo "$1$2"
@@ -36,7 +36,8 @@ echo "---------------------------"
 echo "INSTALL PACKAGES FOR SCRIPT"
 echo "---------------------------"
 
-pacman -S --noconfirm --needed fzf
+pacman -Syy
+pacman -S --noconfirm --needed fzf git
 
 clear
 
@@ -52,14 +53,14 @@ disk=$(input_notnull "Enter Disk Device (full path): ") || exit 1
 [ -e "$disk" ] || exit 1
 
 swap=$(input_confirm "Swap partition?(y/N): ") || exit 1
-filesystem=$(printf "ext4\nbtrfs" | fzf --prompt "File System: ") || exit 1
+filesystem=$(printf "ext4\nbtrfs" | /usr/bin/fzf --prompt "File System: ") || exit 1
 root_passwd=$(input_notnull "Enter Root Password: ") || exit 1
 username=$(input_notnull "Enter Username: ") || exit 1
 user_passwd=$(input_notnull "Enter User Password: ") || exit 1
 hostname=$(input_notnull "Enter Hostname: ") || exit 1
-timezone=$(timedatectl list-timezones | fzf --prompt "Enter Timezone: ") || exit 1
-gpu=$(printf "amd\nnvidia" | fzf --prompt "Enter GPU: ") || exit 1
-display_server=$(printf "xorg\nwayland\nnone" | fzf --prompt "Enter Display Server: ") || exit 1
+timezone=$(timedatectl list-timezones | /usr/bin/fzf --prompt "Enter Timezone: ") || exit 1
+gpu=$(printf "amd\nnvidia" | /usr/bin/fzf --prompt "Enter GPU: ") || exit 1
+display_server=$(printf "xorg\nwayland\nnone" | /usr/bin/fzf --prompt "Enter Display Server: ") || exit 1
 app_suite="n"
 if ! [ "$display_server" = "none" ]; then
     app_suite=$(input_confirm "Install Application Suite?(y/N)") || exit 1
@@ -180,30 +181,30 @@ echo "------------------------"
 echo "GET DOTS"
 echo "------------------------"
 
-rm -rf /mnt/dotfiles || true
-
-git clone https://github.com/dragonfly1033/dotfiles.git /mnt/dotfiles > /dev/null
-chmod +x "/mnt/dotfiles/install/*"
+if ! [ -e /mnt/dotfiles ]; then
+    /usr/bin/git clone https://github.com/dragonfly1033/dotfiles.git /mnt/dotfiles > /dev/null
+    chmod +x /mnt/dotfiles/install/*
+fi
 
 echo "------------------------"
 echo "CHROOT"
 echo "------------------------"
 
 
-arch-chroot /mnt /bin/bash -c "
-disk=$disk
-swap=$swap
-filesystem=$filesystem
-root_passwd=$root_passwd
-username=$username
-user_passwd=$user_passwd
-hostname=$hostname
-timezone=$timezone
-gpu=$gpu
-display_server=$display_server
-app_suite=$app_suite
+arch-chroot /mnt /bin/bash -c '
+export disk='"$disk"'
+export swap='"$swap"'
+export filesystem='"$filesystem"'
+export root_passwd='"$root_passwd"'
+export username='"$username"'
+export user_passwd='"$user_passwd"'
+export hostname='"$hostname"'
+export timezone='"$timezone"'
+export gpu='"$gpu"'
+export display_server='"$display_server"'
+export app_suite='"$app_suite"'
 /dotfiles/install/chroot.sh
-"
+'
 
 umount /mnt/boot
 umount /mnt

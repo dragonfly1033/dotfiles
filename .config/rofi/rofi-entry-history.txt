@@ -1,5 +1,3 @@
-ss
-lutri
 steam
 excal
 ss
@@ -18,3 +16,5 @@ mail
 qpw
 lutr
 exca
+vbox
+vm
