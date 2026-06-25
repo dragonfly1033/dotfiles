@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+    if timeout 2s ping -c 1 wiki.archlinux.org; then
+        exit
+    fi
+fi
+
+# nmcli c down Mesh1022
+# notify-send "<b>󰖪  Wi-Fi Disconnected</b>"
+# nmcli c up   Mesh1022 && notify-send "<b>󰖩  Wi-Fi Connected</b>"
+
+nmcli c down eduroam 
+notify-send "<b>󰖪  Wi-Fi Disconnected</b>"
+nmcli c up   eduroam && notify-send "<b>󰖩  Wi-Fi Connected</b>"
+

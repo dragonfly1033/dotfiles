@@ -1,15 +1,16 @@
 #!/bin/sh
 
-w=$(~/bin/dmenu "" "Word: ")
-echo "$w" | tee /tmp/word
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    word=$(wl-paste --primary | tee /tmp/word) 
+else
+    word=$(xclip -seletion primary -o | tee /tmp/word)
+fi
+notify-send "Checking word" "$word"
 
 new=$(dmenu "$(aspell -a < /tmp/word | tail +2 | cut -d':' -f2 | tr -d ' ' | tr ',' '\n')" "Words: ")
 echo "$new"
 
-if [ -z "$new" ]; then
-	new=$w
-elif [ "$new" = "*" ]; then
-	new="$w"
+if ! [ -z "$new" ] && ! [ "$new" = "*" ]; then
+    xdotool type "$new"
 fi
 
-xdotool type "$new"

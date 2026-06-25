@@ -37,7 +37,7 @@ elif [ "$game" == "Rexuiz" ]; then
 	(cd $DIR && exec "$DIR/rexuiz-linux-sdl-x86_64")
 	
 elif [ "$game" == "Headmaster" ]; then
-	DIR="$game_dir/the-headmaster/TheHeadmaster-0.14.3public-pc"
+	DIR="$game_dir/the-headmaster/TheHeadmaster-0.16.4.3public-pc"
 	(cd $DIR && exec "$DIR/TheHeadmaster.sh")
 elif [ "$game" == "supertuxkart" ]; then
     supertuxkart

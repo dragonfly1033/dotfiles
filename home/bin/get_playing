@@ -1,0 +1,4 @@
+#!/bin/sh
+
+playerctl -a status | nl | grep Playing | awk '{print $1}' | xargs
+

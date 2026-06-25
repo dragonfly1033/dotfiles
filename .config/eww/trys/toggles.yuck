@@ -15,16 +15,16 @@
             )
             (box :orienation "h"
                 :space-evenly false
-                (label :class "side_icon" :text "󰃠")
+                (label :class "side_icon" :text "󱃮")
                 (scale :orienation "h"
                     :valign "start"
                     :hexpand true
                     :class "scale"
-                    :value brightness_value
+                    :value gamma_value
                     :min 0
-                    :max 101
+                    :max 11
                     :round-digits 0
-                    :onchange "~/bin/brightness set $(echo '{}' | cut -d'.' -f1)"
+                    :onchange "~/bin/set_gamma {}"
                 )
             )
             (box :orienation "h"
@@ -67,5 +67,5 @@
 (defvar touchpad_toggle true)
 (defvar swallowing_toggle true)
 (defvar touchpad_while_typing_toggle false)
-(defpoll brightness_value :interval "30s" :initial "100" "~/bin/brightness get")
 (deflisten redshift_value :initial "0" "tail -F /tmp/redshift_10")
+(deflisten gamma_value :initial "0" "tail -F /tmp/gamma_10")

@@ -5,7 +5,5 @@ theme="$1"
 if [ -n "$theme" ]; then
     sed 's/include.*/include'" $theme/" -i ~/.config/zathura/zathurarc
 else
-    themes=$(ls -1 ~/.config/zathura | sed '/zathurarc/d;/change_theme/d')
-
-    notify-send "Valid Themes:" "$themes"
+    notify-send "No theme provided"
 fi

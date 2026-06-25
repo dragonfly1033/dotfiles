@@ -15,12 +15,12 @@ local themes_path = gfs.get_themes_dir()
 local theme = {}
 
 -- class names list of parents that should not be swallowed
-theme.parent_filter_list   = {}--{"firefox", "Gimp", "Pcmanfm", "VSCodium"}
+theme.parent_filter_list   = nil --{"firefox", "Gimp", "Pcmanfm", "VSCodium"}
 -- class names list that should not swallow their parents
-theme.child_filter_list    = {}
+theme.child_filter_list    = {"term-spawned"}
 
-theme.parent_white_list    = {"Alacritty", "popterm-small", "popterm-medium", "popterm-large", "Virt-manager", "feedr"}
-theme.child_white_list    = {}
+theme.parent_white_list    = {"Alacritty", "popterm-small", "popterm-medium", "popterm-large", "Virt-manager"}
+theme.child_white_list    = nil
 -- whether the filters above should be active
 theme.swallowing_filter = true
 
@@ -39,8 +39,8 @@ theme.fg_minimize   = "#ffffff"
 theme.gap_single_client = false
 theme.useless_gap   = dpi(8)
 theme.border_width  = dpi(2)
-theme.border_normal = "#1b1b19"
-theme.border_focus = "#5e5e5c"
+theme.border_normal = "#0c0808"
+theme.border_focus = "#e60c27"
 theme.border_marked = "#ff0000"
 
 -- There are other variable sets
@@ -56,12 +56,12 @@ theme.border_marked = "#ff0000"
 -- Example:
 --theme.taglist_bg_focus = "#ff0000"
 
-theme.hotkeys_modifiers_fg = "#fbfbfb"
-theme.hotkeys_fg = "#fbfbfb"
-theme.hotkeys_bg = "#1b1b19"
+theme.hotkeys_modifiers_fg = "#c9d6e6"
+theme.hotkeys_fg = "#c9d6e6"
+theme.hotkeys_bg = "#0c0808"
 theme.hotkeys_font = "Fira Code 14"
 theme.hotkeys_description_font = "Fira Code 11"
-theme.bg_urgent = "#1b1b19"
+theme.bg_urgent = "#0c0808"
 
 naughty.config.icon_formats={
 "png",

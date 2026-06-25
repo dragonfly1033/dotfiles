@@ -1,0 +1,41 @@
+#!/bin/sh
+
+usage () {
+    echo "USAGE: toogle_keybind_section [section] [enable|disable]"
+    echo "      unset section gives options in dmenu"
+    echo "      unset (en|dis)able toggles"
+    exit 1
+}
+
+section="$1"
+if [ -z "$section" ]; then
+    section=$(cat .config/sxhkd/sxhkdrc | grep START | sed -r 's/.*START (.*)/\1/' | dmenu - "Section: ")
+fi
+
+[ -z "$section" ] && usage
+
+start=$(grep -n "START $section" .config/sxhkd/sxhkdrc | cut -d':' -f1)
+[ -z "$start" ] && echo "START $section not found." && exit 1
+start=$(("$start" + 1))
+
+end=$(grep -n "END $section" .config/sxhkd/sxhkdrc | cut -d':' -f1)
+[ -z "$end" ] && echo "END $section not found." && exit 1
+end=$(("$end" - 1))
+
+if [ "$end" -lt "$start" ]; then
+    echo "section lengh < 1. doing nothing."
+    exit 0
+fi
+
+if [ "$2" = "enable" ]; then
+    sed -r "$start,$end"' s/^# //'  -i .config/sxhkd/sxhkdrc
+elif [ "$2" = "disable" ]; then
+    sed -r "$start,$end"' s/^([^#].*)/# \1/'  -i .config/sxhkd/sxhkdrc
+elif [ -z "$2" ]; then
+    sed -r "$start,$end"' { s/^# //; t ; s/^([^#].*)/# \1/ }'  -i .config/sxhkd/sxhkdrc
+else
+    echo "unknown second arg"
+    usage
+fi
+
+killall sxhkd && sxhkd &

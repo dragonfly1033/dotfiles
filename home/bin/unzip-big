@@ -1,0 +1,55 @@
+#!/bin/python
+
+import zipfile
+import os
+import sys
+from tqdm import tqdm
+
+
+def usage():
+    print("Usage: unzip-big <chunk size in GB> <zip file>")
+    quit(1)
+
+def delete_file_from_zip(zip, file):
+    os.system(f"zip -d {zip} \"{file}\"")
+
+if len(sys.argv) != 3: usage()
+
+try:
+    chunk = int(sys.argv[1])
+except TypeError:
+    usage()
+
+zfile = sys.argv[2]
+
+chunk = chunk * 1024 * 1024 * 1024
+dname = os.path.basename(zfile).replace(".zip", "")
+pwd = os.getcwd()
+
+try:
+    os.mkdir(f"{pwd}/{dname}")
+except FileExistsError:
+    print("output directory exists")
+
+with zipfile.ZipFile(zfile, "r") as f:
+    file_list = sorted([(i.filename, i.file_size) for i in f.infolist()], key=lambda x: x[1])
+
+progress = tqdm(total=len(file_list), position=0, desc="Progress", leave=True)
+
+if file_list[-1][1] > chunk:
+    raise ValueError(f"File {file} too big {size} for chunk size {chunk}")
+
+idx = 0
+for file, size in file_list:
+    with zipfile.ZipFile(zfile, "r") as f:
+        idir = os.path.dirname(file)
+        f.extract(file, f"{dname}/{idir}")
+    delete_file_from_zip(zfile, file)
+
+    progress.write(file)
+    progress.update(1)
+    idx += 1
+
+    
+
+

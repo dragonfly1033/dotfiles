@@ -1,0 +1,36 @@
+#!/bin/sh
+
+l=$(~/bin/dmenu "desktop-laptop\nlaptop\nlaptop-desktop\nmirror\ndesktop" "Layout: ")
+
+if [ -z "$l" ]; then
+    return 1
+fi
+
+awerun "
+new_prim = nil
+for s in screenO do
+    if s.outputs['eDP'] then
+        new_prim = s
+    end
+end
+"
+
+~/.screenlayout/"$l.sh" && (sleep 1 && ~/.config/polybar/launch.sh)
+
+if [ "$l" = "laptop" ]; then
+    ~/bin/awerun "
+    for s in screenO do
+        for i = 1,9 do
+            for k,v in ipairs(s.tags[i]:clients()) do
+                v:move_to_tag(new_prim.tags[i])
+            end
+        end
+    end
+    "
+fi
+
+
+xset r rate 300 40
+xset s off -dpms
+
+~/.fehbg

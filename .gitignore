@@ -1,7 +1,7 @@
-*/bling
-*/bling/*
 */.vscode
 */.vscode/*
-*/pslide
-*/node-modules
+home/bin/pslide
+home/bin/electron-apps/node_modules
 */bin/electron-apps/*.json
+install/progress
+*/__pycache__

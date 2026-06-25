@@ -8,8 +8,23 @@ if [ -z "$n" ]; then
 fi
 
 d=$(ls -At1 "$DOWN" | sed '/.*STG.*/d' | head -n "$n")
-echo "\"$DOWN/$d\"" | xclip -r -selection clipboard
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    echo "\"$DOWN/$d\"" | wl-copy
+else
+    echo "\"$DOWN/$d\"" | xclip -r -selection clipboard
+fi
+
 echo "$d"
+
+FILE="$DOWN/$d"
+
+if [ "$1" = "-r" ]; then
+    if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+        wl-copy -t text/uri-list "$FILE"
+    else
+        xclip -r -selection clipboard -t text/uri-list "$FILE"
+    fi
+fi
 
 # ls -1 $DOWN | sort > /tmp/new_downloads
 # 

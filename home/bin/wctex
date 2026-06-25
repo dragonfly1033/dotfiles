@@ -1,0 +1,40 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+    echo "USAGE: wctex <tex file>"
+    exit 1
+fi
+
+count="0"
+DEBUG=0
+
+while [ -n "$1" ]; do
+    file=$(cat "$1" | sed -r '
+        /^ *%.*$/d; 
+        s/~\\/ \\/g; 
+        s/\\label\{.*\}//g;
+        s/\\todo(\[.*\])*\{.*\}//g;
+        /\\begin\{align\}/,/\\end\{align\}/d;
+        /\\begin\{align\*\}/,/\\end\{align\*\}/d;
+        /\\begin\{math\}/,/\\end\{math\}/d;
+        /\\begin\{equation\}/,/\\end\{equation\}/d;
+        /\\begin\{equation\*\}/,/\\end\{equation\*\}/d;
+        /\\begin\{figure\}/,/\\end\{figure\}/d;
+        s/\\[^\{]+\{([^}]*)\}/\1/g; 
+        /^$/d;
+    ')
+    [ "$DEBUG" -eq 1 ] && echo "$file"
+    new=$(echo "$file" | wc -w)
+    echo "$1: " "$new" 
+    count=$((count + new))
+
+    cat "$1" | sed -r '/\\begin\{minted\}/,/\\end\{minted\}/d' > "/tmp/$(basename "$1")" 
+
+    shift 1
+done
+
+echo "$count"
+
+echo "========================================="
+
+texcount -inc -sum /tmp/*.tex | grep -A1 Total | sed '1d'

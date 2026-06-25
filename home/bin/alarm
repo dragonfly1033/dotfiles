@@ -1,0 +1,48 @@
+#!/bin/sh
+
+help() {
+	echo "Usage: alarm LENGTH"
+	echo ""
+	echo "     An alarm script"
+	echo ""
+	echo "     LENGTH format:"
+	# echo "         [H[H]:M[M]:S[S] | M[M]:S[S] | S[S]]"
+	echo "         [H[H] M[M] | M[M]]"
+	echo ""
+	echo "     EXAMPLES"
+	echo "         alarm 1 10 		#sets an alarm for 1:10"
+	exit 0
+}
+
+
+
+th=$1
+tm=$2 
+
+if [ -z "$tm" ]; then
+    th=$(echo "$th" | tr ':' ' ')
+    tm=$(echo "$th" | cut -d' ' -f2)
+    th=$(echo "$th" | cut -d' ' -f1)
+fi
+
+
+h=$(date +%H)
+m=$(date +%M)
+s=$(date +%S)
+
+if [ "$th" -gt "$h" ]; then
+    ds=$(echo "60 - $s" | bc)
+    dm=$(echo "(60 - ($m+1)) + $tm" | bc)
+    dh=$(echo "$th - ($h+1)" | bc)
+    ~/bin/timer "$dh" "$dm" "$ds" || exit 1
+elif [ "$tm" -gt "$m" ]; then
+    ds=$(echo "60 - $s" | bc)
+    dm=$(echo "$tm - ($m+1)" | bc)
+    ~/bin/timer "$dm" "$ds" || exit 1
+else
+    echo "can't do alarms that cross th day boundary"
+    exit 1
+fi
+    
+
+mpv --volume=40 --loop ~/Documents/Sounds/alarm.opus

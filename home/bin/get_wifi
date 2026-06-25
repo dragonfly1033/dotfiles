@@ -1,6 +1,8 @@
 #!/bin/sh
 
 prev_state=$(~/bin/vars get WIFI_CONNECTED)
+
+
 cur_state=$(nmcli g | sed '1d' | awk '{print $2}')
 if [ "$cur_state" = "full" ]; then
     echo "󰖩"
@@ -9,6 +11,14 @@ else
     echo "󰖪"
     ~/bin/vars set WIFI_CONNECTED false
 fi
+
+# if timeout 1s ping -c 1 wiki.archlinux.org 2> /dev/null 1> /dev/null; then
+#     echo "󰖩"
+#     ~/bin/vars set WIFI_CONNECTED true
+# else
+#     echo "󰖪"
+#     ~/bin/vars set WIFI_CONNECTED false
+# fi
 
 new_state=$(~/bin/vars get WIFI_CONNECTED)
 

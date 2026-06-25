@@ -1,0 +1,31 @@
+#!/bin/sh
+
+file=$1
+user=$2
+pass=$3
+
+if [ -z "$file" ]; then
+    echo "No ovpn file given"
+    exit 1
+elif [ -z "$user" ]; then
+    echo "No username given"
+    exit 1
+elif [ -z "$pass" ]; then
+    echo "No password given"
+    exit 1
+fi
+
+file=$(echo "$file" | sed -r 's/^(.*).ovpn$/\1/')
+conn=$(basename "$file")
+
+if nmcli c show "$conn" 2> /dev/null 1> /dev/null ; then
+    echo "Connection exists. delete to redo"
+    exit 1
+fi
+
+nmcli connection import type openvpn file "$file.ovpn" || exit 1
+
+nmcli connection modify "$conn" +vpn.data "connection-type=password-tls, username=$user" vpn.user-name "$user" +vpn.secrets "password=$pass"
+
+
+

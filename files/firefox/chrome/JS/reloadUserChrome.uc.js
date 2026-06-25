@@ -1,38 +1,75 @@
-const pywalUtils = {
-    updateSheet(win, _key) {
-        if (win !== window) { return; }
-        if (this.sss.sheetRegistered(this.ssUri, this.sss.USER_SHEET)) {
-            this.sss.unregisterSheet(this.ssUri, this.sss.USER_SHEET);
+// ==UserScript==
+// @onlyonce
+// ==/UserScript==
+
+// Script from here:  https://gist.github.com/jscher2000/ad268422c3187dbcbc0d15216a3a8060?permalink_comment_id=3259657#gistcomment-3259657
+
+let lastModifiedStyle = 0;
+
+function reloadSS(chromepath) {
+    // read file
+    var fstream = Cc["@mozilla.org/network/file-input-stream;1"]
+        .createInstance(Ci.nsIFileInputStream);
+    fstream.init(chromepath, 0x01, 0, 0);
+
+    var sstream = Cc["@mozilla.org/scriptableinputstream;1"]
+        .createInstance(Ci.nsIScriptableInputStream);
+    sstream.init(fstream);
+
+    var css = sstream.read(sstream.available());
+    sstream.close();
+    fstream.close();
+
+    // extract :root variables
+    let vars = [...css.matchAll(/--([\w-]+)\s*:\s*([^;]+);/g)];
+
+    let windows = Services.wm.getEnumerator("navigator:browser");
+    while (windows.hasMoreElements()) {
+        let win = windows.getNext();
+        let root = win.document.documentElement;
+
+        for (let v of vars) {
+            root.style.setProperty(`--${v[1]}`, v[2].trim());
         }
-        this.sss.loadAndRegisterSheet(this.ssUri, this.sss.USER_SHEET);
-        console.log(
-            this.sss.sheetRegistered(this.ssUri, this.sss.USER_SHEET)
-                ? "stylesheet registered"
-                : "stylesheet not registered"
-        );
-    },
+    }
 
-    init() {
-        console.log("script loaded, initializing");
-        this.sss = Cc["@mozilla.org/content/style-sheet-service;1"].getService(
-            Ci.nsIStyleSheetService
-        );
-        this.ssUri = makeURI("chrome://userchrome/content/userChrome.css");
-        this.key = document.getElementById("key_gotoHistory");
-
-        this.key.setAttribute("oncommand", "pywalUtils.updateSheet(window)");
-        this.updateSheet(window);
-    },
-};
-
-if (gBrowserInit.delayedStartupFinished) {
-    pywalUtils.init();
-} else {
-    let delayedListener = (subject, topic) => {
-        if (topic == "browser-delayed-startup-finished" && subject == window) {
-            Services.obs.removeObserver(delayedListener, topic);
-            pywalUtils.init();
-        }
-    };
-    Services.obs.addObserver(delayedListener, "browser-delayed-startup-finished");
+    console.log("updated stylesheet")   
 }
+
+
+var ds = Cc["@mozilla.org/file/directory_service;1"].getService(Ci.nsIProperties);
+var chromepath = ds.get("UChrm", Ci.nsIFile);
+chromepath.append("style.css");
+reloadSS(chromepath)
+console.log("Loaded stylesheet first time")
+
+Services.obs.addObserver((_win, topic) => {
+    if (topic !== "browser-delayed-startup-finished") {
+        return;
+    }
+
+    var ds = Cc["@mozilla.org/file/directory_service;1"]
+        .getService(Ci.nsIProperties);
+    var chromepath = ds.get("UChrm", Ci.nsIFile);
+    chromepath.append("style.css");
+
+    reloadSS(chromepath);
+}, "browser-delayed-startup-finished");
+console.log("added new window listener");
+
+setInterval(() => {
+
+    var ds = Cc["@mozilla.org/file/directory_service;1"].getService(Ci.nsIProperties);
+    var chromepath = ds.get("UChrm", Ci.nsIFile);
+    chromepath.append("style.css");
+
+    if (chromepath.lastModifiedTime === lastModifiedStyle) {
+        return;
+    }
+
+    lastModifiedStyle = chromepath.lastModifiedTime;
+
+    reloadSS(chromepath)
+}, 1000);
+
+console.log("Loaded stylesheet reloader")

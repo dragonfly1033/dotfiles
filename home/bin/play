@@ -8,12 +8,20 @@ if [ -z "$link" ]; then
     exit 1
 fi
 
+case "$link" in
+ http*)
+    ;;
+ *)
+    link="https://www.youtube.com/watch?v=$link"
+    ;;
+esac
+
 # https://www.youtube.com/watch?v=724Z2xdjRqA
 
-yt-dlp --abort-on-error -f "bv[ext=webm][height<=?1080]" -o ~/bin/.env/vidpipe "$link" &
+(yt-dlp --abort-on-error -f "bv[ext=webm][height<=?1080]" -o ~/bin/.env/vidpipe "$link" || yt-dlp --list-formats "$link" ) &
 yt-dlp --abort-on-error -f "ba" -o ~/bin/.env/audpipe "$link" &
 
-(ffmpeg -i ~/bin/.env/vidpipe -i ~/bin/.env/audpipe -c:v copy -c:a copy -f webm - | mpv --really-quiet --speed=2.0 -) &
+(ffmpeg -i ~/bin/.env/vidpipe -i ~/bin/.env/audpipe -c:v copy -c:a copy -f webm - | mpv --fullscreen --really-quiet --speed=2.0 -) &
 
 pids=$(python -c "import subprocess, re, os
 process = subprocess.Popen(['pstree', '-p', '$mypid'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)

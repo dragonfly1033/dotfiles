@@ -1,0 +1,80 @@
+#!/bin/sh
+
+usage () {
+    echo "Usage: music [-o shuf|sort] [-s term1,term2,...] <directories>"
+    exit 1
+}
+
+
+order=""
+starters=""
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -o)
+            shift
+            [ $# -eq 0 ] && usage
+            if [ "$1" = "shuf" ]; then
+                order="shuf"
+                shift
+            elif [ "$1" = "sort" ]; then
+                order="sort"
+                shift
+            else
+                usage
+            fi
+            ;;
+        -s)
+            shift
+            [ $# -eq 0 ] && usage
+            starters="$1"
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+        -*)
+            usage
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+
+[ $# -eq 0 ] && usage
+playlist=$(for alb in "$@"; do find "$alb" -type f; done)
+
+if [ "$order" = "shuf" ]; then
+    echo "Shuffling"
+    playlist=$(echo "$playlist" | shuf)
+elif [ "$order" = "sort" ]; then
+    echo "Sorting"
+    playlist=$(echo "$playlist" | sort)
+else
+    echo "None of shuf,sort given. Using file order."
+fi
+
+if [ -n "$starters" ]; then
+    if [ -f "$starters" ]; then 
+        starters=$(cat "$starters" | tr '\n' ','  | sed 's/.$//')
+    fi
+fi
+
+if [ -n "$starters" ]; then
+    selections=$(printf "%s\n" "$starters" | tr ',' '\n' |
+      while IFS= read -r pat; do
+        echo "$playlist" | fzf -f "$pat" | head -n 1
+      done)
+    
+    echo "------------------------------------"   
+    echo "Starting with: $(echo "$selections" | sed -r 's!.*/([^/]*)\.(opus|mp3)!\1!' | tr '\n' ',')"
+    echo "------------------------------------"   
+    selection_pat=$(echo "$selections" | sed 's/\./\\\./g' | tr '\n' '|' | sed 's/.$//')
+    rest=$(echo "$playlist" | grep -i -E -v -e "($selection_pat)")
+    playlist=$(printf "%s\n%s\n" "$selections" "$rest")
+fi
+
+echo "$playlist" | mpv --playlist=-

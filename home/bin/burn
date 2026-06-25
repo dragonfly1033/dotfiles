@@ -16,5 +16,12 @@ if [ -z "$dev" ]; then
     exit 1
 fi
 
+printf "Are you sure you want to burn to %s?(y/N) " "$dev"
+read -r conf
+
+if ! [ "$conf" = "y" ]; then
+    exit 1
+fi
+
 cp "$img" "$dev"
 

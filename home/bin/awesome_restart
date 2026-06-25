@@ -1,16 +1,18 @@
 #!/bin/sh
 
-tag=$(awesome-client '
-local awful = require("awful")
-return awful.screen.focused().selected_tag.name
-')
-tag=$(echo $tag | cut -d ' ' -f 2 | sed -e 's/"//g')
+tags=$(awerun "for s in screenO do; print(s.selected_tag.name); end" | sed -r '/"/d; /^$/d; s/(.*)/'"'\1'/" | tr '\n' ',' | sed -r 's/,$//')
 
 awesome-client 'awesome.restart()'
 
-sleep 0.2 &&
+sleep 1
 
-awesome-client '
-local awful = require("awful")
-awful.tag.find_by_name(awful.screen.focused(), "'"$tag"'"):view_only()
-'
+awerun "
+local tmptags = { $tags }
+local tmpi = 1
+for s in screenO do
+    awful.tag.find_by_name(
+        s, tmptags[tmpi]     
+    ):view_only()
+    tmpi = tmpi + 1
+end
+"

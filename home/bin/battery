@@ -24,11 +24,11 @@ elif [ "$charging" = "Discharging" ] && [ "$battery" -le 20 ]; then
 		~/bin/vars set LOW_BATTERY_SENT true
 	fi
 elif [ -n "$full" ] && [ "$charging" = "Charging" ]; then
-	notify-send -t 30000 -u critical "Full Battery" "Unplug in charger!"
+	notify-send -t 30000 -u critical "Full Battery" "Unplug charger!"
 	~/bin/vars set LOW_BATTERY_SENT false
 	~/bin/vars set VERY_LOW_BATTERY_SENT false
 elif [ "$battery" -ge 98 ] && [ "$charging" = "Charging" ]; then
-	notify-send -t 30000 -u critical "Full Battery" "Unplug in charger!"
+	notify-send -t 30000 -u critical "Full Battery" "Unplug charger!"
 	~/bin/vars set LOW_BATTERY_SENT false
 	~/bin/vars set VERY_LOW_BATTERY_SENT false
 else

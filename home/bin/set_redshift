@@ -1,10 +1,56 @@
 #!/bin/sh
 
-rat=$1
 
-new=$(echo "($rat / 10)*4000+2400" | bc -lq | cut -d'.' -f1)
+usage () {
+    echo "USAGE: set_redshift -t <temp> -g <gamma>" 
+    exit 1
+}
 
-echo "$rat" >> /tmp/redshift_10
-~/bin/vars set REDSHIFT_TEMP "$new"
+temp=$(vars get REDSHIFT_TEMP)
+gamma=$(vars get GAMMA)
 
-redshift -PO "$new"
+
+while [ -n "$1" ]; do
+    case $1 in
+        "-t") 
+                shift 1
+                if [ "$1" -lt 0 ] || [ "$1" -gt 10 ]; then
+                    usage
+                fi
+                temp="$1"
+
+                new_temp=$(echo "($temp / 10)*4000+2400" | bc -lq | cut -d'.' -f1)
+
+                echo "$temp" >> /tmp/redshift_10
+                ~/bin/vars set REDSHIFT_TEMP "$new_temp"
+
+                [ "$XDG_SESSION_TYPE" = "wayland" ] && sunsetr set static_temp="$new_temp"
+
+                shift 1
+                ;;
+        "-g") 
+                shift 1
+                if [ "$1" -lt 0 ] || [ "$1" -gt 10 ]; then
+                    usage
+                fi
+                gamma="$1"
+
+                new_gamma=$(echo "($gamma/10)*0.9 + 0.1" | bc -lq)
+
+                echo "$gamma" >> /tmp/gamma_10
+                vars set GAMMA "$new_gamma"
+
+                gamma_100=$(echo "$new_gamma * 100" | bc -lq | cut -d'.' -f1)
+                [ "$XDG_SESSION_TYPE" = "wayland" ] && sunsetr set static_gamma="$gamma_100"
+                
+                shift 1
+                ;;
+    esac
+done
+
+temp=$(vars get REDSHIFT_TEMP)
+gamma=$(vars get GAMMA)
+
+if ! [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    redshift -b "$gamma" -PO "$temp"
+fi

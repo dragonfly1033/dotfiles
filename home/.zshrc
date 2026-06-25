@@ -1,34 +1,42 @@
+# zmodload zsh/zprof
+
 export PF_INFO="ascii title os kernel pkgs palette"
 # pfetch
 # colorscript -r
-~/gap_rev | figlet
+# ~/gap_rev
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+autoload -Uz compinit 
+if [[ -n ${XDG_CACHE_HOME}/zsh/.zcompdump(#qN.mh+24) ]]; then
+	compinit -d "${XDG_CACHE_HOME}/zsh/.zcompdump";
+else
+	compinit -C -d "${XDG_CACHE_HOME}/zsh/.zcompdump";
 fi
 
-# setopt complete_aliases
-# fpath+=( ~/.config/zsh )
-# autoload -Uz ~/.config/zsh/*
 
-source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+source <(jj util completion zsh) 
+compdef _jj jj
+
+export STARSHIP_CONFIG=~/.config/starship/starship.toml
+
+TRANSIENT_PROMPT_TRANSIENT_PROMPT='$(/usr/bin/starship prompt --profile=transient --terminal-width="$COLUMNS" --keymap="${KEYMAP:-}" --status="$STARSHIP_CMD_STATUS" --pipestatus="${STARSHIP_PIPE_STATUS[*]}" --cmd-duration="${STARSHIP_DURATION:-}" --jobs="$STARSHIP_JOBS_COUNT")'
+TRANSIENT_PROMPT__PROMPT='$(/usr/bin/starship prompt --terminal-width="$COLUMNS" --keymap="${KEYMAP:-}" --status="$STARSHIP_CMD_STATUS" --pipestatus="${STARSHIP_PIPE_STATUS[*]}" --cmd-duration="${STARSHIP_DURATION:-}" --jobs="$STARSHIP_JOBS_COUNT")'
+
+eval "$(starship init zsh)"
+source /home/dragonfly1033/.config/zsh/transient-prompt.zsh-theme
+
+eval "$(fzf --zsh)"
+
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/share/zsh/plugins/zsh-auto-notify/auto-notify.plugin.zsh
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# autoload -U compinit
-
 [[ -s /home/dragonfly1033/.autojump/etc/profile.d/autojump.sh ]] && source /home/dragonfly1033/.autojump/etc/profile.d/autojump.sh
 
-autoload -U compinit -d ~/.cache/zsh/zcompdump-"$ZSH_VERSION" && compinit -u ~/.cache/zsh/zcompdump-"$ZSH_VERSION"
-
-# compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-"$ZSH_VERSION"
+export AUTO_NOTIFY_THRESHOLD=20
+export AUTO_NOTIFY_TITLE="%command has finished"
+export AUTO_NOTIFY_BODY="%elapsed seconds | exit code %exit_code"
+export AUTO_NOTIFY_EXPIRE_TIME=10000
+AUTO_NOTIFY_IGNORE+=("micro" "m" "man" "less" "bat" "krita" "python")
 
 export HISTFILE=$XDG_STATE_HOME/zsh/history
 export HISTSIZE=10000
@@ -38,49 +46,14 @@ setopt hist_ignore_all_dups
 setopt SHARE_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt EXTENDED_HISTORY
-
+setopt EXTENDED_GLOB
 setopt cdablevars
 setopt cdsilent
 setopt autocd
 setopt complete_aliases
 
-eval "$(fzf --zsh)"
-
-export AUTO_NOTIFY_THRESHOLD=20
-export AUTO_NOTIFY_TITLE="%command has finished"
-export AUTO_NOTIFY_BODY="%elapsed seconds | exit code %exit_code"
-export AUTO_NOTIFY_EXPIRE_TIME=10000
-AUTO_NOTIFY_IGNORE+=("micro" "m" "man" "less" "bat" "krita" "python")
-
-
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-
-# start programs from shell but immediately disown them
-startAndDisown() {
-    $@ & disown
-}
-
 mkdirr() {
 	/usr/bin/mkdir $1 && cd $1
-}
-
-package-list() {
-	pacman -Qe | cut -d' ' -f1
-}
-
-custom_bat() {
-	expanded=$(grep -e "^$1" ~/.config/zsh/file_aliases | cut -d' ' -f2 | sed "s|~|$HOME|")
-	bat -p "$1" 2> /dev/null || bat -p "$expanded"	
-}
-
-jarvis() {
-	gptf -q "$1" | speak
-}
-
-gptcode() {
-	gptf --code -q "$1" | glow
 }
 
 cinfo() {
@@ -93,8 +66,19 @@ tmp () {
     cd /tmp
 }
 
+prog () {
+    progress -m -p "$(pgrep $1 | fzf -1)"
+}
 
-alias d=startAndDisown
+yt () {
+    xclip -o -selection clipboard | sed -r 's/yew/you/' | xargs -I {} mpv "{}"
+}
+
+phone () {
+    aft-mtp-mount ~/Desktop/phone
+    cd ~/Desktop/phone
+}
+
 
 bindkey '\e[A' history-search-backward
 bindkey '\e[B' history-search-forward
@@ -104,12 +88,20 @@ bindkey  "^[[F"   end-of-line
 bindkey  "^[[3~"  delete-char
 bindkey  "^[[1;5D"  vi-backward-blank-word
 bindkey  "^[[1;5C"  vi-forward-blank-word
-bindkey  "^H"  backward-delete-word
+bindkey  "\u001bcontrolback"  backward-delete-word
 bindkey  "^[[3;5~"  delete-word
 bindkey  "^[[1;5H"  backward-kill-line
 bindkey  "^[[1;5F"  kill-line
 
-# export PATH="$HOME/Documents/AndroidStudioProjects/flutter/bin:$HOME/bin:$HOME/Games/itchio:$PATH"
+
+select_jj_change () {
+    if ! jj st 1>/dev/null 2>/dev/null ; then 
+        return 0;
+    fi
+    jj log --color always | tac | sed "1d" | fzf --ansi --cycle --bind 'down:down+down+down' --bind 'up:up+up+up' --bind 'load:last' | sed -r 's/^[^a-z]* ([a-z]+) .*/\1/' | tr -d '\n' | xdotool type -f -
+}
+zle -N select_jj_change
+bindkey  "^F" select_jj_change
 
 alias cdc='cd "$OLDPWD"'
 alias tap='tee /dev/stderr'
@@ -125,21 +117,13 @@ alias nano='micro'
 alias htop='btop'
 alias tree='tree -a -I .git -I .cache -I .mozilla -I .local -I backups -I pulse -I .vscode-oss -I VSCodium'
 alias grep='grep --color=auto'
-alias cat='custom_bat'
-alias update='sudo pacman -Syyu'
-# alias install='sudo pacman -S'
-alias install='yay -S $(yay -Sl | sed -r "s|^([^ ]*) ([^ ]*) .*$|\2 \1|" | fzf | cut -d" " -f1)'
-# alias uninstall='sudo pacman -Rns'
-alias uninstall='yay -Rns $(yay -Qe | sed -r "s/([^ ]*) .*/\1/" | fzf)'
+alias cat='bat -p'
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
 alias find='find -L'
-alias code='codium'
 alias cam='mpv /dev/video0 || mpv /dev/video1'
-alias wall='feh --no-fehbg --bg-fill'
-alias vedit='avidemux3_qt5'
-alias pdf='zathura'
+alias pdf='find . -maxdepth 1 -type f -name "*.pdf" | fzf -1 | xargs -I {} zathura {}'
 alias windows='sudo mount /dev/nvme0n1p3 /mnt/c'
 alias unwindows='sudo umount /dev/nvme0n1p3'
 alias rc='micro ~/.zshrc && source ~/.zshrc'
@@ -152,7 +136,6 @@ alias sdu='systemctl --user'
 compdef sdu='systemctl'
 alias todo="$HOME/bin/note todo"
 alias temp="/bin/rm $HOME/.config/micro/backups/%tmp%tmp; micro /tmp/tmp"
-alias df='df -h -x tmpfs'
 alias du='du -sh'
 alias vlc='mpv'
 alias gcl='git clone'
@@ -160,20 +143,41 @@ alias ga='git add'
 alias gs='git status'
 alias gc='git commit -m'
 alias gch='git checkout'
-alias gpom='git push origin master'
-alias clip='xclip -r -selection clipboard'
+alias gq='git rebase -i HEAD~2'
+alias gp='git push origin'
 alias bc='bc -lq'
 alias sudo='sudo EDITOR=micro '
 alias gti='git'
 compdef gti='git'
 alias hist="history 1 -1 | cut -c 8- | fzf --tac | tr -d '\n' | tap | clip"
 alias ytdpa='yt-dlp -x --no-flat-playlist --exec after_move:touch'
+alias ytdpaf='yt-dlp -x --no-flat-playlist --exec after_move:touch -a'
 alias pyvenv='python -m venv venv && source ./venv/bin/activate'
-alias gpt='tgpt --provider openai --key "$(cat ~/.ssh/openaikey)" --model "gpt-3.5-turbo" --temperature=0 --top_p=0.75'
-alias gptc='tgpt --provider openai --key "$(cat ~/.ssh/openaikey)" --model "gpt-3.5-turbo" --temperature=1 --top_p=0.9'
-alias gptf='tgpt --provider openai --key "$(cat ~/.ssh/openaikey)" --model "gpt-3.5-turbo" --temperature=0 --top_p=0.5'
 alias speak='~/Documents/piper/piper --model ~/Documents/piper/voices/irish_woman/voice.onnx --sentence_silence 0.1 --output-raw 2>/dev/null | aplay -r 22050 -f S16_LE -t raw - 2>/dev/null'
 alias scrcpy='scrcpy -S'
 alias whatismyip='curl "ifconfig.me"'
 alias cdusb='cd `usb go`'
 alias incog='unset HISTFILE; sed "$d" -i ~/.local/state/zsh/history'
+alias mount='mount -o uid=1000'
+alias ascii='figlet'
+alias pl='swipl'
+alias pdfjoin='pdfunite'
+alias df='dysk -u binary'
+alias codecd='code . -r'
+alias pwdc='pwd | xargs -I {} printf "\"{}\"" | clip'
+alias start='alacritty --class "term-spawned" & disown'
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    alias wall='feh --no-fehbg --bg-fill'
+    alias clip='wl-copy'
+    alias code='codium'
+else
+    alias wall='swaybg -i'
+    alias clip='xclip -r -selection clipboard'
+    alias code='codium --enable-features=UseOzonePlatform --ozone-platform=wayland'
+    alias feh='imv'
+fi
+
+
+eval "$(direnv hook zsh)"
+
+eval "$(niri completions zsh)"

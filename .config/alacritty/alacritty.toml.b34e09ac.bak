@@ -1,0 +1,20 @@
+general.import = ["~/.dotfiles/.config/alacritty/themes/theme.toml"]
+
+[cursor.style]
+shape = "Beam"
+
+[font]
+size = 11.0
+
+[font.normal]
+family = "JetBrainsMono NL Nerd Font"
+style = "Regular"
+
+[window]
+opacity = 1.0
+
+[selection]
+  save_to_clipboard = true
+
+[keyboard]
+  bindings = [{ key = "Backspace", mods = "Control", chars = "\u001bcontrolback"}]

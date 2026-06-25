@@ -1,0 +1,5 @@
+#!/bin/sh
+
+
+~/bin/awerun 'for i,c in ipairs(screen.selected_tag:clients()) do c.minimized = false end'
+

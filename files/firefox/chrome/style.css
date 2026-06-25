@@ -1,0 +1,7 @@
+:root {
+  --my-accent: #e60c27;
+  --my-background: #0c0808;
+  --my-foreground: #c9d6e6;
+  --my-bottom-border-thickness: 1px;
+  --my-bottom-border-color: var(--my-accent);
+}

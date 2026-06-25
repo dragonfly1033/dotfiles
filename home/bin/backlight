@@ -1,0 +1,48 @@
+#!/bin/python
+
+import sys
+import os
+import subprocess
+
+env = os.environ.get
+
+MIN = 190
+MAX = 61680
+
+def lerp(v, min1=MIN, max1=MAX, min2=0, max2=10):
+    return ((v-min1)/(max1-min1))*(max2-min2) + min2
+
+def ilerp(v, min1=MIN, max1=MAX, min2=0, max2=10):
+    return lerp(v, min2, max2, min1, max1)
+
+
+def adjust(a):
+    # 1943 https://en.wikipedia.org/wiki/Lightness
+    return min(max(int(round(14*(lerp(a))**0.426)), 0), 10)
+
+def unadjust(a):
+    return min(max(int(round(ilerp((a/14)**2.3474))), MIN), MAX)
+
+
+action = sys.argv[1]
+a = int(str(subprocess.check_output(["brightnessctl", "get"]))[2:-3])
+
+if action == "get":
+    print(f"{adjust(a)}%")
+elif action == "inc":
+    extra = int(sys.argv[2])
+    cur = adjust(a)
+    cur = min(max(cur+extra, 0), 10)
+    new = unadjust(cur)
+    subprocess.run(["brightnessctl", "set", f"{new}"])
+elif action == "dec":
+    extra = int(sys.argv[2])
+    cur = adjust(a)
+    cur = min(max(cur-extra, 0), 10)
+    new = unadjust(cur)
+    subprocess.run(["brightnessctl", "set", f"{new}"])
+elif action == "set":
+    new = int(sys.argv[2])
+    new = unadjust(new)
+    print(new)
+    subprocess.run(["brightnessctl", "set", f"{new}"])

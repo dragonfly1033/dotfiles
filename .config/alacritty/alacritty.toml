@@ -1,4 +1,4 @@
-import = ["~/.dotfiles/.config/alacritty/themes/theme.toml"]
+general.import = ["~/.dotfiles/.config/alacritty/themes/theme.toml"]
 
 [cursor.style]
 shape = "Beam"
@@ -15,3 +15,10 @@ opacity = 1.0
 
 [selection]
   save_to_clipboard = true
+
+[keyboard]
+  bindings = [
+    { key = "Backspace", mods = "Control", chars = "\u001bcontrolback"},
+    { key = "Return", mods = "Shift", chars = "\u001B\r"},
+  ]
+

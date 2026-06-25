@@ -1,0 +1,394 @@
+#!/usr/bin/env python3
+
+from __future__ import annotations
+
+import csv
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parent
+PACKAGE_FILE = REPO_ROOT / "install" / "packages.csv"
+SKIP_FILE = REPO_ROOT / ".git" / "track_new_packages_skipped"
+HEADER = ["package", "manager", "display", "profile"]
+SKIP_HEADER = ["package", "manager"]
+
+MANAGERS = {
+    "pacman": ["pacman", "-Qqen"],
+    "yay": ["pacman", "-Qqem"],
+}
+
+DISPLAY_OPTIONS = {
+    "x": "xorg",
+    "w": "wayland",
+    "b": "xorg+wayland",
+    "4": "xorg",
+    "5": "wayland",
+    "6": "xorg+wayland",
+}
+
+PROFILE_OPTIONS = {
+    "c": "cli",
+    "l": "gui_light",
+    "h": "gui_heavy",
+    "1": "cli",
+    "2": "gui_light",
+    "3": "gui_heavy",
+}
+
+PACKAGE_DESCRIPTIONS: dict[str, str] = {}
+
+
+class QuitRequested(Exception):
+    pass
+
+
+def relative(path: Path) -> str:
+    try:
+        return str(path.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
+
+
+def ensure_package_file() -> None:
+    PACKAGE_FILE.parent.mkdir(exist_ok=True)
+    if not PACKAGE_FILE.exists():
+        write_rows([])
+
+
+def is_header(row: list[str]) -> bool:
+    normalized = [cell.strip().lower() for cell in row[:4]]
+    return normalized == HEADER
+
+
+def read_rows() -> list[dict[str, str]]:
+    ensure_package_file()
+
+    rows: list[dict[str, str]] = []
+    with PACKAGE_FILE.open(newline="") as file:
+        reader = csv.reader(file)
+        for line_number, row in enumerate(reader, start=1):
+            if not row or all(not cell.strip() for cell in row):
+                continue
+            if row[0].lstrip().startswith("#"):
+                continue
+            if line_number == 1 and is_header(row):
+                continue
+            if len(row) < 4:
+                print(
+                    f"Skipping malformed row {line_number} in {relative(PACKAGE_FILE)}: {row}",
+                    file=sys.stderr,
+                )
+                continue
+
+            rows.append(
+                {
+                    "package": row[0].strip(),
+                    "manager": row[1].strip(),
+                    "display": row[2].strip(),
+                    "profile": row[3].strip(),
+                }
+            )
+
+    return rows
+
+
+def write_rows(rows: list[dict[str, str]]) -> None:
+    PACKAGE_FILE.parent.mkdir(exist_ok=True)
+    with PACKAGE_FILE.open("w", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=HEADER)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def read_skipped() -> set[tuple[str, str]]:
+    if not SKIP_FILE.exists():
+        return set()
+
+    skipped: set[tuple[str, str]] = set()
+    with SKIP_FILE.open(newline="") as file:
+        reader = csv.reader(file)
+        for line_number, row in enumerate(reader, start=1):
+            if not row or all(not cell.strip() for cell in row):
+                continue
+            if row[0].lstrip().startswith("#"):
+                continue
+            if line_number == 1 and [cell.strip().lower() for cell in row[:2]] == SKIP_HEADER:
+                continue
+            if len(row) < 2:
+                continue
+
+            skipped.add((row[1].strip(), row[0].strip()))
+
+    return skipped
+
+
+def write_skipped(skipped: set[tuple[str, str]]) -> None:
+    SKIP_FILE.parent.mkdir(exist_ok=True)
+    with SKIP_FILE.open("w", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=SKIP_HEADER)
+        writer.writeheader()
+        for manager, package in sorted(skipped):
+            writer.writerow({"package": package, "manager": manager})
+
+
+def skipped_packages(manager: str) -> set[str]:
+    return {
+        package
+        for skipped_manager, package in read_skipped()
+        if skipped_manager == manager
+    }
+
+
+def remember_skipped(manager: str, package: str) -> None:
+    skipped = read_skipped()
+    entry = (manager, package)
+    if entry in skipped:
+        return
+
+    skipped.add(entry)
+    write_skipped(skipped)
+    print(f"Skipped {manager}:{package}; saved in {relative(SKIP_FILE)}")
+
+
+def installed_packages(manager: str) -> set[str]:
+    try:
+        proc = subprocess.run(
+            MANAGERS[manager],
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+    except FileNotFoundError:
+        print("track_new_packages: pacman is not installed or not in PATH", file=sys.stderr)
+        sys.exit(1)
+
+    if proc.returncode != 0 and proc.stderr.strip():
+        print(proc.stderr.strip(), file=sys.stderr)
+
+    return {line.strip() for line in proc.stdout.splitlines() if line.strip()}
+
+
+def package_description(package: str) -> str:
+    if package in PACKAGE_DESCRIPTIONS:
+        return PACKAGE_DESCRIPTIONS[package]
+
+    description = pacman_description(package) or yay_search_description(package)
+    PACKAGE_DESCRIPTIONS[package] = description
+    return description
+
+
+def pacman_description(package: str) -> str:
+    try:
+        proc = subprocess.run(
+            ["pacman", "-Qi", package],
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+    except FileNotFoundError:
+        return ""
+
+    if proc.returncode != 0:
+        return ""
+
+    for line in proc.stdout.splitlines():
+        if line.startswith("Description"):
+            return line.split(":", 1)[1].strip()
+
+    return ""
+
+
+def yay_search_description(package: str) -> str:
+    try:
+        proc = subprocess.run(
+            ["yay", "-Qs", f"^{re.escape(package)}$"],
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+    except FileNotFoundError:
+        return ""
+
+    if proc.returncode != 0:
+        return ""
+
+    for line in proc.stdout.splitlines()[1:]:
+        description = line.strip()
+        if description:
+            return description
+
+    return ""
+
+
+def describe_package(package: str) -> str:
+    description = package_description(package)
+    if description:
+        return f"{package}: {description}"
+    return f"{package}: description unavailable"
+
+
+def tracked_packages(rows: list[dict[str, str]], manager: str) -> set[str]:
+    return {
+        row["package"]
+        for row in rows
+        if row["package"] and row["manager"] == manager
+    }
+
+
+def rows_for_package(
+    rows: list[dict[str, str]],
+    manager: str,
+    package: str,
+) -> list[dict[str, str]]:
+    return [
+        row
+        for row in rows
+        if row["package"] == package and row["manager"] == manager
+    ]
+
+
+def ask_yes_no(prompt: str, default: bool = False) -> bool:
+    suffix = "[Y/n]" if default else "[y/N]"
+
+    while True:
+        answer = input(f"{prompt} {suffix}, q to quit ").strip().lower()
+
+        if not answer:
+            return default
+        if answer in {"q", "quit", "exit"}:
+            raise QuitRequested
+        if answer in {"y", "yes"}:
+            return True
+        if answer in {"n", "no"}:
+            return False
+
+        print("Please answer y, n, or q.")
+
+
+def choose_metadata(package: str) -> tuple[str, str] | None:
+    print("Target:")
+    print("  display: (4|x)org, (5|w)ayland, (6|b)oth")
+    print("  profile: (1|c)li, (2|l)ight_gui, (3|h)eavy_gui")
+    print("  stop: q or quit")
+
+    while True:
+        answer = input(f"Selection for {package} [skip]: ").strip().lower()
+        if not answer or answer in {"s", "skip"}:
+            return None
+        if answer in {"q", "quit", "exit"}:
+            raise QuitRequested
+        if len(answer) == 2 and answer[0] in DISPLAY_OPTIONS and answer[1] in PROFILE_OPTIONS:
+            return DISPLAY_OPTIONS[answer[0]], PROFILE_OPTIONS[answer[1]]
+
+        print("Enter a 2 character selection like xc, wl, or bh; s to skip; q to quit.")
+
+
+def handle_removed(
+    rows: list[dict[str, str]],
+    manager: str,
+    package: str,
+) -> int:
+    matches = rows_for_package(rows, manager, package)
+
+    print()
+    print(f"[{manager}] removed: {describe_package(package)}")
+    print("Currently tracked as:")
+    for row in matches:
+        print(f"  - {row['package']},{row['manager']},{row['display']},{row['profile']}")
+
+    if not ask_yes_no("Remove matching row(s) from install/packages?"):
+        return 0
+
+    before = len(rows)
+    rows[:] = [
+        row
+        for row in rows
+        if not (row["package"] == package and row["manager"] == manager)
+    ]
+    write_rows(rows)
+    return before - len(rows)
+
+
+def handle_added(rows: list[dict[str, str]], manager: str, package: str) -> int:
+    print()
+    print(f"[{manager}] added: {describe_package(package)}")
+
+    metadata = choose_metadata(package)
+    if metadata is None:
+        remember_skipped(manager, package)
+        return 0
+    display, profile = metadata
+
+    rows.append(
+        {
+            "package": package,
+            "manager": manager,
+            "display": display,
+            "profile": profile,
+        }
+    )
+    write_rows(rows)
+    return 1
+
+
+def process_manager(rows: list[dict[str, str]], manager: str) -> tuple[int, int]:
+    installed = installed_packages(manager)
+    tracked = tracked_packages(rows, manager)
+    skipped = skipped_packages(manager)
+
+    removed = sorted(tracked - installed)
+    added = sorted(installed - tracked - skipped)
+    removed_count = 0
+    added_count = 0
+
+    print()
+    print("=" * 72)
+    print(manager.upper())
+    print("=" * 72)
+
+    if not removed and not added:
+        print("No package list changes found.")
+        return 0, 0
+
+    for package in removed:
+        removed_count += handle_removed(rows, manager, package)
+
+    for package in added:
+        added_count += handle_added(rows, manager, package)
+
+    return removed_count, added_count
+
+
+def main() -> int:
+    rows = read_rows()
+
+    removed_total = 0
+    added_total = 0
+    try:
+        for manager in MANAGERS:
+            removed_count, added_count = process_manager(rows, manager)
+            removed_total += removed_count
+            added_total += added_count
+    except (KeyboardInterrupt, QuitRequested):
+        write_rows(rows)
+        print()
+        print("Stopped. Saved completed changes.")
+        print(f"Package file: {relative(PACKAGE_FILE)}")
+        return 130
+
+    write_rows(rows)
+
+    print()
+    print("Done.")
+    print(f"Removed rows: {removed_total}")
+    print(f"Added rows: {added_total}")
+    print(f"Package file: {relative(PACKAGE_FILE)}")
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

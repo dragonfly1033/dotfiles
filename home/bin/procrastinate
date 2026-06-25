@@ -1,0 +1,139 @@
+#!/bin/sh
+
+kf () {
+    d=$(date "+%s")
+    sqlite3 "$DB" 'update SPGBTW set value='"$d"' where id=1;'
+
+    PID1=$(pgrep -f "firefox.*-P Chill")
+    PID2=$(pgrep -f "firefox.*-P Pol")
+
+    # Kill all related Firefox processes for that profile
+    while (pgrep -f "firefox.*-P Chill" > /dev/null); do
+        pgrep -f "firefox.*-P Chill"
+        for i in $PID1; do
+            echo "$i"
+            kill "$i"
+        done
+        sleep 1
+    done
+    OUT "Firefox profile 'Chill' has been closed. Back to work!"
+
+    while (pgrep -f "firefox.*-P Pol" > /dev/null); do
+        pgrep -f "firefox.*-P Pol"
+        for i in $PID2; do
+            kill "$i"
+        done
+        sleep 1
+    done
+    OUT "Firefox profile 'Pol' has been closed. Back to work!"
+}
+
+start_check() {
+    l=$(sqlite3 "$DB" 'select value from SPGBTW where id=1;')
+    n=$(date "+%s")
+    g=$((n - l))
+    if [ "$g" -lt 3000 ]; then
+        OUTERR "50 minute timeout not finished. $((g/60)) mins passed. $(( (3000 - g)/60 )) mins left."
+        return 1
+    fi
+
+    return 0
+}
+
+if [ -t 0 ]; then
+    OUT() { echo "$@"; }
+    OUTERR() { echo "$@"; }
+    TIME_LIMIT="$1"
+else
+    OUT() { notify-send "Procrastinate" "$@"; }
+    OUTERR() { notify-send -u critical -t 5000 "Procrastinate" "$@"; }
+    TIME_LIMIT=$(~/bin/dmenu "" "Enter Duration: ")
+fi
+
+
+DB="$HOME/bin/.env/proc.db"
+
+if [ ! -f "$DB" ]; then
+	OUTERR "no lock db file"
+	exit 1
+fi
+
+if ! (sqlite3 "$DB" '.schema'>/dev/null); then
+	OUTERR "proc.db not valid"
+	exit 1
+fi
+
+c=$(sqlite3 "$DB" 'select count(value) from SPGBTW;')
+if [ "$c" -le 0 ]; then
+	OUTERR "proc.db no values"
+	exit 1
+fi
+
+
+start_check || exit 1
+
+trap 'kf; exit 0' INT
+
+if [ -z "$TIME_LIMIT" ]; then
+    OUTERR "Time limit not given (in minutes)"
+    exit 1
+fi
+
+TIME_LIMIT=$(("$TIME_LIMIT" * 60))
+
+
+# Check if the profile is already running
+if pgrep -f "firefox.*-P Chill" > /dev/null; then
+  OUTERR "Firefox profile 'Chill' is already running. Not starting a new one."
+  exit 1
+fi
+if pgrep -f "firefox.*-P Pol" > /dev/null; then
+  OUTERR "Firefox profile 'Pol' is already running. Not starting a new one."
+  exit 1
+fi
+
+# Launch Firefox with the entertainment profile
+~/bin/awerun 'awful.spawn.spawn("firefox -P Chill --no-remote", {tag = screen.tags[9]})'
+~/bin/awerun   'awful.spawn.spawn("firefox -P Pol --no-remote", {tag = screen.tags[8]})'
+
+sleep 3
+
+PID1=$(pgrep -f "firefox.*-P Chill")
+PID2=$(pgrep -f "firefox.*-P Pol")
+
+if [ -z "$PID1" ]; then
+  OUTERR "Failed to detect Firefox process for profile 'Chill'."
+  exit 1
+fi
+echo "Chill: $PID1"
+if [ -z "$PID2" ]; then
+  OUTERR "Failed to detect Firefox process for profile 'Pol'."
+  exit 1
+fi
+echo "Pol: $PID2"
+
+OUT "Entertainment session started. You have $((TIME_LIMIT / 60)) minutes."
+
+# Wait for the time limit
+
+# Countdown loop
+REMAINING_TIME="$TIME_LIMIT"
+
+while [ "$REMAINING_TIME" -gt 0 ]; do
+    MINS=$(("$REMAINING_TIME" / 60))
+    SECS=$(("$REMAINING_TIME" % 60))
+
+    # Print countdown on the same line
+    printf "\rTime left: %02d:%02d" "$MINS" "$SECS"
+
+    sleep 1
+    REMAINING_TIME=$(("$REMAINING_TIME" - 1))
+done
+
+
+echo ""
+
+OUT "Time's up! Closing Firefox..."
+
+kf
+

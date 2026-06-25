@@ -1,0 +1,13 @@
+#!/bin/sh
+
+for i in ./*.opus; do
+    [ -e "$i" ] || continue   # handles no matches case
+
+    echo "$i"
+    read -r name
+    if [ -n "$name" ]; then
+        mv "$i" "$name.opus"
+    else
+        echo "skipped"
+    fi
+done

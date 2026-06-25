@@ -1,6 +1,7 @@
 local beautiful = require("beautiful")
 local awful = require("awful")
 local gears = require("gears")
+local naughty = require("naughty")
 
 
 -- {{{ Rules
@@ -16,6 +17,7 @@ awful.rules.rules = {
                      size_hints_honor = false,
                      buttons = clientbuttons,
                      screen = awful.screen.preferred,
+                     tag = function (c) return awful.screen.preferred(c).selected_tag end,
                      placement = awful.placement.no_overlap+awful.placement.no_offscreen
       }
     },
@@ -68,6 +70,8 @@ awful.rules.rules = {
       	height = 750,
       	x = 500,
       	y = 165,
+      	screen = awful.screen.preferred,
+      	tag = function (c) return awful.screen.preferred(c).selected_tag end,
       	placement = awful.placement.centered
       }
     	
@@ -81,6 +85,8 @@ awful.rules.rules = {
 		height = 800,
 		x = 210,
 		y = 140,
+		screen = awful.screen.preferred,
+		tag = function (c) return awful.screen.preferred(c).selected_tag end,
       	placement = awful.placement.centered
       }
     },
@@ -92,12 +98,19 @@ awful.rules.rules = {
 		height = 600,
 		x = 460,
 		y = 240,
+		screen = awful.screen.preferred,
+		tag = function (c) return awful.screen.preferred(c).selected_tag end,
       	placement = awful.placement.centered
       }
     },
 
     { rule_any = {class = { "popterm-small" }},
-      properties = { floating = true, placement = awful.placement.centered }
+      properties = { 
+        floating = true, 
+        screen = awful.screen.preferred,
+        tag = function (c) return awful.screen.preferred(c).selected_tag end,
+        placement = awful.placement.centered 
+      }
     },
 
     { rule_any = {class = { "firefox" }},
@@ -112,6 +125,9 @@ awful.rules.rules = {
 		height = 981,
 		x = 500,
 		y = 44, 
+		screen = awful.screen.preferred,
+        tag = function (c) return awful.screen.preferred(c).selected_tag end,
+		screen = awful.screen.preferred,
 		honor_padding = false
 	  }
 	},
@@ -124,27 +140,28 @@ awful.rules.rules = {
 		height = 1044,
 		x = 550,
 		y = 30, 
+		screen = awful.screen.preferred,
+		tag = function (c) return awful.screen.preferred(c).selected_tag end,
+		screen = awful.screen.preferred,
 		honor_padding = false
 	  } 
-    },
-
-    { rule_any = {class = { "Anki" }},
-	  properties = { 
-		floating = true,
-		ontop = true, 
-		width = 1080, 
-		height = 630,
-		x = 420,
-		y = 250, 
-		honor_padding = false
-	  }
     },
 
     { rule_any = {class = {"Polybar", "eww-bar"}},
       properties = {
       	border_width = 0,
       	floating = true,
-      	tag = "1"
+      	tags = {"1", "10"}
+      }
+    	
+    },
+
+    { rule_any = {name = {"message"}},
+      properties = {
+      	border_width = 5,
+      	screen = awful.screen.preferred,
+      	tag = function (c) return awful.screen.preferred(c).selected_tag end,
+      	placement = awful.placement.centered
       }
     	
     },

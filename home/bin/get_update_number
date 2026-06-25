@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ups=$(checkupdates | awk -F'[ -]' '{print $1}' | sort | uniq)
+ups=$(checkupdates 2>&1 | awk -F'[ -]' '{print $1}' | sort | uniq)
 n=$(echo "$ups" | wc -l)
 LIMIT=80
 
@@ -8,11 +8,14 @@ message="$n"
 
 plain="$1"
 
-case "$n" in
-	"ERROR"*) echo "" ;;
+case "$ups" in
+	*"==>"*) echo "" ;;
 	*) 	if [ "$n" -ge "$LIMIT" ] && [ -z "$plain" ]; then
 			message="%{F#f00}$message"
 		fi
-		(echo "$ups" | grep -e "grub" > /dev/null ) && echo " $message !" || echo " $message"
+        if (echo "$ups" | grep -e "grub" > /dev/null ); then 
+            message="$message!"
+        fi
+		echo "$message"
 		;;
 esac

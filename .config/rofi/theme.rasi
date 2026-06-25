@@ -5,10 +5,10 @@
  */
 
 * {
-    background-color: #1b1b19;
+    background-color: #0c0808;
     border-color:          White;
-    text-color: #fbfbfb;
-    accent: #5e5e5c;
+    text-color: #c9d6e6;
+    accent: #e60c27;
     font:            "Fira Code 12";
 }
 window {

@@ -1,4 +1,10 @@
 #!/bin/sh
 
-flameshot gui -r | display
-
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    niri msg action screenshot
+    sleep 1
+    wl-paste > /tmp/o.png
+    imv -w "lift-sel" /tmp/o.png
+else
+    flameshot gui -r | display
+fi

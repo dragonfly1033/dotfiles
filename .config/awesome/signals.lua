@@ -86,6 +86,44 @@ local function set_shape(c)
 end
 
 
+
+-- 
+-- function track()
+--     c1 = mouse.coords()
+-- 
+--     b = gears.timer({
+--         timeout = 0.01,
+--         callback = function() 
+--             c2 = mouse.coords()
+--             if -THRESH <= c2.x - c1.x and c2.x - c1.x <= THRESH then return end
+--             -- if (c1.x > 1920 and c2.x > 1920) or (c2.x <= 1920 and c1.x <= 1920) then return end
+--             naughty.notify({text=tostring(c2.x-c1.x).." "..tostring(c2.y-c1.y)})
+--             awful.spawn.easy_async_with_shell("~/.config/awesome/lock_axis", function(so, se, er, ec) 
+--                 -- naughty.notify({text="so: "..so..", se: "..se..", er: "..er..", ec: "..tostring(ec)})
+--             end)
+--         end,
+--         single_shot = true
+--     })
+--     b:start()
+--     
+-- end
+-- 
+-- THRESH = 40
+-- a = gears.timer({
+--     timeout = 0.01,
+--     callback = track
+-- })
+-- 
+-- a:start()
+
+
+
+
+
+
+
+
+
 -- function handle_polybar(tag)
 -- 	if polybar_hide[tag.index] then
 -- 		awful.spawn("polybar-msg cmd hide")
@@ -106,7 +144,14 @@ client.connect_signal("request::activate", set_border)
 client.connect_signal("swallow", set_border)
 
 
-client.connect_signal("property:minimized", function(c) c.minimized = false end)
+client.connect_signal("property::minimized", function(c) c.minimized = false end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+
+tag.connect_signal("request::screen", 
+function (t)
+    for k,c in pairs(t:clients()) do
+        c:move_to_tag(screen.primary.tags[t.index])
+    end
+end)
 -- }}}

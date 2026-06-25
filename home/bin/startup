@@ -16,24 +16,35 @@ echo "" > /tmp/last_download
 setxkbmap gb
 setxkbmap -query | grep layout | tee -a /tmp/startup_log
 xset r rate 300 40
+xset s off -dpms
 
 numlockx on
 $HOME/bin/set_temp_sensor
 $HOME/bin/time_brightness
+# xmodmap -e "keycode 108 = Control_R"
 
 # run picom --no-vsync --experimental-backends
-run compfy -b
+run picom -b
 run ~/.fehbg
-run polybar -r top
+$HOME/.config/polybar/launch.sh
 polybar-msg cmd hide
 run mpris-proxy 
 run volctl 
-run xbindkeys
+run sxhkd
 run /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
-run pragha -x
+# run pragha -x
 # notify-send "Startup Succesful!" "$(cat /tmp/startup_log)"
 
 run ~/bin/change_plymouth
 
 ~/bin/vars set UPDATES "$(~/bin/get_update_number c)"
+to_update=$(~/bin/vars get TO_UPDATE)
 
+if [ "$to_update" = "true" ]; then
+    alacritty --class popterm-small -e ~/bin/showupdates
+fi
+
+~/bin/vars set UPDATES "$(~/bin/get_update_number c)"
+if [ "$(~/bin/vars get UPDATES)" -lt 80 ]; then
+    ~/bin/vars set TO_UPDATE "false"
+fi

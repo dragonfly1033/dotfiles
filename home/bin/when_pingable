@@ -1,0 +1,26 @@
+#!/bin/sh
+
+usage () {
+    echo "USAGE: when_pingable [-d <delay>] <addr> <command>"
+    exit 1
+}
+
+addr="$1"
+if [ "$addr" = "-d" ]; then
+    shift 1
+    delay="$1"
+    shift 1
+fi
+
+if [ -z "$delay" ]; then
+    delay=2
+fi
+
+addr="$1"
+[ -z "$addr" ] && usage
+shift 1
+
+while ! ping -c 1 "$addr" > /dev/null; do
+    sleep "$delay"
+done; sleep "$delay"; "$@"
+

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Get initial position
+# eval "$(xdotool getmouselocation --shell)"
+FIXED_X=1912
+
+# Get start time
+START_TIME=$(date +%s)
+
+# Loop to lock mouse horizontally for 3 seconds
+while true; do
+    CURRENT_TIME=$(date +%s)
+    ELAPSED=$((CURRENT_TIME - START_TIME))
+    if [ "$ELAPSED" -ge 2 ]; then
+        break
+    fi
+
+    eval "$(xdotool getmouselocation --shell)"
+    if [ "$X" != "$FIXED_X" ]; then
+        xdotool mousemove "$FIXED_X" "$Y"
+    fi
+done

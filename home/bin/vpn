@@ -1,6 +1,13 @@
 #!/bin/sh
 
-servers=$(sudo ls /etc/openvpn/client)
-server=$(echo "$servers" | fzf)
-sudo openvpn  --config "/etc/openvpn/client/$server" --auth-user-pass "$HOME/.ssh/vpn.txt" --auth-nocache
+down=$1
 
+if [ "$down" = "down" ]; then
+    vpn=$(nmcli c show --active | grep vpn | awk '{print $1}' | tail -n1)
+    nmcli c down "$vpn"
+    exit 0
+fi
+
+servers=$(nmcli c show | grep vpn | cut -d' ' -f1)
+server=$(echo "$servers" | fzf)
+nmcli c up "$server"

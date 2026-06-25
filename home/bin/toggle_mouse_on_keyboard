@@ -2,20 +2,17 @@
 
 state="$1"
 
-if [ "$state" = "set" ]; then
+if [ "$state" = "enable" ]; then
     setxkbmap -option keypad:pointerkeys
-    sed -r '57,63 s/# (.*)/\1/' -i ~/.xbindkeysrc
-    killall xbindkeys
-    xbindkeys &
-elif [ "$state" = "unset" ]; then
+    toggle_keybind_section mouse_on_kb enable
+    killall sxhkd && sxhkd &
+elif [ "$state" = "disable" ]; then
     setxkbmap -option
-    sed -r '57,63 s/(.*)/# \1/' -i ~/.xbindkeysrc
-    killall xbindkeys
-    xbindkeys &
+    toggle_keybind_section mouse_on_kb disable
+    killall sxhkd && sxhkd &
 else
-    echo "Usage: toggle_mouse_on_keyboard (set/unset)"
+    echo "Usage: toggle_mouse_on_keyboard [enable|disable]"
     exit
 fi
     
-
 

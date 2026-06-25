@@ -20,12 +20,15 @@ matches:
   - trigger: "sp2"
     replace: "sp2117@cam.ac.uk"
 
+  - trigger: "sout"
+    replace: "System.out.println"
+
   - triggers: ["slef", "sefl"]
     replace: "self"
   - trigger: "improt"
     replace: "import"
   - triggers: ["bcz", "cuz"]
-    replace: "beacuse"
+    replace: "because"
   - trigger: "probs"
     replace: "probably"
   - trigger: "idk"

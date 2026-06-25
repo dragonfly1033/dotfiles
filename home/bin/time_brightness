@@ -1,12 +1,17 @@
 #!/bin/sh
 
 hour=$(date +"%H")
-brightness=$HOME/bin/brightness
 
-if [ $hour -ge 23 ] || [ $hour -le 6 ]; then
-	$brightness set 0
-	$HOME/bin/set_redshift 0
+if { [ "$hour" -ge 23 ] || [ "$hour" -le 6 ]; } && ! [ "$1" = "day" ]; then
+	brightnessctl set 0%
+	~/bin/brightness set 0
+	~/bin/set_redshift -t 0
 else
-	$brightness set 75
-	$HOME/bin/set_redshift 10
+	brightnessctl set 100%
+	~/bin/brightness set 10
+	~/bin/set_redshift -t 10
+fi
+
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    systemctl --user restart sunsetr
 fi

@@ -1,0 +1,78 @@
+#!/bin/python
+
+from datetime import timedelta
+
+class td(timedelta):
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+
+    def __repr__(self):
+        s = self.total_seconds()
+        y, r = divmod(s, 31536000) 
+        w, r = divmod(r, 604800)
+        d, r = divmod(r, 86400)
+        h, r = divmod(r, 3600)
+        m, s = divmod(r, 60)
+        ans = f'{round(y)} year'*(y != 0) + \
+               's'*(y != 0)*(round(y)>1) + ','*(y != 0) + \
+              f'{round(w)} week'*(w != 0) + \
+               's'*(w != 0)*(round(w)>1) + ','*(w != 0) + \
+              f'{round(d)} day'*(d != 0) + \
+               's'*(d != 0)*(round(d)>1) + ','*(d != 0) + \
+              f'{round(h)} hour'*(h != 0) + \
+               's'*(h != 0)*(round(h)>1) + ','*(h != 0) + \
+              f'{round(m)} minute'*(m != 0) + \
+               's'*(m != 0)*(round(m)>1) + ','*(m != 0) + \
+              f'{round(s)} second'*(s != 0) + \
+               's'*(s != 0)*(round(s)>1) + ','*(s != 0)
+        return ans[:-1]
+
+import sys
+
+if len(sys.argv) != 2:
+    print("Usage: dons <pounds>")
+    quit()
+
+pounds = sys.argv[1]
+pounds = pounds.replace("_", "")
+if pounds.endswith("M"):
+    pounds = pounds.replace("M", "e6")
+if pounds.endswith("B"):
+    pounds = pounds.replace("B", "e9")
+if pounds.endswith("T"):
+    pounds = pounds.replace("T", "e12")
+if pounds.endswith("m"):
+    pounds = pounds.replace("m", "e6")
+if pounds.endswith("b"):
+    pounds = pounds.replace("b", "e9")
+if pounds.endswith("t"):
+    pounds = pounds.replace("t", "e12")
+    
+if 'e' in pounds:
+    pounds, e = pounds.split('e')
+    pounds = float(pounds)
+    pounds *= 10**int(e)
+pounds = float(pounds)
+
+pounds_per_year = 180e9
+pounds_per_second = pounds_per_year / 31536000
+
+print(td(seconds=pounds/pounds_per_second).__repr__(), "of NHS spending")
+
+spending = 1.276e12
+revenue = 1.149e12
+deficit = spending - revenue
+gdp = 2.85e12
+debt = 2.72e12
+popn = 70e6
+
+
+prec = 4
+
+print(f"{round(100*pounds/spending, prec)}% of spending")
+print(f"{round(100*pounds/revenue, prec)}% of revenue")
+print(f"{round(100*pounds/deficit, prec)}% of deficit")
+print(f"{round(100*pounds/gdp, prec)}% of GDP")
+print(f"{round(100*pounds/debt, prec)}% of national debt")
+print(f"£{round(pounds/popn, 2)} per person")
+

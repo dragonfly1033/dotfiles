@@ -1,0 +1,6 @@
+#!/bin/sh
+
+supo=$(find ~/Documents/supervisions -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | dmenu - "Supo: ")
+
+codium ~/Documents/supervisions/"$supo" 
+zathura ~/Documents/supervisions/"$supo"/work.pdf

@@ -3,12 +3,15 @@
 
 ~/bin/theme random 1
 
+
 if [ "$(~/bin/vars get UPDATES)" -ge 80 ]; then
-    alacritty --class popterm-small -e ~/bin/showupdates
+    ~/bin/vars set TO_UPDATE "true"
 fi
 
 # alacritty --class "popterm-small" -e "$HOME/bin/showupdates"
 
 # notify-send "hey"
+
+~/.screenlayout/laptop.sh
 
 shutdown now

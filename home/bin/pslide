@@ -1,4 +1,12 @@
 #!/bin/sh
 
-(cd ~/Documents/Sync/PFiles && ($HOME/bin/loop 10 '$HOME/bin/slide "Niamh AmeliaC BethW HannahC AmberF ScarlettW .spec" 5' &))
+if [ -n "$1" ]; then
+    num="$1"
+else
+    num="10"
+fi
+
+awerun 'awful.layout.set(bling.layout.equalarea)' > /dev/null
+awerun "awful.screen.focused().selected_tag.gap = 0" > /dev/null
+(cd ~/Documents/Sync/PFiles && ($HOME/bin/loop "$num" '$HOME/bin/slide "Niamh AmeliaC BethW HannahC AmberF ScarlettW .spec" 5' &))
 

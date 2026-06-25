@@ -2,6 +2,10 @@
 
 OK=$(echo -e "Yes\nNo" | rofi -dmenu -i -p " Are you sure?  ")
 
+if [ -z "$1" ]; then
+    echo "no command given"
+fi
+
 if [ "$OK" == "Yes" ]; then
 	eval "$1"
 fi

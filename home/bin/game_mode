@@ -1,0 +1,18 @@
+#!/bin/sh
+
+
+enable=$(~/bin/dmenu "enable\ndisable" "State: ")
+
+
+if [ "$enable" = "enable" ]; then
+    ~/bin/awerun 'for i,s in ipairs(screenO) do if awful.screen.focused() == s then bar_auto[i]=false end end'
+    ~/bin/toggle_mouse_on_keyboard "enable"
+    ~/bin/toggle_touchpad_while_typing "enable"
+    ~/bin/toggle_keybind_section minecraft "enable"
+else
+    ~/bin/awerun 'for i,s in ipairs(screenO) do if awful.screen.focused() == s then bar_auto[i]=true end end'
+    ~/bin/toggle_mouse_on_keyboard "disable"
+    ~/bin/toggle_touchpad_while_typing "disable"
+    ~/bin/toggle_keybind_section minecraft "disable" 
+fi
+

@@ -1,37 +1,65 @@
-#!/bin/python
+#!/bin/sh
 
-import sys
-import os
-import subprocess
+usage () {
+    echo "Usage: brightness <inc|dec|set|get> [delta|value]"
+}
 
-env = os.environ.get
+get_gamma () {
+    if [ -f /tmp/gamma_10 ]; then
+        gamma=$(tail -n1 /tmp/gamma_10)
+    else
+        gamma="10"
+    fi
 
+    echo "$gamma" | cut -d'.' -f1
+}
 
-def adjust(a):
-    return min(max(int(round(14*(100*a/255)**0.426)), 0), 100)
+gamma="2.2"
 
-def unadjust(a):
-    return min(max(int(round(2.55*(a/14)**2.3474)), 0), 255)
+if [ "$XDG_SESSSION_TYPE" = "wayland" ]; then
+    monitors=$(niri msg outputs | grep -Ec " Output")
+else
+    monitors=$(xrandr -q | grep -Ec " connected")
+fi
 
-action = sys.argv[1]
-a = int(str(subprocess.check_output(["brightnessctl", "get"]))[2:-3])
+operation="$1"
 
-if action == "get":
-    print(f"{adjust(a)}%")
-elif action == "inc":
-    extra = int(sys.argv[2])
-    cur = adjust(a)
-    cur = min(max(cur+extra, 0), 100)
-    new = unadjust(cur)
-    subprocess.run(["brightnessctl", "set", f"{new}"])
-elif action == "dec":
-    extra = int(sys.argv[2])
-    cur = adjust(a)
-    cur = min(max(cur-extra, 0), 100)
-    new = unadjust(cur)
-    subprocess.run(["brightnessctl", "set", f"{new}"])
-elif action == "set":
-    new = int(sys.argv[2])
-    new = unadjust(new)
-    subprocess.run(["brightnessctl", "set", f"{new}"])
-
+if [ "$operation" = "get" ]; then
+    gamma=$(get_gamma)
+    bl=$(brightnessctl get)
+    echo "gamma: $gamma"
+    echo "backlight: $bl"
+elif [ "$operation" = "set" ]; then
+    new="$2"
+    [ -z "$new" ] && usage
+    { [ "$new" -lt 0 ] || [ "$new" -gt 10 ]; } && echo "set value must be [0,10]" && exit 1
+    
+    if [ "$monitors" -gt 1 ]; then
+        brightnessctl --exponent="$gamma" set "100%"
+        ~/bin/set_redshift -g "$new"
+    else
+        brightnessctl --exponent="$gamma" set "$((new * 10))%"
+    fi
+elif [ "$operation" = "inc" ]; then
+    if [ "$monitors" -gt 1 ]; then
+        brightnessctl --exponent="$gamma" set "100%"
+        gamma=$(get_gamma)
+        new=$(("$gamma" + 1)) 
+        new=$(echo "$new" | clamp 0 10 | cut -d'.' -f1)
+        ~/bin/set_redshift -g "$new"
+    else
+        brightnessctl --exponent="$gamma" set "+10%"
+    fi
+elif [ "$operation" = "dec" ]; then
+    if [ "$monitors" -gt 1 ]; then
+        brightnessctl --exponent="$gamma" set "100%"
+        gamma=$(get_gamma)
+        new=$(("$gamma" - 1)) 
+        new=$(echo "$new" | clamp 0 10 | cut -d'.' -f1)
+        ~/bin/set_redshift -g "$new"
+    else
+        brightnessctl --exponent="$gamma" set "10%-"
+    fi
+else 
+    usage
+fi  

@@ -1,26 +1,53 @@
 #!/bin/sh
 
 ddmenu=~/bin/dmenu
-# PROF=$($ddmenu "Main\nChill\nPolitics\nAnime\nIncog\nPriv" "Profile:")
-PROF=$($ddmenu "Main\nPriv" "Profile: ")
+PROF=$($ddmenu "Main\nChill\nPolitics\nAnime\nIncog\nPriv" "Profile:")
+# PROF=$($ddmenu "Main\nPriv" "Profile: ")
 
-if [ $PROF == 'Main' ]; then
+if [ "$PROF" = 'Main' ]; then
 	firefox -P Main
-elif [ $PROF == 'Chill' ]; then
+elif [ "$PROF" = 'Chill' ]; then
 	firefox -P Chill
-elif [ $PROF == 'Politics' ]; then
+elif [ "$PROF" = 'Politics' ]; then
 	firefox -P Pol
-elif [ $PROF == 'Anime' ]; then
+elif [ "$PROF" = 'Anime' ]; then
 	firefox -P Weeb
-elif [ $PROF == 'Incog' ]; then
+elif [ "$PROF" = 'Incog' ]; then
 	firefox -P Inc
-elif [ $PROF == 'Priv' ]; then
+elif [ "$PROF" = 'Priv' ]; then
 	firefox --private-window -P Main
-elif [ $PROF == '2' ]; then
-	~/bin/awerun 'awful.spawn.spawn("firefox -P Pol", {tag = "8"})'
-	~/bin/awerun 'awful.spawn.spawn("firefox -P Chill", {tag = "9"})'
-elif [ $PROF == '3' ]; then
-	~/bin/awerun 'awful.spawn.spawn("firefox -P Weeb", {tag = "7"})'
-	~/bin/awerun 'awful.spawn.spawn("firefox -P Pol", {tag = "8"})'
-	~/bin/awerun 'awful.spawn.spawn("firefox -P Chill", {tag = "9"})'
+elif [ "$PROF" = '2' ]; then
+    if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+        niri msg action spawn -- firefox -P Chill --name stack-firefox
+        niri msg action spawn -- firefox -P Pol --name stack-firefox
+        while ! [ "$(pgrep -f stack-firefox | wc -l)" -eq 2 ]; do
+            sleep 1
+        done 
+        sleep 3
+        niri msg action focus-column-left
+        niri msg action consume-window-into-column  
+    else
+    	~/bin/awerun 'awful.spawn.spawn("firefox -P Pol", {tag = screen.tags[8]})'
+    	~/bin/awerun 'awful.spawn.spawn("firefox -P Chill", {tag = screen.tags[9]})'
+    fi
+elif [ "$PROF" = '3' ]; then
+	if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+        niri msg action spawn -- firefox -P Chill --name stack-firefox
+        niri msg action spawn -- firefox -P Pol --name stack-firefox
+        niri msg action spawn -- firefox -P Weeb --name stack-firefox
+        while ! [ "$(pgrep -f stack-firefox | wc -l)" -eq 3 ]; do
+            sleep 1
+        done
+        sleep 3
+        niri msg action focus-column-left
+        niri msg action focus-column-left
+        niri msg action consume-window-into-column
+        niri msg action consume-window-into-column
+    else
+	    ~/bin/awerun 'awful.spawn.spawn("firefox -P Weeb", {tag = screen.tags[7]})'
+    	~/bin/awerun 'awful.spawn.spawn("firefox -P Pol", {tag = screen.tags[8]})'
+    	~/bin/awerun 'awful.spawn.spawn("firefox -P Chill", {tag = screen.tags[9]})'
+    fi
+else
+    notify-send "Unknown Profile:" "$PROF"
 fi

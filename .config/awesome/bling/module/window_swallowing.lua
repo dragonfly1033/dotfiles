@@ -20,9 +20,6 @@ local child_filter_list = beautiful.child_filter_list
 local parent_white_list = beautiful.parent_white_list
 local child_white_list = beautiful.child_white_list
 
-local whitelist = (#parent_white_list > 0) or (#child_white_list > 0)
-
-
 local function print_table(t)
 	a = ''
 	for i, v in ipairs(t) do
@@ -39,9 +36,13 @@ for _, var in pairs(filter_vars) do
     swallowing_filter = var
 end
 
--- check if element exist in table
+-- check if element exist in table (given default if table is nil)
 -- returns true if it is
-local function is_in_table(element, table)
+local function is_in_table(element, table, default)
+    if table == nil then
+        return default
+    end
+    
     local res = false
     for _, value in pairs(table) do
         if element == value then
@@ -55,17 +56,11 @@ end
 -- if the swallowing filter is active checks the child and parent classes
 -- against their filters
 local function check_swallow(parent, child)
-    local res = not whitelist
+    local res = false
     if swallowing_filter then
-    	if not whitelist then
-	        local prnt = not is_in_table(parent, parent_filter_list)
-	        local chld = not is_in_table(child, child_filter_list)
-	        res = (prnt and chld)
-	    else
-	        local prntW = is_in_table(parent, parent_white_list)
-	        local chldW = is_in_table(child, child_white_list)
-	        res = ( prntW or chldW )
-	    end
+        local prnt_allowed = is_in_table(parent, parent_white_list, true) and (not is_in_table(parent, parent_filter_list, false))
+        local chld_allowed = is_in_table(child, child_white_list, true) and (not is_in_table(child, child_filter_list, false))
+        res = ( prnt_allowed and chld_allowed )
     end
     return res
 end

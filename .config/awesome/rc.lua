@@ -17,7 +17,6 @@ local menubar = require("menubar")
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
-
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -55,6 +54,22 @@ naughty.config.presets.critical.bg = "#aa0000"
 local bling = require("bling")
 bling.module.window_swallowing.start()
 
+function notif(...)
+    local arg = {...}
+    s = ''
+    for i = 1, #arg-1 do
+        s = s .. tostring(arg[i]) .. ' | '
+    end
+    s = s .. tostring(arg[#arg])
+    naughty.notify({text=tostring(s), position='top_middle', timeout=5})
+end
+
+function notif_table(t)
+    for k, v in pairs(t) do
+      notif(tostring(k) .. ' : ' .. tostring(v))
+    end
+end
+
 require("scratchpads")
 require("keys")
 require("rules")
@@ -86,8 +101,14 @@ awful.layout.layouts = {
 
 awful.screen.connect_for_each_screen(function(s)
 
-    -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9"}, s, awful.layout.layouts[1])
+    for i = 1,9 do
+        -- Each screen has its own tag table.
+        awful.tag.add(tostring(i+9*(s.index-1)), {
+            layout             = awful.layout.layouts[1],
+            screen             = s
+        })
+    end
+    s.tags[1]:view_only()
 	awful.screen.padding(s, {top=0, bottom=0, left=0, right=0})
 end)
 
@@ -124,5 +145,11 @@ awful.mouse.drag_to_tag.enabled = false
 
 
 -- awful.spawn.once("alacritty --class popterm --hold --command bat -p "..os.getenv("HOME").."/Desktop/todo.md", {tag = "1"})
+
+
+function panic() 
+    awful.spawn.with_shell("playerctl -a pause")
+    goto_tag(1)
+end
 
 awful.spawn.with_shell(os.getenv("HOME").."/bin/startup")

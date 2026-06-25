@@ -21,9 +21,14 @@ local scratch = require('scratchpads')
 local bling = require('bling')
 local menubar = require('menubar')
 
-function notif(s, timeout)
-	timeout = timeout or 1
-	naughty.notify({text=tostring(s), position='top_middle', timeout=timeout})
+function notif(...)
+    local arg = {...}
+    s = ''
+    for i = 1, #arg-1 do
+        s = s .. tostring(arg[i]) .. ' | '
+    end
+    s = s .. tostring(arg[#arg])
+    naughty.notify({text=tostring(s), position='top_middle', timeout=5})
 end
 
 function notif_table(t)
@@ -37,12 +42,29 @@ function print(s, d)
 	stdout_str = stdout_str .. tostring(s) .. d
 end
 
+function prints(...)
+	local arg = {...}
+    s = ''
+    for i = 1, #arg-1 do
+        s = s .. tostring(arg[i]) .. ' | '
+    end
+    s = s .. tostring(arg[#arg])
+	stdout_str = stdout_str .. tostring(s) .. '\n'
+end
+
 function print_table(t)
-	for k, v in ipairs(t) do
+	for k, v in pairs(t) do
 		print(tostring(k)..' : '..tostring(v))
 	end
 end
 
+function spawn(c)
+    awful.spawn.with_shell(c)
+end
+
+local HOME = os.getenv('HOME')
+
+local screenO = screen
 local screen = awful.screen.focused()
 local tag = screen.selected_tag
 local tags = screen.tags
@@ -53,7 +75,7 @@ stdout_str = ''
 
 $script
 
-stdout_str = stdout_str .. '\n'
+stdout_str = '\n' .. stdout_str .. '\n'
 return stdout_str
 "
 

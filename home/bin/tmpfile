@@ -3,6 +3,7 @@
 t=$(mktemp)
 
 chmod +x "$t"
+xclip -o -selection clipboard > "$t"
 echo "$t" | xclip -r -selection clipboard
 
 $EDITOR "$t"

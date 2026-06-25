@@ -2,11 +2,16 @@
 
 ddmenu_dir=~/bin/dmenu_dir
 
-lang=$(dmenu "Python\nGo\nHTML" "Lang: ")
+lang=$(dmenu "WORK\nPython\nGo\nHTML\nC\nRust\nsupervisions\nproject" "Lang: ")
+
+if [ "$lang" = "WORK" ]; then
+    vscodium ~/Documents/Rust/matrix-rust-sdk
+    exit 0
+fi 
 
 CONF=$($ddmenu_dir ~/Documents/"$lang")
 
-if [ $CONF != 'NONE' ]; then 
+if [ "$CONF" != 'NONE' ]; then 
 	#notify-send "$CONF" 
 	eval "vscodium $CONF" 
 fi	

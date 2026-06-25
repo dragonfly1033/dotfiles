@@ -19,8 +19,40 @@ function eww_show_toggle(name, variable)
 	return variable
 end
 
+function is_tag_empty(num)
+    sum = 0
+    for s in screen do  
+        sum = sum + #s.tags[num]:clients()
+    end
+    return sum == 0
+end
+
+function goto_tag(num)
+    for s in screen do
+        s.tags[num]:view_only()
+    end
+end
+
+function next_tag()
+    num = awful.screen.primary.selected_tag.index
+    nxt = (num + 1) % 9
+    for s in screen do
+        s.tags[nxt]:view_only()
+    end
+end
+
+function prev_tag()
+    num = awful.screen.primary.selected_tag.index
+    prv = (num - 1) % 9
+    for s in screen do
+        s.tags[prv]:view_only()
+    end
+end
+
+
 ALT = 'Mod1'
 modkey = "Mod4"
+NUMLOCK = "Mod2"
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty"
@@ -31,8 +63,15 @@ file_manager = "pcmanfm"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 
-bar_state = false
-bar_auto = true
+bar_status = {}
+bar_auto = {}
+for i = 1,screen:count() do
+    bar_status[i] = false
+    bar_auto[i] = true
+end
+
+monitors = {}
+
 toggles_menu_state = false
 power_menu_state = false
 
@@ -42,10 +81,34 @@ tag_notification = nil
 globalkeys = gears.table.join(
     awful.key({ modkey,           }, "s",  function() hotkeys_popup:show_help() end,
               {description="show help", group="awesome"}),
-    awful.key({ ALT,           }, "Tab",  awful.tag.viewnext,
-              {description = "view next", group = "tag"}),
-    awful.key({ ALT,   "Shift" }, "Tab",   awful.tag.viewprev,
+
+              
+    awful.key({ ALT,           }, "Tab",  function(sc) 
+                                            for s in screen do
+                                                if s ~= mouse.screen then
+                                                    awful.tag.viewnext(s)
+                                                end
+                                            end
+                                            awful.tag.viewnext(mouse.screen)
+                                            -- awful.spawn.with_shell("sleep 0.1; xdotool click 3; xdotool mousemove_relative -5 -5; xdotool click 1")
+                                            -- awful.spawn.with_shell("sleep 0.1; xdotool click 1")
+                                        end,
+                                        {description = "view next", group = "tag"}),
+
+              
+    awful.key({ ALT,   "Shift" }, "Tab",  function(sc) 
+                                            for s in screen do
+                                                if s ~= mouse.screen then
+                                                    awful.tag.viewprev(s)
+                                                end
+                                            end
+                                            awful.tag.viewprev(mouse.screen)
+                                            -- awful.spawn.with_shell("sleep 0.1; xdotool click 1")
+                                          end,
               {description = "view previous", group = "tag"}),
+
+
+              
     awful.key({ ALT,           }, "Escape", awful.tag.history.restore,
               {description = "go back", group = "tag"}),
 
@@ -234,32 +297,47 @@ globalkeys = gears.table.join(
               {description = "un swallow", group = "client"}), 
 
     awful.key({ ALT },         "b",     function () 
-    										if bar_status then
-    											awful.spawn.with_shell('polybar-msg cmd hide') 
-    											bar_status = false
-    											bar_auto = true
-    										else
-    											awful.spawn.with_shell('polybar-msg cmd show') 
-    											bar_status = true
-    											bar_auto = false   											
-    										end
+                                            if #monitors ~= screen:count() then
+                                                return
+                                            end
+                                            for i, s in ipairs(screen) do
+                                                if awful.screen.focused() == s then
+            										if bar_status[i] then
+            											awful.spawn.with_shell('polybar-msg -p '.. monitors[i] ..' cmd hide') 
+            											bar_status[i] = false
+            											bar_auto[i] = true
+            										else
+            											awful.spawn.with_shell('polybar-msg -p '.. monitors[i] ..' cmd show') 
+            											bar_status[i] = true
+            											bar_auto[i] = false   											
+            										end
+            								    end
+        									end
     									end,
               {description = "toggle bar", group = "launcher"})
 )
 
 function auto_bar_handler()
-	if bar_auto then
-		if mouse.coords().y <= 2 then
-			awful.spawn("polybar-msg cmd show", false)
-			bar_status = true
-		else
-			awful.spawn("polybar-msg cmd hide", false)
-			bar_status = false
-		end	
-	end	
+    if #monitors ~= screen:count() then
+        return
+    end
+    for i, s in ipairs(screen) do
+    	if bar_auto[i] and awful.screen.focused() == s then
+    		if mouse.coords().y <= 2 then
+    			awful.spawn("polybar-msg -p ".. monitors[i] .." cmd show", false)
+    			bar_status[i] = true
+    		else
+    			awful.spawn("polybar-msg -p ".. monitors[i] .." cmd hide", false)
+    			bar_status[i] = false
+    		end	
+    	end	
+    end
 end
 
 function tag_notify(t) 
+    if t.screen ~= screen.primary then
+        return
+    end
 	if t.selected and not bar_status then  
 		if tag_notification == nil then
 			tag_notification = naughty.notify({
@@ -285,6 +363,7 @@ todo_timer = gears.timer({
 	autostart = true,
 	callback = auto_bar_handler
 })
+
 
 tag.connect_signal("property::selected", function (t) tag_notify(t) end)
 
@@ -381,11 +460,7 @@ for i = 1, 9 do
         -- View tag only.
         awful.key({ modkey }, "#" .. i + 9,
                   function ()
-                        local screen = awful.screen.focused()
-                        local tag = screen.tags[i]
-                        if tag then
-                           tag:view_only()
-                        end
+                        goto_tag(i)
                   end,
                   {description = "view tag", group = "tag"}),
         -- Move client to tag.
@@ -398,18 +473,18 @@ for i = 1, 9 do
                           end
                      end
                   end,
-                  {description = "move focused client to tag", group = "tag"}),
-        -- Toggle tag on focused client.
-        awful.key({ ALT, "Shift" }, "#" .. i + 9,
-                  function ()
-                      if client.focus then
-                          local tag = client.focus.screen.tags[i]
-                          if tag then
-                              client.focus:toggle_tag(tag)
-                          end
-                      end
-                  end,
-                  {description = "toggle focused client on tag", group = "tag"})
+                  {description = "move focused client to tag", group = "tag"})
+        -- -- Toggle tag on focused client.
+        -- awful.key({ ALT, "Shift" }, "#" .. i + 9,
+        --           function ()
+        --               if client.focus then
+        --                   local tag = client.focus.screen.tags[i]
+        --                   if tag then
+        --                       client.focus:toggle_tag(tag)
+        --                   end
+        --               end
+        --           end,
+        --           {description = "toggle focused client on tag", group = "tag"})
     )
 end
 

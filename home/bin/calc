@@ -9,6 +9,8 @@ from random import randint as rint
 import random
 from fractions import Fraction as F
 import os
+from datetime import datetime as dt
+from datetime import timedelta
 
 import numpy as np
 
@@ -35,11 +37,17 @@ def is_prime(n):
 			return False
 	return True
 
+def unhex(h):
+    return int(h, 16)
+
 def decomp(n):
 	os.system(f"factor {n}")
 
 def sign(a):
 	return 1 * (a > 0) -1 * (a < 0)
+
+def entropy(l):
+    return -sum([i*log2(i) for i in l])
 
 def D(n):
     return [i for i in range(1, n+1) if n%i==0]
@@ -48,10 +56,11 @@ def CD(m, n):
     return [i for i in range(1, max(m, n)+1) if m%i==0 and n%i==0]
 
 def gcd(m, n):
-    if m%n == 0:
-        return n
-    else:
-        return gcd(n, m%n)
+    while n:
+        t = m % n
+        m = n
+        n = t
+    return m
 
 def help():
 	print("e, pi, tau, inf")
@@ -62,5 +71,46 @@ def help():
 	print("perm, choose, exp, log, log2, log10")
 	print("numpy = np")
 	print("random, rint")
+
+def cal(args=""):
+    os.system("cal " + args)
+class st(type):
+    def __repr__(cls): 
+        os.system("cal")
+        return ""
+    def __sub__(cls, other):
+        os.system("cal -n"+str(other))
+class cal(metaclass=st): pass
+
+# td(days=388, seconds=32917)
+class td(timedelta):
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+
+    def __repr__(self):
+        s = self.total_seconds()
+        y, r = divmod(s, 31536000) 
+        w, r = divmod(r, 604800)
+        d, r = divmod(r, 86400)
+        h, r = divmod(r, 3600)
+        m, s = divmod(r, 60)
+        ans = f'{round(y)} years,'*(y != 0) + \
+              f'{round(w)} weeks,'*(w != 0) + \
+              f'{round(d)} days,'*(d != 0) + \
+              f'{round(h)} hours,'*(h != 0) + \
+              f'{round(m)} minutes,'*(m != 0) + \
+              f'{round(s)} seconds,'*(s != 0)
+        return ans[:-1]
+
+
+class Vec:
+    def __init__(self, *args):
+        self.vals = args
+
+    def __add__(self, other):
+        if len(self.vals) != len(other.vals): raise ValueError("diff lens")
+        return [self.vals[i] + other.vals[i] for i in range(len(self.vals))]
+
+        
 
 
