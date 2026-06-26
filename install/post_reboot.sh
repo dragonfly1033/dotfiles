@@ -26,8 +26,25 @@ echo "INSTALL YAY PKGS"
 echo "------------------------"
 
 yay_install () {
-    yes '
-    ' | yay -S --sudoloop --needed --mflags "--noconfirm" $(get_packages yay "$1" "$2")
+      pkgs=$(get_packages yay "$1" "$2")
+
+      [ -n "$pkgs" ] || return 0
+
+      for pkg in $pkgs; do
+          echo "Installing AUR package: $pkg"
+
+          yay -S --aur \
+              --needed \
+              --noconfirm \
+              --sudoloop \
+              --removemake \
+              --cleanafter \
+              --answerclean All \
+              --answerdiff None \
+              --answeredit None \
+              --mflags "--noconfirm" \
+              "$pkg"
+      done
 }
 
 yay_install ".*" cli
