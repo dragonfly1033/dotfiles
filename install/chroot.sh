@@ -14,7 +14,7 @@ install_aur () {
     runuser -u "aurbuilder" -- git clone "$AUR_URL" "$BUILD_DIR" > /dev/null
 
     # Build as non-root.
-    runuser -u "aurbuilder" -- sh -c "cd '$BUILD_DIR' && makepkg -s --needed --noconfirm" > /dev/null
+    runuser -u "aurbuilder" -- sh -c "cd '$BUILD_DIR' && makepkg -sr --needed --noconfirm" > /dev/null
 }
 
 get_packages () {
@@ -96,6 +96,39 @@ elif [ "$gpu" = "nvidia" ]; then
 fi
 
 echo "------------------------"
+echo "INSTALL AUR PACKAGES"
+echo "------------------------"
+
+cleanup() {
+    rm -f /etc/sudoers.d/temp_aur_builder_perms
+
+    if id aurbuilder >/dev/null 2>&1; then
+        userdel -r aurbuilder >/dev/null 2>&1 || true
+    fi
+
+    rm -rf /tmp/aur-build-*
+}
+trap cleanup EXIT HUP INT TERM
+
+# create temp user with perms
+useradd -m -r -s /bin/sh aurbuilder >/dev/null
+echo "aurbuilder ALL=(root) NOPASSWD: /usr/bin/pacman" >> /etc/sudoers.d/temp_aur_builder_perms
+chmod 0440 /etc/sudoers.d/temp_aur_builder_perms >/dev/null
+
+for pkg in yay-bin nody-greeter; do
+    install_aur "$pkg"
+done
+
+# delete perms and user
+rm -f /etc/sudoers.d/temp_aur_builder_perms >/dev/null
+userdel -r aurbuilder >/dev/null || true
+
+# build packages
+pacman -U --noconfirm /tmp/aur-build-*/*.pkg.tar.*
+
+rm -rf /tmp/aur-build-*
+
+echo "------------------------"
 echo "INSTALL PROGRAMS"
 echo "------------------------"
 
@@ -162,39 +195,6 @@ echo "------------------------"
 pacman -S --noconfirm --needed networkmanager > /dev/null
 
 systemctl enable NetworkManager > /dev/null
-
-echo "------------------------"
-echo "INSTALL AUR PACKAGES"
-echo "------------------------"
-
-cleanup() {
-    rm -f /etc/sudoers.d/temp_aur_builder_perms
-
-    if id aurbuilder >/dev/null 2>&1; then
-        userdel -r aurbuilder >/dev/null 2>&1 || true
-    fi
-
-    rm -rf /tmp/aur-build-*
-}
-trap cleanup EXIT HUP INT TERM
-
-# create temp user with perms
-useradd -m -r -s /bin/sh aurbuilder >/dev/null
-echo "aurbuilder ALL=(root) NOPASSWD: /usr/bin/pacman" >> /etc/sudoers.d/temp_aur_builder_perms
-chmod 0440 /etc/sudoers.d/temp_aur_builder_perms >/dev/null
-
-for pkg in yay-bin nody-greeter; do
-    install_aur "$pkg"
-done
-
-# delete perms and user
-rm -f /etc/sudoers.d/temp_aur_builder_perms >/dev/null
-userdel -r aurbuilder >/dev/null || true
-
-# build packages
-pacman -U --noconfirm /tmp/aur-build-*/*.pkg.tar.*
-
-rm -rf /tmp/aur-build-*
 
 echo "------------------------"
 echo "LOGIN & SPLASH"
