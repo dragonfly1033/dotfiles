@@ -1,5 +1,3 @@
-bluema
-ss
 mail
 qpw
 lutr
@@ -18,3 +16,5 @@ blkue
 blueman
 ss
 brave
+vm
+vm
