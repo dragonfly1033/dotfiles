@@ -365,6 +365,8 @@ for i in "/home/$username/.dotfiles/fonts"/*; do
 done
 
 runuser -u "$username" -- ln -sfn "/home/$username/.dotfiles/wallpapers" "/home/$username/Pictures/wallpapers"
+runuser -u "$username" -- mkdir -p "/home/$username/.config/zsh"
+runuser -u "$username" -- cp "/home/$username/.dotfiles/files/transient-prompt.zsh-theme" "/home/$username/.config/zsh"
 
 if [ "$display_server" = "xorg" ]; then
     sed "s!name=.*!name=\"$("/home/$username/bin/vars" get THEME)\"!" -i "/home/$username/.fehbg"
