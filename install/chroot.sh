@@ -2,6 +2,28 @@
 
 set -e
 
+input_notnull () {
+    ret=""
+
+    while [ -z "$ret" ]; do
+        printf "%s" "$1" >&2
+        read -r ret
+    done
+    
+    echo "$ret"
+}
+
+input_confirm () {
+    printf "%s" "$1" >&2
+    read -r ret
+
+    if [ "$ret" = "y" ]; then
+        echo y
+    else
+        echo n
+    fi
+}
+
 install_aur () {
     AUR_PKG="$1"
     AUR_URL="https://aur.archlinux.org/${AUR_PKG}.git"
@@ -279,10 +301,10 @@ if ! [ "$display_server" = "none" ]; then
     sed -ri 's/^#?webkit_theme.*/webkit_theme=litarvan/' /etc/lightdm/lightdm-webkit2-greeter.conf
     sed -ri 's/^#?debug_mode.*/debug_mode=true/' /etc/lightdm/lightdm-webkit2-greeter.conf
 
-    sed -ri 's/^( *theme:).*/\1 litarvan/' /etc/lightdm/web-greeter.yml
-    sed -ri 's/^( *debug_mode:).*/\1 True/' /etc/lightdm/web-greeter.yml
-    sed -ri 's/^( *- us).*/\1- gb/' /etc/lightdm/web-greeter.yml
-    sed -ri 's/^( *battery:).*/\1 True/' /etc/lightdm/web-greeter.yml
+    sed -ri 's/^theme.*/theme = "litarvan"/' /etc/lightdm/web-greeter.toml
+    sed -ri 's/^debug-mode.*/debug-mode = true/' /etc/lightdm/web-greeter.toml
+    sed -ri 's/"us"/"gb"/' /etc/lightdm/web-greeter.toml
+    sed -ri 's/^enabled.*/enabled = true/g' /etc/lightdm/web-greeter.toml
 
     sed -ri 's/GRUB_CMDLINE_LINUX_DEFAULT=".*"/GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 splash udev.log_level=3 rd.udev.log_level=3 loglevel=3 vt.global_cursor_default=0"/' /etc/default/grub
     sed -ri 's/^#?GRUB_DEFAULT=.*/GRUB_DEFAULT=0/' /etc/default/grub

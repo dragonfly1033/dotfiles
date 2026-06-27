@@ -2,6 +2,28 @@
 
 set -e
 
+input_notnull () {
+    ret=""
+
+    while [ -z "$ret" ]; do
+        printf "%s" "$1" >&2
+        read -r ret
+    done
+    
+    echo "$ret"
+}
+
+input_confirm () {
+    printf "%s" "$1" >&2
+    read -r ret
+
+    if [ "$ret" = "y" ]; then
+        echo y
+    else
+        echo n
+    fi
+}
+
 get_packages () {
     cat ~/.dotfiles/install/packages.csv | grep -E ".*,$1,.*$2.*,$3" | cut -d',' -f1 | xargs
 }
