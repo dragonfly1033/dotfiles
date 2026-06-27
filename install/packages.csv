@@ -22,6 +22,7 @@ cronie,pacman,xorg+wayland,cli
 csvkit,pacman,xorg+wayland,cli
 cups,pacman,xorg+wayland,gui_light
 cups-pdf,pacman,xorg+wayland,gui_light
+direnv,pacman,xorg+wayland,cli
 dosfstools,pacman,xorg+wayland,cli
 efibootmgr,pacman,xorg+wayland,cli
 electron,pacman,xorg+wayland,gui_heavy
