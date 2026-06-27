@@ -5,14 +5,21 @@ set -e
 install_aur () {
     AUR_PKG="$1"
     AUR_URL="https://aur.archlinux.org/${AUR_PKG}.git"
-    BUILD_DIR="$(mktemp -d "/tmp/aur-build-${AUR_PKG}.XXXXXX")"
+    BUILD_DIR="/tmp/aur-build-${AUR_PKG}"
 
+    rm -rf "$BUILD_DIR" > /dev/null
+    mkdir -p "$BUILD_DIR" > /dev/null
     chown "aurbuilder:aurbuilder" "$BUILD_DIR" > /dev/null
 
-    runuser -u "aurbuilder" -- git clone "$AUR_URL" "$BUILD_DIR"
+    runuser -u "aurbuilder" -- git clone "$AUR_URL" "$BUILD_DIR" > /dev/null
 
     # Build as non-root.
-    runuser -u "aurbuilder" -- sh -c 'cd "$1" && PKGDEST="$2" makepkg -Ccsr --needed --noconfirm' sh "$BUILD_DIR" "$AUR_PKGDEST"
+    runuser -u "aurbuilder" -- sh -c "cd '$BUILD_DIR' && makepkg -sr --needed --noconfirm" > /dev/null
+
+    # build packages as root
+    pacman -U --noconfirm "$BUILD_DIR"/*.pkg.tar.*
+
+    rm -rf "$BUILD_DIR"
 }
 
 get_packages () {
@@ -105,7 +112,6 @@ cleanup() {
     fi
 
     rm -rf /tmp/aur-build-*
-    rm -rf "$AUR_PKGDEST"
 }
 trap cleanup EXIT HUP INT TERM
 
@@ -114,11 +120,6 @@ useradd -m -r -s /bin/sh aurbuilder >/dev/null
 echo "aurbuilder ALL=(root) NOPASSWD: /usr/bin/pacman" >> /etc/sudoers.d/temp_aur_builder_perms
 chmod 0440 /etc/sudoers.d/temp_aur_builder_perms >/dev/null
 
-AUR_PKGDEST="/tmp/aur-packages"
-rm -rf "$AUR_PKGDEST"
-mkdir -p "$AUR_PKGDEST"
-chown "aurbuilder:aurbuilder" "$AUR_PKGDEST" > /dev/null
-
 for pkg in yay-bin nody-greeter; do
     install_aur "$pkg"
 done
@@ -126,12 +127,6 @@ done
 # delete perms and user
 rm -f /etc/sudoers.d/temp_aur_builder_perms >/dev/null
 userdel -r aurbuilder >/dev/null || true
-
-# install built packages
-pacman -U --noconfirm "$AUR_PKGDEST"/*.pkg.tar.*
-
-rm -rf /tmp/aur-build-*
-rm -rf "$AUR_PKGDEST"
 
 echo "------------------------"
 echo "INSTALL PROGRAMS"
