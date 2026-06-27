@@ -6,19 +6,47 @@ get_packages () {
     cat ~/.dotfiles/install/packages.csv | grep -E ".*,$1,.*$2.*,$3" | cut -d',' -f1 | xargs
 }
 
-error="required variable not set, must be run from start_install.sh"
-disk="${disk:?$error}"
-swap="${swap:?$error}"
-filesystem="${filesystem:?$error}"
-root_passwd="${root_passwd:?$error}"
-username="${username:?$error}"
-user_passwd="${user_passwd:?$error}"
-hostname="${hostname:?$error}"\
-timezone="${timezone:?$error}"
-gpu="${gpu:?$error}"
-display_server="${display_server:?$error}"
-machine="${machine:?$error}"
-app_suite="${app_suite:?$error}"
+if [ "$1" = "--set-again" ]; then
+    echo "------------------------"
+    echo "INPUT DATA"
+    echo "------------------------"
+
+    lsblk
+    echo "------------------------"
+
+    disk=$(input_notnull "Enter Disk Device (full path): ") || exit 1
+
+    [ -e "$disk" ] || exit 1
+
+    swap=$(input_confirm "Swap partition?(y/N): ") || exit 1
+    filesystem=$(printf "ext4\nbtrfs" | /usr/bin/fzf --prompt "File System: ") || exit 1
+    root_passwd=$(input_notnull "Enter Root Password: ") || exit 1
+    username=$(input_notnull "Enter Username: ") || exit 1
+    user_passwd=$(input_notnull "Enter User Password: ") || exit 1
+    hostname=$(input_notnull "Enter Hostname: ") || exit 1
+    timezone=$(timedatectl list-timezones | /usr/bin/fzf --prompt "Enter Timezone: ") || exit 1
+    gpu=$(printf "amd\nnvidia" | /usr/bin/fzf --prompt "Enter GPU: ") || exit 1
+    display_server=$(printf "xorg\nwayland\nnone" | /usr/bin/fzf --prompt "Enter Display Server: ") || exit 1
+    machine=$(printf "vbox\nvmware\nhardware" | /usr/bin/fzf --prompt "Enter Machine: ") || exit 1
+    app_suite="n"
+    if ! [ "$display_server" = "none" ]; then
+        app_suite=$(input_confirm "Install Application Suite?(y/N)") || exit 1
+    fi
+else
+    error="required variable not set, must be run from start_install.sh or use --set-again"
+    disk="${disk:?$error}"
+    swap="${swap:?$error}"
+    filesystem="${filesystem:?$error}"
+    root_passwd="${root_passwd:?$error}"
+    username="${username:?$error}"
+    user_passwd="${user_passwd:?$error}"
+    hostname="${hostname:?$error}"
+    timezone="${timezone:?$error}"
+    gpu="${gpu:?$error}"
+    display_server="${display_server:?$error}"
+    machine="${machine:?$error}"
+    app_suite="${app_suite:?$error}"
+fi
 
 
 echo "------------------------"

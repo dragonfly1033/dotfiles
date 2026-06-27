@@ -32,19 +32,47 @@ get_packages () {
 }
 
 
-error="required variable not set, must be run from start_install.sh"
-disk="${disk:?$error}"
-swap="${swap:?$error}"
-filesystem="${filesystem:?$error}"
-root_passwd="${root_passwd:?$error}"
-username="${username:?$error}"
-user_passwd="${user_passwd:?$error}"
-hostname="${hostname:?$error}"
-timezone="${timezone:?$error}"
-gpu="${gpu:?$error}"
-display_server="${display_server:?$error}"
-machine="${machine:?$error}"
-app_suite="${app_suite:?$error}"
+if [ "$1" = "--set-again" ]; then
+    echo "------------------------"
+    echo "INPUT DATA"
+    echo "------------------------"
+
+    lsblk
+    echo "------------------------"
+
+    disk=$(input_notnull "Enter Disk Device (full path): ") || exit 1
+
+    [ -e "$disk" ] || exit 1
+
+    swap=$(input_confirm "Swap partition?(y/N): ") || exit 1
+    filesystem=$(printf "ext4\nbtrfs" | /usr/bin/fzf --prompt "File System: ") || exit 1
+    root_passwd=$(input_notnull "Enter Root Password: ") || exit 1
+    username=$(input_notnull "Enter Username: ") || exit 1
+    user_passwd=$(input_notnull "Enter User Password: ") || exit 1
+    hostname=$(input_notnull "Enter Hostname: ") || exit 1
+    timezone=$(timedatectl list-timezones | /usr/bin/fzf --prompt "Enter Timezone: ") || exit 1
+    gpu=$(printf "amd\nnvidia" | /usr/bin/fzf --prompt "Enter GPU: ") || exit 1
+    display_server=$(printf "xorg\nwayland\nnone" | /usr/bin/fzf --prompt "Enter Display Server: ") || exit 1
+    machine=$(printf "vbox\nvmware\nhardware" | /usr/bin/fzf --prompt "Enter Machine: ") || exit 1
+    app_suite="n"
+    if ! [ "$display_server" = "none" ]; then
+        app_suite=$(input_confirm "Install Application Suite?(y/N)") || exit 1
+    fi
+else
+    error="required variable not set, must be run from start_install.sh or use --set-again"
+    disk="${disk:?$error}"
+    swap="${swap:?$error}"
+    filesystem="${filesystem:?$error}"
+    root_passwd="${root_passwd:?$error}"
+    username="${username:?$error}"
+    user_passwd="${user_passwd:?$error}"
+    hostname="${hostname:?$error}"
+    timezone="${timezone:?$error}"
+    gpu="${gpu:?$error}"
+    display_server="${display_server:?$error}"
+    machine="${machine:?$error}"
+    app_suite="${app_suite:?$error}"
+fi
 
 echo "------------------------"
 echo "ROOT password"
@@ -159,7 +187,7 @@ useradd -m -r -s /bin/sh aurbuilder >/dev/null
 echo "aurbuilder ALL=(root) NOPASSWD: /usr/bin/pacman" >> /etc/sudoers.d/temp_aur_builder_perms
 chmod 0440 /etc/sudoers.d/temp_aur_builder_perms >/dev/null
 
-for pkg in yay-bin nody-greeter; do
+for pkg in yay-bin web-greeter; do
     install_aur "$pkg"
 done
 
@@ -241,22 +269,25 @@ echo "------------------------"
 if ! [ "$display_server" = "none" ]; then
     pacman -S --noconfirm --needed lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan plymouth
 
+    cp -r /usr/share/lightdm-webkit/themes/litarvan /usr/share/web-greeter/themes
+
     mkdir -p /usr/share/backgrounds
     cp /dotfiles/files/black_background.png /usr/share/backgrounds
     cp -r "/dotfiles/files/plymouth_themes"/* /usr/share/plymouth/themes
 
-    sed -ri 's/^#?greeter-session=.*/greeter-session=nody-greeter/' /etc/lightdm/lightdm.conf
+    sed -ri 's/^#?greeter-session=.*/greeter-session=web-greeter/' /etc/lightdm/lightdm.conf
     sed -ri 's/^#?webkit_theme.*/webkit_theme=litarvan/' /etc/lightdm/lightdm-webkit2-greeter.conf
     sed -ri 's/^#?debug_mode.*/debug_mode=true/' /etc/lightdm/lightdm-webkit2-greeter.conf
 
     sed -ri 's/^( *theme:).*/\1 litarvan/' /etc/lightdm/web-greeter.yml
-    sed -ri 's/^( *debug:).*/\1 True/' /etc/lightdm/web-greeter.yml
+    sed -ri 's/^( *debug_mode:).*/\1 True/' /etc/lightdm/web-greeter.yml
+    sed -ri 's/^( *- us).*/\1- gb/' /etc/lightdm/web-greeter.yml
     sed -ri 's/^( *battery:).*/\1 True/' /etc/lightdm/web-greeter.yml
 
     sed -ri 's/GRUB_CMDLINE_LINUX_DEFAULT=".*"/GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 splash udev.log_level=3 rd.udev.log_level=3 loglevel=3 vt.global_cursor_default=0"/' /etc/default/grub
     sed -ri 's/^#?GRUB_DEFAULT=.*/GRUB_DEFAULT=0/' /etc/default/grub
     sed -ri 's/^#?GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
-    echo "GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT" | tee -a /etc/default/grub
+    echo "GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT" >> /etc/default/grub
     
     sed -ri 's/MODULES=\((.*)\)$/MODULES=\(\1 amdgpu\)/' /etc/mkinitcpio.conf
     sed -ri 's/HOOKS=\(base udev (.*)\)/HOOKS=\(base udev plymouth \1\)/' /etc/mkinitcpio.conf   
@@ -265,9 +296,15 @@ if ! [ "$display_server" = "none" ]; then
 
     grub-mkconfig -o /boot/grub/grub.cfg
 
-    systemctl enable lightdm.service
-
     plymouth-set-default-theme -R rings > /dev/null
+fi
+
+echo "------------------------"
+echo "ENABLE DISPLAY MANAGER"
+echo "------------------------"
+
+if ! [ "$display_server" = "none" ]; then
+    systemctl enable lightdm.service
 fi
 
 echo "------------------------"
@@ -303,31 +340,31 @@ echo "------------------------"
 echo "LINK DOTS"
 echo "------------------------"
 
-mkdir "/home/$username/Downloads" || true
-mkdir "/home/$username/Documents" || true
-mkdir "/home/$username/Desktop" || true
-mkdir "/home/$username/Pictures" || true
-mkdir "/home/$username/.config" || true
+runuser -u "$username" -- mkdir "/home/$username/Downloads" || true
+runuser -u "$username" -- mkdir "/home/$username/Documents" || true
+runuser -u "$username" -- mkdir "/home/$username/Desktop" || true
+runuser -u "$username" -- mkdir "/home/$username/Pictures" || true
+runuser -u "$username" -- mkdir "/home/$username/.config" || true
 
 for i in "/home/$username/.dotfiles/.config"/*; do
-    ln -sfn "$i" "/home/$username/.config"
+    runuser -u "$username" -- ln -sfn "$i" "/home/$username/.config"
 done
 
 for i in "/home/$username/.dotfiles/home"/*; do
-    ln -sfn "$i" "/home/$username"
+    runuser -u "$username" -- ln -sfn "$i" "/home/$username"
 done
 
 for i in "/home/$username/.dotfiles/home"/.*; do
-    ln -sfn "$i" "/home/$username"
+    runuser -u "$username" -- ln -sfn "$i" "/home/$username"
 done
 
-mkdir -p "/home/$username/.local/share/fonts"
+runuser -u "$username" -- mkdir -p "/home/$username/.local/share/fonts"
 
 for i in "/home/$username/.dotfiles/fonts"/*; do
-    ln -sfn "$i" "/home/$username/.local/share/fonts"
+    runuser -u "$username" -- ln -sfn "$i" "/home/$username/.local/share/fonts"
 done
 
-ln -sfn "/home/$username/.dotfiles/wallpapers" "/home/$username/Pictures/wallpapers"
+runuser -u "$username" -- ln -sfn "/home/$username/.dotfiles/wallpapers" "/home/$username/Pictures/wallpapers"
 
 if [ "$display_server" = "xorg" ]; then
     sed "s!name=.*!name=\"$("/home/$username/bin/vars" get THEME)\"!" -i "/home/$username/.fehbg"
