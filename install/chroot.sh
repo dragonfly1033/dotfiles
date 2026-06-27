@@ -209,7 +209,7 @@ useradd -m -r -s /bin/sh aurbuilder >/dev/null
 echo "aurbuilder ALL=(root) NOPASSWD: /usr/bin/pacman" >> /etc/sudoers.d/temp_aur_builder_perms
 chmod 0440 /etc/sudoers.d/temp_aur_builder_perms >/dev/null
 
-for pkg in yay-bin web-greeter; do
+for pkg in yay-bin; do
     install_aur "$pkg"
 done
 
@@ -289,9 +289,19 @@ echo "LOGIN & SPLASH"
 echo "------------------------"
 
 if ! [ "$display_server" = "none" ]; then
-    pacman -S --noconfirm --needed lightdm lightdm-webkit2-greeter lightdm-webkit-theme-litarvan plymouth
+    pacman -S --noconfirm --needed lightdm plymouth # lightdm-webkit2-greeter lightdm-webkit-theme-litarvan
+    # cp -r /usr/share/lightdm-webkit/themes/litarvan /usr/share/web-greeter/themes
 
-    cp -r /usr/share/lightdm-webkit/themes/litarvan /usr/share/web-greeter/themes
+    cd /tmp
+    git clone "https://github.com/Litarvan/lightdm-webkit-theme-litarvan" 
+    cd lightdm-webkit-theme-litarvan
+    ./build.sh
+    mkdir /usr/share/web-greeter/themes/litarvan
+    cp lightdm-webkit-theme-litarvan-3.2.0.tar.gz /usr/share/web-greeter/themes/litarvan
+    cd /usr/share/web-greeter/themes/litarvan
+    tar xvf lightdm-webkit-theme-litarvan-3.2.0.tar.gz
+    cd /
+    rm -rf /tmp/lightdm-webkit-theme-litarvan
 
     mkdir -p /usr/share/backgrounds
     cp /dotfiles/files/black_background.png /usr/share/backgrounds

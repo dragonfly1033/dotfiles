@@ -134,30 +134,6 @@ if pacman -Qe | grep -q vscodium; then
 fi
 
 echo "------------------------"
-echo "PATCH FIREFOX"
-echo "------------------------"
-
-if pacman -Qe | grep -q firefox; then
-    firefox --headless &
-
-    sleep 4
-
-    for i in $(find ~ -maxdepth 3 -type d -path "/home/$username/.mozilla/firefox/*.*"); do
-        cp -r ~/.dotfiles/files/firefox/chrome "$i"/chrome
-        rm -rf "$i"/startupCache/*
-        cat ~/.dotfiles/files/firefox/user.js >> "$i"/prefs.js
-    done
-
-    sudo cp -r ~/.dotfiles/files/firefox/defaults "/usr/lib/firefox"
-    sudo cp ~/.dotfiles/files/firefox/config.js /usr/lib/firefox
-    sudo cp ~/.dotfiles/files/firefox/config-prefs.js /usr/lib/firefox/defaults/pref
-
-    sleep 2
-
-    pkill firefox || true
-fi
-
-echo "------------------------"
 echo "CLEANUP HOOK"
 echo "------------------------"
 

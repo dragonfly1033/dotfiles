@@ -192,7 +192,7 @@ echo "GET DOTS"
 echo "------------------------"
 
 if ! [ -e /mnt/dotfiles ]; then
-    /usr/bin/git clone https://github.com/dragonfly1033/dotfiles.git /mnt/dotfiles > /dev/null
+    /usr/bin/git clone --recursive https://github.com/dragonfly1033/dotfiles.git /mnt/dotfiles > /dev/null
     chmod +x /mnt/dotfiles/install/*
 fi
 
