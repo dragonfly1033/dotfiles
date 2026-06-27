@@ -5,16 +5,21 @@ set -e
 install_aur () {
     AUR_PKG="$1"
     AUR_URL="https://aur.archlinux.org/${AUR_PKG}.git"
-    BUILD_DIR="/tmp/aur-build-${AUR_PKG}"
+    AUR_BUILD_ROOT="${AUR_BUILD_ROOT:-/var/tmp}"
+    BUILD_DIR="${AUR_BUILD_ROOT}/aur-build-${AUR_PKG}"
+    AUR_TMPDIR="${TMPDIR:-/var/tmp}"
+    AUR_NPM_CACHE="${AUR_NPM_CACHE:-/var/tmp/aur-npm-cache}"
 
     rm -rf "$BUILD_DIR" > /dev/null
+    mkdir -p "$AUR_BUILD_ROOT" "$AUR_TMPDIR" "$AUR_NPM_CACHE" > /dev/null
+    chmod 1777 "$AUR_BUILD_ROOT" "$AUR_TMPDIR" > /dev/null
     mkdir -p "$BUILD_DIR" > /dev/null
-    chown "aurbuilder:aurbuilder" "$BUILD_DIR" > /dev/null
+    chown -R "aurbuilder:aurbuilder" "$BUILD_DIR" "$AUR_NPM_CACHE" > /dev/null
 
     runuser -u "aurbuilder" -- git clone "$AUR_URL" "$BUILD_DIR" > /dev/null
 
     # Build as non-root.
-    runuser -u "aurbuilder" -- sh -c "cd '$BUILD_DIR' && makepkg -sr --needed --noconfirm" > /dev/null
+    runuser -u "aurbuilder" -- sh -c "cd '$BUILD_DIR' && TMPDIR='$AUR_TMPDIR' npm_config_cache='$AUR_NPM_CACHE' makepkg -sr --needed --noconfirm"
 
     # build packages as root
     pacman -U --noconfirm "$BUILD_DIR"/*.pkg.tar.*
@@ -104,16 +109,50 @@ echo "------------------------"
 echo "INSTALL AUR PACKAGES"
 echo "------------------------"
 
-cleanup() {
+aur_diagnostics() {
+    status="$1"
+
+    echo "AUR build failed with status $status"
+    echo "Keeping aurbuilder, /var/tmp/aur-build-*, and /var/tmp/aur-npm-cache for inspection."
+    echo "Run this from the live system to inspect it again: arch-chroot /mnt"
+    echo "Remove leftovers later with: userdel -r aurbuilder; rm -rf /var/tmp/aur-build-* /var/tmp/aur-npm-cache"
+    echo "------------------------"
+    echo "DISK SPACE"
+    echo "------------------------"
+    df -hT / /tmp /var/tmp /home/aurbuilder /run /dev/shm 2>/dev/null || true
+    echo "------------------------"
+    echo "INODES"
+    echo "------------------------"
+    df -ih / /tmp /var/tmp /home/aurbuilder /run /dev/shm 2>/dev/null || true
+    echo "------------------------"
+    echo "MOUNTS"
+    echo "------------------------"
+    for path in / /tmp /var/tmp /home/aurbuilder /run /dev/shm; do
+        findmnt -T "$path" -o TARGET,SOURCE,FSTYPE,SIZE,AVAIL,OPTIONS 2>/dev/null || true
+    done
+}
+
+cleanup_aur() {
     rm -f /etc/sudoers.d/temp_aur_builder_perms
 
     if id aurbuilder >/dev/null 2>&1; then
         userdel -r aurbuilder >/dev/null 2>&1 || true
     fi
 
-    rm -rf /tmp/aur-build-*
+    rm -rf /var/tmp/aur-build-* /var/tmp/aur-npm-cache
 }
-trap cleanup EXIT HUP INT TERM
+
+finish_aur() {
+    status="$1"
+
+    if [ "$status" -eq 0 ]; then
+        cleanup_aur
+    else
+        rm -f /etc/sudoers.d/temp_aur_builder_perms
+        aur_diagnostics "$status"
+    fi
+}
+trap 'status=$?; finish_aur "$status"; exit "$status"' EXIT
 
 # create temp user with perms
 useradd -m -r -s /bin/sh aurbuilder >/dev/null
@@ -124,9 +163,8 @@ for pkg in yay-bin nody-greeter; do
     install_aur "$pkg"
 done
 
-# delete perms and user
-rm -f /etc/sudoers.d/temp_aur_builder_perms >/dev/null
-userdel -r aurbuilder >/dev/null || true
+cleanup_aur
+trap - EXIT
 
 echo "------------------------"
 echo "INSTALL PROGRAMS"
